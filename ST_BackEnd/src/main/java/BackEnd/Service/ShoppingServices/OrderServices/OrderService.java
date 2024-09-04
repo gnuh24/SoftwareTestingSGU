@@ -3,13 +3,13 @@ package BackEnd.Service.ShoppingServices.OrderServices;
 import BackEnd.Entity.AccountEntity.UserInformation;
 import BackEnd.Entity.ShoppingEntities.Order;
 import BackEnd.Entity.ShoppingEntities.OrderStatus;
-import BackEnd.Entity.ShoppingEntities.Voucher;
 import BackEnd.Form.ShoppingForms.OrderDetailForm.OrderDetailCreateForm;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderCreateFormForAdmin;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderFilterForm;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderUpdateForm;
 import BackEnd.Form.ShoppingForms.OrderStatusForms.OrderStatusCreateFormForFirstTime;
 import BackEnd.Repository.ShoppingRepositories.IOrderRepository;
+import BackEnd.Service.AccountServices.AccountService.IAccountService;
 import BackEnd.Service.AccountServices.AuthService.JWTUtils;
 import BackEnd.Service.AccountServices.UserInformationService.IUserInformationService;
 import BackEnd.Service.ShoppingServices.OrderDetailServices.IOrderDetailService;
@@ -39,7 +39,7 @@ public class OrderService implements IOrderService{
     private IOrderStatusService orderStatusService;
 
     @Autowired
-    private IUserInformationService userInformationService;
+    private IAccountService accountService;
 
     @Autowired
     private JWTUtils jwtUtilsl;
@@ -59,7 +59,7 @@ public class OrderService implements IOrderService{
 
         String email = jwtUtilsl.extractUsernameWithoutLibrary(token);
 
-        UserInformation userInformation = userInformationService.getUserByEmail(email);
+        UserInformation userInformation = accountService.getUserByEmail(email);
 
         return orderRepository.findByUserInformation_Id(userInformation.getId());
     }
@@ -79,7 +79,7 @@ public class OrderService implements IOrderService{
 
         String email = jwtUtilsl.extractUsernameWithoutLibrary(token);
 
-        UserInformation userInformation = userInformationService.getUserByEmail(email);
+        UserInformation userInformation = accountService.getUserByEmail(email);
 
         if (isOrderBelongToThisId(userInformation.getId(), orderId)){
             return orderRepository.findById(orderId).orElse(null);
@@ -92,7 +92,7 @@ public class OrderService implements IOrderService{
 
     @Override
     @Transactional
-    public Order createOrder(Voucher voucher, OrderCreateFormForAdmin form) {
+    public Order createOrder(OrderCreateFormForAdmin form) {
 
         // 1. Create new `Order`
         Order newOrder = modelMapper.map(form, Order.class);
@@ -108,7 +108,7 @@ public class OrderService implements IOrderService{
         orderStatusService.createOrderStatusFirstTime(orderStatusCreateForm);
 
         // 4. Liên kết thông tin người dùng
-        UserInformation in4 = userInformationService.getUserById(form.getUserInformationId());
+        Account in4 = ac.getUserById(form.getUserInformationId());
         newOrder.setUserInformation(in4);
 
         return newOrder;
@@ -130,7 +130,7 @@ public class OrderService implements IOrderService{
 
         if (form.getUserInformationId() != null){
 
-            UserInformation in4 = userInformationService.getUserById(form.getUserInformationId());
+            UserInformation in4 = accountService.getUserById(form.getUserInformationId());
             order.setUserInformation(in4);
 
         }

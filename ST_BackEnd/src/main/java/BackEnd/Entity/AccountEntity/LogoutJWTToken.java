@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "LogoutJWTToken")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

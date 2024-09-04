@@ -1,0 +1,56 @@
+package BackEnd.Entity.ProductEntity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
+    private Integer id;
+
+    @Column(name = "ProductName", nullable = false)
+    private String productName;
+
+    @Column(name = "Status", nullable = false)
+    private Boolean status;
+
+    @Column(name = "CreateTime", nullable = false)
+    private java.util.Date createTime;
+
+    @Column(name = "Image", nullable = false)
+    private String image;
+
+    @Column(name = "Price", nullable = false)
+    private Integer price;
+
+    @Column(name = "Origin", nullable = false)
+    private String origin;
+
+    @Column(name = "Capacity", nullable = false)
+    private Integer capacity;
+
+    @Column(name = "ABV", nullable = false)
+    private Integer abv;
+
+    @Column(name = "Quantity", nullable = false)
+    private Integer quantity;
+
+    @Column(name = "Description")
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "BrandId", nullable = false)
+    private Brand brand;
+
+    @ManyToOne
+    @JoinColumn(name = "CategoryId", nullable = false)
+    private Category category;
+}

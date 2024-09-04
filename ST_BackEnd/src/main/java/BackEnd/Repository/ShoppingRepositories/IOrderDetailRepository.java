@@ -1,6 +1,6 @@
 package BackEnd.Repository.ShoppingRepositories;
 
-import BackEnd.Entity.ShoppingEntities.OrderDetail;
+import BackEnd.Entity.OrderEntity.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

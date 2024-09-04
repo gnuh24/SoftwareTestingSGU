@@ -16,8 +16,4 @@ public class BrandCreateForm {
     @NotBlank(message = "Bạn không được để trống tên thương hiệu !!")
     private String brandName;
 
-    @FileSize(max = "5MB")
-    @FileContentType(allowed = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
-    private MultipartFile logo;
-
 }

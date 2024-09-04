@@ -1,6 +1,7 @@
 package BackEnd.Entity.AccountEntity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,8 +9,8 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "Token")
 public class Token {
 
     @Id
@@ -20,10 +21,10 @@ public class Token {
     private String token;
 
     @Column(nullable = false)
-    private LocalDateTime expiration;
+    private LocalDateTime expiration = LocalDateTime.now().plusHours(2);
 
     @Column(name = "CreateTime", nullable = false, updatable = false)
-    private LocalDateTime createTime;
+    private LocalDateTime createTime = LocalDateTime.now();;
 
     @ManyToOne
     @JoinColumn(name = "tokenTypeId", nullable = false)
@@ -33,15 +34,4 @@ public class Token {
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
-    @PrePersist
-    void prePersists() {
-        if (expiration == null) {
-            // Set expiration time to 2 hours from now
-            expiration = LocalDateTime.now().plusHours(2);
-        }
-        if (createTime == null) {
-            // Set creation time to the current time
-            createTime = LocalDateTime.now();
-        }
-    }
 }

@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "OrderStatus")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +19,7 @@ public class OrderStatus {
     private OrderStatusId id;
 
     @Column(name = "UpdateTime", nullable = false)
-    private LocalDateTime updateTime;
+    private LocalDateTime updateTime = LocalDateTime.now();
 
     @ManyToOne
     @MapsId("orderId")
@@ -38,19 +37,7 @@ public class OrderStatus {
 
         @Enumerated(EnumType.STRING)
         @Column(name = "Status", nullable = false, length = 12)
-        private Status status;
-    }
-
-    @PrePersist
-    private void prePersist() {
-
-        if (updateTime == null){
-            updateTime = LocalDateTime.now();
-        }
-
-        if (id.getStatus() == null){
-            id.status = Status.ChoDuyet;
-        }
+        private Status status = Status.ChoDuyet;
     }
 
     public enum Status {

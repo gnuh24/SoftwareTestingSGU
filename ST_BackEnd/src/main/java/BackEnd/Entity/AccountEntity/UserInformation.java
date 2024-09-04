@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "UserInformation")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +37,7 @@ public class UserInformation {
     @Column(name = "PhoneNumber", length = 20, unique = true)
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "userInformation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "userInformation")
     private Account account;
 
     public enum Gender {

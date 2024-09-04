@@ -17,8 +17,4 @@ public class BrandUpdateForm {
 
     private String brandName;
 
-    @FileSize(max = "5MB")
-    @FileContentType(allowed = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
-    private MultipartFile logo;
-
 }

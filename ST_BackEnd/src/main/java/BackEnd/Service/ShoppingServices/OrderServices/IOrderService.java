@@ -1,7 +1,6 @@
 package BackEnd.Service.ShoppingServices.OrderServices;
 
 import BackEnd.Entity.ShoppingEntities.Order;
-import BackEnd.Entity.ShoppingEntities.Voucher;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderCreateFormForAdmin;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderFilterForm;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderUpdateForm;
@@ -23,7 +22,7 @@ public interface IOrderService {
 
     Order getOrderById(String token, String orderId) throws AccessDeniedException;
 
-    Order createOrder(Voucher voucher, OrderCreateFormForAdmin form);
+    Order createOrder(OrderCreateFormForAdmin form);
 
     Order updateOrder(OrderUpdateForm form);
 

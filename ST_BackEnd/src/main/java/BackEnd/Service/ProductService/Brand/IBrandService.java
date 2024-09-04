@@ -21,6 +21,6 @@ public interface IBrandService {
 
     Brand updateBrand(BrandUpdateForm form) throws IOException;
 
-    void deleteBrand(Integer shoeTypeId);
+    void deleteBrand(Integer brandId);
 
 }

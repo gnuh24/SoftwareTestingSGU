@@ -2,7 +2,6 @@ package BackEnd.Service.InventoryServices.InventoryReportStatusServices;
 
 import BackEnd.Entity.InventoryEntities.InventoryReportDetail;
 import BackEnd.Entity.InventoryEntities.InventoryReportStatus;
-import BackEnd.Entity.ProductEntity.ShoeSize;
 import BackEnd.Form.InventoryForms.InventoryReportStatusForms.InventoryReportStatusCreateForm;
 import BackEnd.Repository.InventoryRepositoties.IInventoryReportStatusRepository;
 import BackEnd.Service.InventoryServices.InventoryReportDetailServices.IInventoryReportDetailService;

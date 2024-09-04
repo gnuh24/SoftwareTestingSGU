@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Account")
 public class Account implements UserDetails {
 
     @Id
@@ -25,7 +24,7 @@ public class Account implements UserDetails {
     private Integer id;
 
     @NotBlank(message = "Password cannot be blank")
-    @Column(nullable = false)
+    @Column(nullable = false, length = 800)
     private String password;
 
     @Column(name = "CreateAt", nullable = false, updatable = false)
@@ -41,9 +40,9 @@ public class Account implements UserDetails {
     @Column(name = "Role", nullable = false)
     private Role role = Role.User;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "Type", nullable = false)
-    private AccountType type = AccountType.WEB;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "Type", nullable = false)
+//    private AccountType type = AccountType.WEB;
 
     @OneToOne
     @JoinColumn(name = "UserInformationId", nullable = false)
@@ -83,8 +82,8 @@ public class Account implements UserDetails {
         User, Admin
     }
 
-    public enum AccountType {
-        FACEBOOK, GOOGLE, WEB, OTHER
-    }
+//    public enum AccountType {
+//        FACEBOOK, GOOGLE, WEB, OTHER
+//    }
 
 }

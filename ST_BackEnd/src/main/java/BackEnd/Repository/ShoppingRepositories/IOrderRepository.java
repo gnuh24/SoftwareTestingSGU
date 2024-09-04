@@ -28,10 +28,10 @@ public interface IOrderRepository extends JpaRepository<Order, String>, JpaSpeci
         "COUNT(od.Quantity) AS quantity, SUM(od.Total) AS total " +
         "FROM `Order` o " +
         "JOIN `OrderDetail` od ON o.Id = od.OrderId " +
-        "JOIN `Shoe` s ON od.ShoeId = s.ShoeId " +
+        "JOIN `Product` s ON od.ShoeId = s.ShoeId " +
         "JOIN `OrderStatus` os ON os.OrderId = o.Id " +
         "JOIN `Brand` b ON s.BrandId = b.BrandId " + // Join with Brand table
-        "JOIN `ShoeType` st ON s.ShoeTypeId = st.ShoeTypeId " + // Join with ShoeType table
+        "JOIN `Category` st ON s.ShoeTypeId = st.ShoeTypeId " + // Join with Category table
         "WHERE os.Status = 'GiaoThanhCong' AND " +
         "DATE(os.UpdateTime) BETWEEN COALESCE(:minDate, '2022-01-01') AND COALESCE(:maxDate, CURRENT_DATE()) " +
         "AND (:brandId IS NULL OR b.BrandId = :brandId) " + // Filter by brandId if provided
@@ -50,7 +50,7 @@ public interface IOrderRepository extends JpaRepository<Order, String>, JpaSpeci
         "COUNT(od.Quantity) AS quantity, SUM(od.Total) AS total " +
         "FROM `Order` o " +
         "JOIN `OrderDetail` od ON o.Id = od.OrderId " +
-        "JOIN `Shoe` s ON od.ShoeId = s.ShoeId " +
+        "JOIN `Product` s ON od.ShoeId = s.ShoeId " +
         "JOIN `OrderStatus` os ON os.OrderId = o.Id " +
         "WHERE os.Status = 'GiaoThanhCong' AND " +
         "s.ShoeId = :shoeId AND " +

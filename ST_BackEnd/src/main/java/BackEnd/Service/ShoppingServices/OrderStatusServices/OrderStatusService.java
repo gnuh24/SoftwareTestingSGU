@@ -2,8 +2,6 @@ package BackEnd.Service.ShoppingServices.OrderStatusServices;
 
 import BackEnd.Configure.ErrorResponse.NotEnoughInventory;
 import BackEnd.Entity.AccountEntity.UserInformation;
-import BackEnd.Entity.ProductEntity.ShoeSize;
-import BackEnd.Entity.ShoppingEntities.Order;
 import BackEnd.Entity.ShoppingEntities.OrderDetail;
 import BackEnd.Entity.ShoppingEntities.OrderStatus;
 import BackEnd.Form.ShoppingForms.OrderStatusForms.OrderStatusCreateFormForFirstTime;
@@ -96,7 +94,7 @@ public class OrderStatusService implements IOrderStatusService{
                     if (soLuongConLai >= 0){
                         shoeSize.setQuantity(soLuongConLai);
                     }else{
-                        throw new NotEnoughInventory("Không đủ sản phẩm " + shoeSize.getShoe().getShoeName() + ", size: "+ shoeSize.getId().getSize() +  " tồn kho !!");
+                        throw new NotEnoughInventory("Không đủ sản phẩm " + shoeSize.getProduct().getShoeName() + ", size: "+ shoeSize.getId().getSize() +  " tồn kho !!");
                     }
 
                 }

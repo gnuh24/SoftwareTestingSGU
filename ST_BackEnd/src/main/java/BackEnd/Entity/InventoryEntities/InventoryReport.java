@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "InventoryReport")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +20,7 @@ public class InventoryReport {
     private Integer id;
 
     @Column(name = "CreateTime", nullable = false)
-    private LocalDateTime createTime;
+    private LocalDateTime createTime = LocalDateTime.now();
 
     @Column(name = "Supplier")
     private String supplier;
@@ -38,10 +37,4 @@ public class InventoryReport {
     @OneToMany(mappedBy = "inventoryReport")
     private List<InventoryReportStatus> inventoryReportStatuses;
 
-    @PrePersist
-    private void prePersist() {
-        if (createTime == null) {
-            createTime = LocalDateTime.now();
-        }
-    }
 }
