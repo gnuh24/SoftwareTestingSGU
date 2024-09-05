@@ -68,17 +68,25 @@ public class AccountService implements IAccountService {
     @Override
     public Account getAccountById(Integer accountId, String token) {
 
+        // Tìm kiếm account theo accountId
         Account account = repository.findById(accountId).orElse(null);
 
+        // Kiểm tra nếu account là null
+        if (account == null) {
+            throw new IllegalArgumentException("Không thể xác định được người dùng");
+        }
+
+        // Trích xuất email từ token
         String email = jwtUtils.extractUsernameWithoutLibrary(token);
 
-        assert account != null;
-        if (!account.getUsername().equals(email) ){
-            throw new AccessDeniedException("Bạn không có quyền try cập !!");
+        // Kiểm tra xem username trong account có khớp với email từ token không
+        if (!account.getUsername().equals(email)) {
+            throw new AccessDeniedException("Bạn không có quyền truy cập !!");
         }
 
         return account;
     }
+
 
     @Override
     public Account getAccountById(Integer accountId) {

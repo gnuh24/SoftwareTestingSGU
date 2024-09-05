@@ -38,8 +38,7 @@ public class UserInformationController {
     @PatchMapping()
     public UserInformationDTOForOrder updateAccount(@ModelAttribute @Valid UserInformationUpdateForm form){
 
-        UserInformationDTOForOrder account = modelMapper.map(informationService.updateUser(form), UserInformationDTOForOrder.class);
-        return account;
+        return modelMapper.map(informationService.updateUser(form), UserInformationDTOForOrder.class);
     }
 
 
