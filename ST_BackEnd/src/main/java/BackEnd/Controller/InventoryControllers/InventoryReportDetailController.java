@@ -34,14 +34,14 @@ public class InventoryReportDetailController {
     }
 
     @PatchMapping()
-    public ResponseEntity<InventoryReportDetailDTO> updateInventoryReportDetail(@ModelAttribute InventoryReportDetailUpdateForm form) {
+    public ResponseEntity<InventoryReportDetailDTO> updateInventoryReportDetail(@ModelAttribute @Valid InventoryReportDetailUpdateForm form) {
         InventoryReportDetail updatedInventoryReportDetail = inventoryReportDetailService.updateInventoryReportDetailById(form);
         InventoryReportDetailDTO dto = modelMapper.map(updatedInventoryReportDetail, InventoryReportDetailDTO.class);
         return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> deleteInventoryReportDetail(@ModelAttribute InventoryReportDetailDeleteForm form) {
+    public ResponseEntity<Void> deleteInventoryReportDetail(@ModelAttribute @Valid InventoryReportDetailDeleteForm form) {
 
         InventoryReportDetail.InventoryReportDetailId id = new InventoryReportDetail.InventoryReportDetailId(
                                                                                                 form.getIdInventoryReportId(),

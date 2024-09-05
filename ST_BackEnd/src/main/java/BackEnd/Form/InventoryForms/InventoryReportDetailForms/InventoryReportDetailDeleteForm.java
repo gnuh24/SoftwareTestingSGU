@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryReportDetailDeleteForm {
+
+    @NotNull(message = "Inventory Id is required")
     private Integer idInventoryReportId;
 
+    @NotNull(message = "Product Id is required")
     private  Integer idProductId;
 
 }

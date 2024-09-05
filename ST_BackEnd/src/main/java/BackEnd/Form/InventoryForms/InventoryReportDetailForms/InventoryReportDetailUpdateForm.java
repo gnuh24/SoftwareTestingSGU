@@ -1,5 +1,6 @@
 package BackEnd.Form.InventoryForms.InventoryReportDetailForms;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InventoryReportDetailUpdateForm {
 
+    @NotNull(message = "Inventory Id is required")
     private Integer idInventoryReportId;
 
+    @NotNull(message = "Product Id is required")
     private Integer idProductId;
 
     private Integer quantity;

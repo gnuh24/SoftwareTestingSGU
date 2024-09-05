@@ -10,13 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InventoryReportDetailDTO {
 
-    @JsonProperty("shoeId")
-    private  Integer idShoeId;
+    @JsonProperty("productId")
+    private  Integer idProductId;
 
-    @JsonProperty("size")
-    private Byte idSize;
-
-    private String shoeName;
+    private String productName;
 
     private Integer quantity;
 

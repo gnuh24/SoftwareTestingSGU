@@ -57,6 +57,7 @@ public class InventoryReportService implements IInventoryReportService {
             InventoryReportDetailCreateForm detailCreateForm = modelMapper.map(detailForm, InventoryReportDetailCreateForm.class);
             detailCreateForm.setIdInventoryReportId(inventoryReport.getId());
 
+
             inventoryReportDetailService.createInventoryReportDetail(detailCreateForm);
         }
 

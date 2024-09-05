@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class InventoryReportDetailCreateFormForFirstTime {
 
-    private  Integer idShoeId;
-
-    private Byte idSize;
+    private  Integer idProductId;
 
     private Integer quantity;
 

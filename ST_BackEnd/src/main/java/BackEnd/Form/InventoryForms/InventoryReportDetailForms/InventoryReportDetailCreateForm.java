@@ -14,9 +14,8 @@ public class InventoryReportDetailCreateForm {
     @NotNull(message = "Bạn không thể để trống mã phieu nhập kho !!")
     private Integer idInventoryReportId;
 
-    private  Integer idShoeId;
-
-    private Byte idSize;
+    @NotNull(message = "Product Id is required")
+    private  Integer idProductId;
 
     private Integer quantity;
 

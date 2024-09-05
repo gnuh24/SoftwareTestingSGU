@@ -10,6 +10,7 @@ import BackEnd.Service.InventoryServices.InventoryReportDetailServices.Inventory
 import BackEnd.Service.InventoryServices.InventoryReportServices.IInventoryReportService;
 import BackEnd.Service.InventoryServices.InventoryReportServices.InventoryReportService;
 import BackEnd.Service.InventoryServices.InventoryReportStatusServices.IInventoryReportStatusService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class InventoryReportController {
     }
 
     @PostMapping
-    public ResponseEntity<InventoryReportListDTO> createInventoryReport(@ModelAttribute InventoryReportCreateForm form) {
+    public ResponseEntity<InventoryReportListDTO> createInventoryReport(@ModelAttribute @Valid InventoryReportCreateForm form) {
         InventoryReport createdInventoryReport = inventoryReportService.createInventoryReport(form);
         InventoryReportListDTO inventoryReportDTO = modelMapper.map(createdInventoryReport, InventoryReportListDTO.class);
 
@@ -81,7 +82,7 @@ public class InventoryReportController {
     }
 
     @PatchMapping
-    public ResponseEntity<InventoryReportListDTO> updateInventoryReportById(@ModelAttribute InventoryReportUpdateForm form) {
+    public ResponseEntity<InventoryReportListDTO> updateInventoryReportById(@ModelAttribute @Valid InventoryReportUpdateForm form) {
 
         InventoryReport updatedInventoryReport = inventoryReportService.updateInventoryReportById(form);
         InventoryReportListDTO inventoryReportDTO = modelMapper.map(updatedInventoryReport, InventoryReportListDTO.class);
