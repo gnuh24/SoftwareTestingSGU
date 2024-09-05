@@ -13,11 +13,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class CartItemCreateForm {
 
-    @NotNull(message = "ShoeId cannot be null")
-    private Integer shoeId;
-
-    @NotNull(message = "Size cannot be null")
-    private Byte idSize;
+    @NotNull(message = "ProductId cannot be null")
+    private Integer productId;
 
     @NotNull(message = "AccountId cannot be null")
     private Integer accountId;
