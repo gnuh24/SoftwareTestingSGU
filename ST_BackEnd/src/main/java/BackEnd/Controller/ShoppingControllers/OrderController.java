@@ -8,10 +8,8 @@ import BackEnd.Form.ShoppingForms.OrderDetailForm.OrderDetailDTO;
 import BackEnd.Form.ShoppingForms.OrderForm.*;
 import BackEnd.Service.AccountServices.AccountService.IAccountService;
 import BackEnd.Service.AccountServices.UserInformationService.IUserInformationService;
-import BackEnd.Service.ProductService.ShoeImage.IShoeImageService;
 import BackEnd.Service.ShoppingServices.OrderServices.IOrderService;
 import BackEnd.Service.ShoppingServices.OrderStatusServices.IOrderStatusService;
-import BackEnd.Service.ShoppingServices.VoucherServices.IVoucherService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -43,12 +41,6 @@ public class OrderController {
 
     @Autowired
     private IUserInformationService userService;
-
-    @Autowired
-    private IShoeImageService shoeImageService;
-
-    @Autowired
-    private IVoucherService voucherService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -83,15 +75,6 @@ public class OrderController {
             dtoListAdmin.setLatestStatus(
                 newStatus.getId().getStatus().toString()
             );
-
-            for (OrderDetailDTO orderDetailDTO: dtoListAdmin.getOrderDetails()){
-
-                ShoeImage shoeImage = shoeImageService.getShoeImageByShoeIdAndPriority(orderDetailDTO.getIdShoeId(), true);
-
-                String defaultImage = shoeImage.getPath();
-                orderDetailDTO.setDefaultImage(defaultImage);
-            }
-
         }
 
         return dtos;
@@ -103,17 +86,8 @@ public class OrderController {
 
         Order order = orderService.getOrderById(token, id);
 
-        OrderDTODetailUser orderDTODetailAdmin = modelMapper.map(order, OrderDTODetailUser.class);
 
-        for (OrderDetailDTO orderDetailDTO: orderDTODetailAdmin.getOrderDetails()){
-
-            ShoeImage shoeImage = shoeImageService.getShoeImageByShoeIdAndPriority(orderDetailDTO.getIdShoeId(), true);
-
-            String defaultImage = shoeImage.getPath();
-            orderDetailDTO.setDefaultImage(defaultImage);
-        }
-
-        return orderDTODetailAdmin;
+        return modelMapper.map(order, OrderDTODetailUser.class);
     }
 
 
@@ -121,66 +95,26 @@ public class OrderController {
     public OrderDTODetailAdmin getOrderInDetailForAdmin(@PathVariable ("id") String id){
 
         Order order = orderService.getOrderById(id);
-        OrderDTODetailAdmin orderDTODetailAdmin = modelMapper.map(order, OrderDTODetailAdmin.class);
 
-        for (OrderDetailDTO orderDetailDTO: orderDTODetailAdmin.getOrderDetails()){
 
-            ShoeImage shoeImage = shoeImageService.getShoeImageByShoeIdAndPriority(orderDetailDTO.getIdShoeId(), true);
-
-            String defaultImage = shoeImage.getPath();
-            orderDetailDTO.setDefaultImage(defaultImage);
-        }
-
-        return orderDTODetailAdmin;
+        return modelMapper.map(order, OrderDTODetailAdmin.class);
     }
 
-    @PostMapping(value = "/Admin")
-    public ResponseEntity<OrderDTO> createNewOrderByAdmin(@Valid @ModelAttribute OrderCreateFormForAdmin orderCreateDTO) throws VoucherExpiredException {
-        Voucher voucher = null;
-
-        if (orderCreateDTO.getVoucherId() != null){
-            voucher = voucherService.getVoucherById(orderCreateDTO.getVoucherId());
-            if (voucher.getExpirationTime().isBefore(LocalDateTime.now())){
-                throw new VoucherExpiredException("Voucher đã hết hạn sử dụng !!");
-            }
-        }
-
-        Order savedOrder = orderService.createOrder(voucher, orderCreateDTO);
-        OrderDTO dto = modelMapper.map(savedOrder, OrderDTO.class);
-        return ResponseEntity.ok(dto);
-    }
 
     @PostMapping(value = "/User")
     public ResponseEntity<OrderDTO> createNewOrderByUser(@RequestHeader("Authorization") String token,
                                                             @Valid @ModelAttribute OrderCreateFormForUser orderCreateDTO) throws VoucherExpiredException {
-        Voucher voucher = null;
-        if (orderCreateDTO.getVoucherId() != null){
-            voucher = voucherService.getVoucherById(orderCreateDTO.getVoucherId());
-            if (voucher.getExpirationTime().isBefore(LocalDateTime.now())){
-                throw new VoucherExpiredException("Voucher đã hết hạn sử dụng !!");
-            }
-        }
+
 
         Account account = accountService.getAccountById(orderCreateDTO.getAccountId(), token);
 
-        OrderCreateFormForAdmin formForAdmin = modelMapper.map(orderCreateDTO, OrderCreateFormForAdmin.class);
-        formForAdmin.setUserInformationId(account.getUserInformation().getId());
+        OrderCreateFormForUser formForUser = modelMapper.map(orderCreateDTO, OrderCreateFormForUser.class);
+        formForUser.setAccountId(account.getUserInformation().getId());
 
-        Order savedOrder = orderService.createOrder(voucher, formForAdmin);
+        Order savedOrder = orderService.createOrder(formForUser);
         OrderDTO dto = modelMapper.map(savedOrder, OrderDTO.class);
         return ResponseEntity.ok(dto);
     }
 
-    @PatchMapping()
-    public ResponseEntity<OrderDTO> updateOrder( @ModelAttribute OrderUpdateForm orderUpdateForm) {
 
-        // Save the updated order
-        Order updatedOrder = orderService.updateOrder(orderUpdateForm);
-
-        // Map the updated order to DTO
-        OrderDTO dto = modelMapper.map(updatedOrder, OrderDTO.class);
-
-        // Return ResponseEntity with the updated DTO
-        return ResponseEntity.ok(dto);
-    }
 }

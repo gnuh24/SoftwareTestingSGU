@@ -2,10 +2,11 @@ package BackEnd.Service.InventoryServices.InventoryReportStatusServices;
 
 import BackEnd.Entity.InventoryEntities.InventoryReportDetail;
 import BackEnd.Entity.InventoryEntities.InventoryReportStatus;
+import BackEnd.Entity.ProductEntity.Product;
 import BackEnd.Form.InventoryForms.InventoryReportStatusForms.InventoryReportStatusCreateForm;
 import BackEnd.Repository.InventoryRepositoties.IInventoryReportStatusRepository;
 import BackEnd.Service.InventoryServices.InventoryReportDetailServices.IInventoryReportDetailService;
-import BackEnd.Service.ProductService.ShoeSize.IShoeSizeService;
+import BackEnd.Service.ProductService.Product.IProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,14 @@ import java.util.List;
 public class InventoryReportStatusService implements IInventoryReportStatusService {
 
     @Autowired
+    private IProductService productService;
+
+    @Autowired
     private IInventoryReportStatusRepository inventoryReportStatusRepository;
 
     @Autowired
     private IInventoryReportDetailService inventoryReportDetailService;
 
-    @Autowired
-    private IShoeSizeService shoeSizeService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -59,12 +61,13 @@ public class InventoryReportStatusService implements IInventoryReportStatusServi
                 form.getIdStatus().equals(InventoryReportStatus.Status.DaNhapKho)){
 
                 for (InventoryReportDetail ctdh : details) {
-                    ShoeSize shoeSize = shoeSizeService.getShoeSizeById(ctdh.getId().getShoeId(), ctdh.getId().getSize());
 
-                    Short soLuongConLai = (short) (shoeSize.getQuantity() + ctdh.getQuantity());
+                    Product product = productService.getProductById(ctdh.getId().getProductId());
+//                    ShoeSize shoeSize = shoeSizeService.getShoeSizeById(ctdh.getId().getShoeId(), ctdh.getId().getSize());
 
-                    shoeSize.setQuantity(soLuongConLai);
+                    int soLuongConLai = product .getQuantity() + ctdh.getQuantity();
 
+                    product.setQuantity(soLuongConLai);
 
                 }
 

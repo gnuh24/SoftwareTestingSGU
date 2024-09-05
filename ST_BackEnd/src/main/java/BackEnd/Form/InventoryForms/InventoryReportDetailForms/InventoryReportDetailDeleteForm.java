@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class InventoryReportDetailDeleteForm {
     private Integer idInventoryReportId;
 
-    private  Integer idShoeId;
+    private  Integer idProductId;
 
-    private Byte idSize;
 }

@@ -45,8 +45,7 @@ public class InventoryReportDetailController {
 
         InventoryReportDetail.InventoryReportDetailId id = new InventoryReportDetail.InventoryReportDetailId(
                                                                                                 form.getIdInventoryReportId(),
-                                                                                                form.getIdShoeId(),
-                                                                                                form.getIdSize());
+                                                                                                form.getIdProductId());
 
         inventoryReportDetailService.deleteInventoryReportDetail(id);
         return ResponseEntity.noContent().build();

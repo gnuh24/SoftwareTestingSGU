@@ -118,7 +118,7 @@ public class AccountService implements IAccountService {
         Account account = new Account();
         account.setPassword(passwordEncoder.encode(form.getPassword()));
         account.setUserInformation(in4);
-        account.setType(Account.AccountType.GOOGLE);
+//        account.setType(Account.AccountType.GOOGLE);
         account.setStatus(true);
         account = repository.save(account);
         tokenService.createRegistrationToken(account);

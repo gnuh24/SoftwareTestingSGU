@@ -17,14 +17,8 @@ public class OrderDTO {
 
     private Integer totalPrice;
 
-    private Integer shippingFee;
-
-    private String type;
-
-    @JsonFormat(pattern = "hh:mm:ss dd/MM/yyyy")
-    private LocalDateTime orderDate;
-
-    private String voucherCode;
+    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
+    private LocalDateTime orderTime;
 
 
 }

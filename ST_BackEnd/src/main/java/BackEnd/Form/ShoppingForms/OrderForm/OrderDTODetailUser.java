@@ -3,7 +3,6 @@ package BackEnd.Form.ShoppingForms.OrderForm;
 
 import BackEnd.Form.ShoppingForms.OrderDetailForm.OrderDetailDTO;
 import BackEnd.Form.ShoppingForms.OrderStatusForms.OrderStatusDTO;
-import BackEnd.Form.ShoppingForms.VoucherForms.VoucherDTO;
 import BackEnd.Form.UsersForms.UserInformationForms.UserInformationDTOForOrder;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -22,18 +21,12 @@ public class OrderDTODetailUser {
 
     private Integer totalPrice;
 
-    private Integer shippingFee;
+    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
+    private LocalDateTime orderTime;
 
-    private String type;
-
-    @JsonFormat(pattern = "hh:mm:ss dd/MM/yyyy")
-    private LocalDateTime orderDate;
-
-    private Integer subtotalPrice;
 
     private String note;
 
-    private VoucherDTO voucher;
 
     private List<OrderStatusDTO> orderStatuses;
 

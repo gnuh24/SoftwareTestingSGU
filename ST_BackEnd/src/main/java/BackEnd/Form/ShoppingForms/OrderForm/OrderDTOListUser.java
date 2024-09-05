@@ -21,12 +21,9 @@ public class OrderDTOListUser {
 
     private Integer totalPrice;
 
-    private Integer shippingFee;
 
     @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
-    private LocalDateTime orderDate;
-
-    private Integer subtotalPrice;
+    private LocalDateTime orderTime;
 
     @JsonProperty(value = "status")
     private String latestStatus;

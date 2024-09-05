@@ -13,7 +13,7 @@ public class LogoutJWTTokenService implements ILogoutJWTTokenService {
 
     @Override
     public boolean isThisTokenLogouted(String token) {
-        return logoutJWTTokenRepository.findByToken(token) == null? false: true;
+        return logoutJWTTokenRepository.findByToken(token) != null;
     }
 
     public void createLogoutJWTToken(String token) {

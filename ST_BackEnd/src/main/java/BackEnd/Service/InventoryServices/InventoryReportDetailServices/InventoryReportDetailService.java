@@ -48,8 +48,7 @@ public class InventoryReportDetailService implements IInventoryReportDetailServi
     public InventoryReportDetail updateInventoryReportDetailById(InventoryReportDetailUpdateForm form) {
         InventoryReportDetail.InventoryReportDetailId id = new InventoryReportDetail.InventoryReportDetailId(
             form.getIdInventoryReportId(),
-            form.getIdShoeId(),
-            form.getIdSize()
+            form.getIdProductId()
         );
         InventoryReportDetail inventoryReportDetail = getInventoryReportDetailById(id);
 

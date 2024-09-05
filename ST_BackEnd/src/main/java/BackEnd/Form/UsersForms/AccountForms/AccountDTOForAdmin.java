@@ -24,7 +24,7 @@ public class AccountDTOForAdmin {
 
     private Account.Role role;
 
-    private Account.AccountType type;
+//    private Account.AccountType type;
 
     @JsonProperty("email")
     private String userInformationEmail;

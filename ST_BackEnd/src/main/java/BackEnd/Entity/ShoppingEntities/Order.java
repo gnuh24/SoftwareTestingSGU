@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import BackEnd.Entity.OrderEntity.OrderDetail;
 import java.time.LocalDateTime;
 import java.util.List;
 

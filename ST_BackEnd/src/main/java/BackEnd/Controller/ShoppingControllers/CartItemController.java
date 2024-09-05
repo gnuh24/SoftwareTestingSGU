@@ -1,7 +1,6 @@
 package BackEnd.Controller.ShoppingControllers;
 
 import BackEnd.Entity.ShoppingEntities.CartItem;
-import BackEnd.Form.ProductForm.ShoeSizeForm.ShoeSizeDTO;
 import BackEnd.Form.ShoppingForms.CartItemForm.CartItemCreateForm;
 import BackEnd.Form.ShoppingForms.CartItemForm.CartItemDTO;
 import BackEnd.Form.ShoppingForms.CartItemForm.CartItemDeleteForm;
@@ -33,9 +32,8 @@ public class CartItemController {
     @GetMapping("/{accountId}")
     public List<CartItemDTO> getAllCartItemsByAccountId(@PathVariable Integer accountId) {
         List<CartItem> entites = cartItemService.getAllCartItemsByAccountId(accountId);
-        List<CartItemDTO> dto = modelMapper.map(entites, new TypeToken<List<CartItemDTO>>() {
+        return modelMapper.map(entites, new TypeToken<List<CartItemDTO>>() {
         }.getType());
-        return dto;
     }
 
     @PostMapping
@@ -52,7 +50,7 @@ public class CartItemController {
 
     @DeleteMapping()
     public void deleteCartItem(@ModelAttribute @Valid CartItemDeleteForm form) {
-        cartItemService.deleteCartItem(form.getShoeId(), form.getIdSize(), form.getAccountId());
+        cartItemService.deleteCartItem(form.getProductId(), form.getAccountId());
     }
 
     @DeleteMapping("/{accountId}")

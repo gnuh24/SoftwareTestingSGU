@@ -18,7 +18,7 @@ public class LogoutJWTToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "Token", nullable = false, unique = true, length = 255)
+    @Column(name = "Token", nullable = false, unique = true)
     private String token;
 
     @Column(name = "LogoutTime", nullable = false)

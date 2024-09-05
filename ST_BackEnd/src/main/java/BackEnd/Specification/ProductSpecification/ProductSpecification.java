@@ -54,47 +54,40 @@ public class ProductSpecification implements Specification<Product> {
             return criteriaBuilder.equal(root.get("shoeType").get("shoeTypeId"), value);
         }
 
-        if (field.equalsIgnoreCase("minPrice")) {
-            // Tạo một subquery để lấy giá trị nhỏ nhất của price từ ShoeSize
-            Subquery<Integer> subquery = query.subquery(Integer.class);
+//        if (field.equalsIgnoreCase("minPrice")) {
+//            // Tạo một subquery để lấy giá trị nhỏ nhất của price từ ShoeSize
+//            Subquery<Integer> subquery = query.subquery(Integer.class);
+//
+//            // Tạo root cho subquery từ ShoeSize
+//            Root<ShoeSize> subRoot = subquery.from(ShoeSize.class);
+//
+//            // Chọn giá trị nhỏ nhất của price trong subquery
+//            subquery.select(criteriaBuilder.min(subRoot.get("price")));
+//
+//            // Điều kiện của subquery: shoeId của ShoeSize bằng shoeId của root (Product)
+//            subquery.where(criteriaBuilder.equal(subRoot.get("shoe").get("shoeId"), root.get("shoeId")));
+//
+//            // Trả về điều kiện: giá trị của subquery phải lớn hơn hoặc bằng giá trị được cung cấp
+//            return criteriaBuilder.greaterThanOrEqualTo(subquery, (Integer) value);
+//        }
+//
+//        if (field.equalsIgnoreCase("maxPrice")) {
+//            // Tạo một subquery để lấy giá trị nhỏ nhất của price từ ShoeSize
+//            Subquery<Integer> subquery = query.subquery(Integer.class);
+//
+//            // Tạo root cho subquery từ ShoeSize
+//            Root<ShoeSize> subRoot = subquery.from(ShoeSize.class);
+//
+//            // Chọn giá trị nhỏ nhất của price trong subquery
+//            subquery.select(criteriaBuilder.min(subRoot.get("price")));
+//
+//            // Điều kiện của subquery: shoeId của ShoeSize bằng shoeId của root (Product)
+//            subquery.where(criteriaBuilder.equal(subRoot.get("shoe").get("shoeId"), root.get("shoeId")));
+//
+//            // Trả về điều kiện: giá trị của subquery phải nhỏ hơn hoặc bằng giá trị được cung cấp
+//            return criteriaBuilder.lessThanOrEqualTo(subquery, (Integer) value);
+//        }
 
-            // Tạo root cho subquery từ ShoeSize
-            Root<ShoeSize> subRoot = subquery.from(ShoeSize.class);
-
-            // Chọn giá trị nhỏ nhất của price trong subquery
-            subquery.select(criteriaBuilder.min(subRoot.get("price")));
-
-            // Điều kiện của subquery: shoeId của ShoeSize bằng shoeId của root (Product)
-            subquery.where(criteriaBuilder.equal(subRoot.get("shoe").get("shoeId"), root.get("shoeId")));
-
-            // Trả về điều kiện: giá trị của subquery phải lớn hơn hoặc bằng giá trị được cung cấp
-            return criteriaBuilder.greaterThanOrEqualTo(subquery, (Integer) value);
-        }
-
-        if (field.equalsIgnoreCase("maxPrice")) {
-            // Tạo một subquery để lấy giá trị nhỏ nhất của price từ ShoeSize
-            Subquery<Integer> subquery = query.subquery(Integer.class);
-
-            // Tạo root cho subquery từ ShoeSize
-            Root<ShoeSize> subRoot = subquery.from(ShoeSize.class);
-
-            // Chọn giá trị nhỏ nhất của price trong subquery
-            subquery.select(criteriaBuilder.min(subRoot.get("price")));
-
-            // Điều kiện của subquery: shoeId của ShoeSize bằng shoeId của root (Product)
-            subquery.where(criteriaBuilder.equal(subRoot.get("shoe").get("shoeId"), root.get("shoeId")));
-
-            // Trả về điều kiện: giá trị của subquery phải nhỏ hơn hoặc bằng giá trị được cung cấp
-            return criteriaBuilder.lessThanOrEqualTo(subquery, (Integer) value);
-        }
-
-        if (field.equalsIgnoreCase("eventId")) {
-            return criteriaBuilder.equal(root.join("sales").get("event").get("eventId"), value);
-        }
-
-        if (field.equalsIgnoreCase("colorId")) {
-            return criteriaBuilder.equal(root.join("shoeColors").get("id").get("colorId"), value);
-        }
 
         return null;
     }
@@ -131,15 +124,7 @@ public class ProductSpecification implements Specification<Product> {
                 }
             }
 
-            //Filter cho Combobox Priority (Độ ưu tiên)
-            if (form.getPriority() != null){
-                ProductSpecification priority = new ProductSpecification("priority", form.getPriority());
-                if (where != null){
-                    where = where.and(priority);
-                }else{
-                    where = Specification.where(priority);
-                }
-            }
+
 
             //Filter cho bộ lọc theo ngày ( Cận dưới )
             if (form.getMinCreateDate() != null){
@@ -172,8 +157,8 @@ public class ProductSpecification implements Specification<Product> {
             }
 
             //Filter cho bộ lọc theo loại sản phẩm
-            if (form.getShoeTypeId() != null){
-                ProductSpecification shoeTypeId = new ProductSpecification("shoeTypeId", form.getShoeTypeId());
+            if (form.getCategoryId() != null){
+                ProductSpecification shoeTypeId = new ProductSpecification("shoeTypeId", form.getCategoryId());
                 if (where != null){
                     where = where.and(shoeTypeId);
                 }else{
@@ -201,23 +186,7 @@ public class ProductSpecification implements Specification<Product> {
                 }
             }
 
-            //Filter cho bộ lọc theo cận trên của giá sản phẩm
-            if (form.getEventId() != null){
-                ProductSpecification event = new ProductSpecification("eventId", form.getEventId());
-                if (where != null){
-                    where = where.and(event);
-                }else{
-                    where = Specification.where(event);
-                }
-            }
 
-            // Filter theo Màu
-            if (form.getListShoeColorId() != null && !form.getListShoeColorId().isEmpty()) {
-                for (Integer colorId : form.getListShoeColorId()) {
-                    ProductSpecification color = new ProductSpecification("colorId", colorId);
-                    where = where == null ? Specification.where(color) : where.and(color);
-                }
-            }
 
         }
 

@@ -2,13 +2,14 @@ package BackEnd.Service.ShoppingServices.OrderStatusServices;
 
 import BackEnd.Configure.ErrorResponse.NotEnoughInventory;
 import BackEnd.Entity.AccountEntity.UserInformation;
+import BackEnd.Entity.ProductEntity.Product;
 import BackEnd.Entity.ShoppingEntities.OrderDetail;
 import BackEnd.Entity.ShoppingEntities.OrderStatus;
 import BackEnd.Form.ShoppingForms.OrderStatusForms.OrderStatusCreateFormForFirstTime;
 import BackEnd.Repository.ShoppingRepositories.IOrderStatusRepository;
 import BackEnd.Service.AccountServices.AuthService.JWTUtils;
 import BackEnd.Service.AccountServices.UserInformationService.IUserInformationService;
-import BackEnd.Service.ProductService.ShoeSize.IShoeSizeService;
+import BackEnd.Service.ProductService.Product.IProductService;
 import BackEnd.Service.ShoppingServices.OrderDetailServices.IOrderDetailService;
 import BackEnd.Service.ShoppingServices.OrderServices.IOrderService;
 import org.modelmapper.ModelMapper;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class OrderStatusService implements IOrderStatusService{
     private IOrderDetailService orderDetailService;
 
     @Autowired
-    private IShoeSizeService shoeSizeServicel;
+    private IProductService productService;
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -87,14 +87,14 @@ public class OrderStatusService implements IOrderStatusService{
             if (form.getIdStatus().equals(OrderStatus.Status.DaDuyet)) {
                 List<OrderDetail> chiTietDonHang = orderDetailService.getAllOrderDetailByOrderId(form.getOrderId());
                 for (OrderDetail ctdh : chiTietDonHang) {
-                    ShoeSize shoeSize = shoeSizeServicel.getShoeSizeById(ctdh.getId().getShoeId(), ctdh.getId().getSize());
+                    Product product = productService.getProductById(ctdh.getId().getProductId());
 
-                    Short soLuongConLai = (short) (shoeSize.getQuantity() - ctdh.getQuantity());
+                    int soLuongConLai = product.getQuantity() - ctdh.getQuantity();
 
                     if (soLuongConLai >= 0){
-                        shoeSize.setQuantity(soLuongConLai);
+                        product.setQuantity(soLuongConLai);
                     }else{
-                        throw new NotEnoughInventory("Không đủ sản phẩm " + shoeSize.getProduct().getShoeName() + ", size: "+ shoeSize.getId().getSize() +  " tồn kho !!");
+                        throw new NotEnoughInventory("Không đủ sản phẩm " + product.getProductName() +  " tồn kho !!");
                     }
 
                 }
@@ -107,10 +107,11 @@ public class OrderStatusService implements IOrderStatusService{
                             oldOrderStatus.getId().getStatus().equals(OrderStatus.Status.GiaoThanhCong))
                     ) {
                 List<OrderDetail> chiTietDonHang = orderDetailService.getAllOrderDetailByOrderId(form.getOrderId());
+
                 for (OrderDetail ctdh : chiTietDonHang) {
 
-                    ShoeSize shoeSize = shoeSizeServicel.getShoeSizeById(ctdh.getId().getShoeId(), ctdh.getId().getSize());
-                    shoeSize.setQuantity((short) (shoeSize.getQuantity() + ctdh.getQuantity()));
+                    Product product = productService.getProductById(ctdh.getId().getProductId());
+                    product.setQuantity( product.getQuantity() + ctdh.getQuantity() );
 
                 }
             }

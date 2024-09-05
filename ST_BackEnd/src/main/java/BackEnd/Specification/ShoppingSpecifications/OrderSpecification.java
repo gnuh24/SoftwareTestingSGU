@@ -101,14 +101,7 @@ public class OrderSpecification implements Specification<Order> {
                 }
             }
 
-            if (form.getType() != null) {
-                OrderSpecification typeSpec = new OrderSpecification("type", form.getType());
-                if (where != null) {
-                    where = where.and(typeSpec);
-                } else {
-                    where = Specification.where(typeSpec);
-                }
-            }
+
         }
 
         return where;

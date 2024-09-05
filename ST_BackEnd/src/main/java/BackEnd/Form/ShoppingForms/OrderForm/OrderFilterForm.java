@@ -22,6 +22,4 @@ public class OrderFilterForm {
 
     private String status;
 
-    private String type;
-
 }

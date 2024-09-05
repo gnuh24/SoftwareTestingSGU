@@ -4,7 +4,6 @@ import BackEnd.Entity.ProductEntity.Brand;
 import BackEnd.Form.ProductForm.BrandForm.BrandCreateForm;
 import BackEnd.Form.ProductForm.BrandForm.BrandDTO;
 import BackEnd.Form.ProductForm.BrandForm.BrandUpdateForm;
-import BackEnd.Other.ImageService.ImageService;
 import BackEnd.Service.ProductService.Brand.IBrandService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -63,24 +62,6 @@ public class BrandController {
     public BrandDTO getBrandById(@PathVariable  Integer brandId) {
         Brand entity = brandService.getBrandById(brandId);
         return modelMapper.map(entity, BrandDTO.class);
-    }
-
-    @GetMapping(value = "/Image/{logo}")
-    //API Lấy `Logo` của `Brand` theo tên ảnh đính kèm
-    public ResponseEntity<Resource> getBrandLogoByName(@PathVariable String logo) {
-        try{
-            Path imagePath = Paths.get(ImageService.brandLogoPath, logo);
-            Resource resource = new UrlResource(imagePath.toUri());
-
-            return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
-        }
-
-        catch (MalformedURLException e) {
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @PostMapping()

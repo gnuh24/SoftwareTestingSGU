@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "InventoryReportDetail")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InventoryReportDetail {
+public class InventoryReportDetail implements Serializable {
 
     @EmbeddedId
     private InventoryReportDetailId id;
@@ -32,23 +33,20 @@ public class InventoryReportDetail {
     private InventoryReport inventoryReport;
 
     @ManyToOne
-    @MapsId("shoeId")
-    @JoinColumn(name = "ShoeId", referencedColumnName = "ShoeId")
+    @MapsId("productId")
+    @JoinColumn(name = "ProductId", referencedColumnName = "Id")
     private Product product;
 
     @Embeddable
     @Data
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class InventoryReportDetailId implements Serializable {
 
-        @Column(name = "InventoryReportId")
+        @Column(name = "InventoryReportId", nullable = false)
         private Integer inventoryReportId;
 
-        @Column(name = "ShoeId")
-        private Integer shoeId;
-
-        @Column(name = "Size")
-        private Byte size;
+        @Column(name = "ProductId", nullable = false)
+        private Integer productId;
     }
 }

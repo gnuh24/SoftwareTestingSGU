@@ -19,19 +19,10 @@ public class OrderCreateFormForUser {
     @NotNull(message = "TotalPrice cannot be null")
     private Integer totalPrice;
 
-    @NotNull(message = "SubtotalPrice cannot be null")
-    private Integer subtotalPrice;
 
     private String note;
-
-    @NotNull(message = "ShippingFeeId cannot be null")
-    private Integer shippingFeeId;
-
-    @NotNull(message = "Type cannot be null")
-    private Order.OrderType type;
 
 
     private List<OrderDetailCreateForm> listOrderDetail;
 
-    private Integer voucherId;
 }

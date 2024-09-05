@@ -43,7 +43,7 @@ public class CartItemService implements ICartItemService {
     @Transactional
     public CartItem updateCartItem(CartItemUpdateForm form) {
 
-        CartItem.CartItemId id = new CartItem.CartItemId(form.getShoeId(), form.getIdSize(), form.getAccountId());
+        CartItem.CartItemId id = new CartItem.CartItemId(form.getProductId(), form.getAccountId());
         CartItem cartItem1 = getCartItemById(id);
 
         if (form.getUnitPrice() != null){
@@ -63,8 +63,8 @@ public class CartItemService implements ICartItemService {
 
     @Override
     @Transactional
-    public void deleteCartItem( Integer shoeId, Byte size, Integer accountId) {
-        CartItem.CartItemId id = new CartItem.CartItemId(shoeId, size, accountId);
+    public void deleteCartItem( Integer productId, Integer accountId) {
+        CartItem.CartItemId id = new CartItem.CartItemId(productId, accountId);
         cartItemRepository.deleteById(id);
     }
 

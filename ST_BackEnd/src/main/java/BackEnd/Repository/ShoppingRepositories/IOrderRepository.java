@@ -15,13 +15,13 @@ import java.util.List;
 
 public interface IOrderRepository extends JpaRepository<Order, String>, JpaSpecificationExecutor<Order> {
 
-    List<Order> findByUserInformation_Id(Integer userInformationId);
+    List<Order> findByAccount_Id(Integer accountId);
 
     @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END " +
         "FROM Order o " +
-        "WHERE o.userInformation.id = :userInformationId " +
+        "WHERE o.account.id = :accountId " +
         "AND o.id = :orderId")
-    Boolean isOrderBelongToThisId(@Param("userInformationId") Integer userInformationId,
+    Boolean isOrderBelongToThisId(@Param("accountId") Integer accountId,
                                   @Param("orderId") String orderId);
 
     @Query(value = "SELECT s.ShoeId AS shoeId, s.ShoeName AS shoeName, " +

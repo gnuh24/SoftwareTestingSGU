@@ -1,9 +1,8 @@
 package BackEnd.Service.ShoppingServices.OrderServices;
 
 import BackEnd.Entity.ShoppingEntities.Order;
-import BackEnd.Form.ShoppingForms.OrderForm.OrderCreateFormForAdmin;
+import BackEnd.Form.ShoppingForms.OrderForm.OrderCreateFormForUser;
 import BackEnd.Form.ShoppingForms.OrderForm.OrderFilterForm;
-import BackEnd.Form.ShoppingForms.OrderForm.OrderUpdateForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,8 +21,7 @@ public interface IOrderService {
 
     Order getOrderById(String token, String orderId) throws AccessDeniedException;
 
-    Order createOrder(OrderCreateFormForAdmin form);
+    Order createOrder(OrderCreateFormForUser form);
 
-    Order updateOrder(OrderUpdateForm form);
 
 }

@@ -17,18 +17,16 @@ public class OrderDTOListAdmin {
 
     private Integer totalPrice;
 
-    private String type;
-
-    @JsonFormat(pattern = "hh:mm:ss dd/MM/yyyy")
-    private LocalDateTime orderDate;
+    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
+    private LocalDateTime orderTime;
 
     @JsonProperty(value = "status")
     private String latestStatus;
 
     @JsonProperty(value = "fullname")
-    private String userInformationFullname;
+    private String accountUserInformationFullname;
 
     @JsonProperty(value = "phoneNumber")
-    private String userInformationPhoneNumber;
+    private String accountUserInformationPhoneNumber;
 
 }

@@ -25,12 +25,18 @@ public class OrderDetailService implements IOrderDetailService{
         return orderDetailRepository.findByOrderId(orderId);
     }
 
+
+//    @Override
+//    public OrderDetail createOrderDetail(Order order, OrderDetailCreateForm listForm) {
+//        OrderDetail orderDetail = modelMapper.map(listForm, OrderDetail.class);
+//        orderDetail.setOrder(order);
+//        return orderDetailRepository.save(orderDetail);
+//    }
+
     @Override
-    public OrderDetail createOrderDetail(Order order, OrderDetailCreateForm listForm) {
+    public OrderDetail createOrderDetail(OrderDetailCreateForm listForm) {
         OrderDetail orderDetail = modelMapper.map(listForm, OrderDetail.class);
-        orderDetail.setOrder(order);
-        OrderDetail result = orderDetailRepository.save(orderDetail);
-        return result;
+        return orderDetailRepository.save(orderDetail);
     }
 
 }
