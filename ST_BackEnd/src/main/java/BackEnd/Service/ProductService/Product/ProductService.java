@@ -63,9 +63,14 @@ public class ProductService implements IProductService {
 
         entity.setProductName(form.getProductName());
         entity.setPrice(form.getPrice());
-        entity.setImage(
-            CloundinaryServices.createImageFromMultipart(form.getImage())
-        );
+        String path = CloundinaryServices.createImageFromMultipart(form.getImage());
+
+        if (path != null){
+            entity.setImage(path);
+        }else{
+            System.err.println("Lỗi Clound");
+        }
+
 
         entity.setDescription(form.getDescription());
         entity.setAbv(form.getAbv());

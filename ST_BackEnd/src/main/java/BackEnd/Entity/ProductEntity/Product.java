@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -20,10 +23,10 @@ public class Product {
     private String productName;
 
     @Column(name = "Status", nullable = false)
-    private Boolean status;
+    private Boolean status = false;
 
     @Column(name = "CreateTime", nullable = false)
-    private java.util.Date createTime;
+    private LocalDateTime createTime = LocalDateTime.now();
 
     @Column(name = "Image", nullable = false)
     private String image;
@@ -41,7 +44,7 @@ public class Product {
     private Integer abv;
 
     @Column(name = "Quantity", nullable = false)
-    private Integer quantity;
+    private Integer quantity = 0;
 
     @Column(name = "Description")
     private String description;

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,10 +17,10 @@ public class ProductFilterForm {
     private Boolean status;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date minCreateDate;
+    private Date minCreateTime;
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date maxCreateDate;
+    private Date maxCreateTime;
 
 
     private  Integer brandId;

@@ -3,6 +3,7 @@ package BackEnd.Controller.ProductController;
 import BackEnd.Entity.ProductEntity.Product;
 import BackEnd.Form.ProductForm.ProductForms.*;
 import BackEnd.Service.ProductService.Product.IProductService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,13 +84,13 @@ public class ProductController {
 
 
     @PostMapping()
-    public ProductDTOListAdmin createShoe(@ModelAttribute ProductCreateForm form) throws IOException {
+    public ProductDTOListAdmin createShoe(@ModelAttribute @Valid ProductCreateForm form) throws IOException {
         Product entity = productService.createProduct(form);
         return modelMapper.map(entity, ProductDTOListAdmin.class);
     }
 
     @PatchMapping()
-    public ProductDTOListAdmin updateShoe(@ModelAttribute ProductUpdateForm form) {
+    public ProductDTOListAdmin updateShoe(@ModelAttribute @Valid ProductUpdateForm form) {
         Product entity = productService.updateProduct(form);
         return modelMapper.map(entity, ProductDTOListAdmin.class);
     }

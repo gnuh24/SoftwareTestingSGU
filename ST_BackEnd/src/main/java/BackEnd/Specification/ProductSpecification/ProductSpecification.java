@@ -26,68 +26,41 @@ public class ProductSpecification implements Specification<Product> {
                                  @NonNull  CriteriaQuery<?> query,
                                  @NonNull  CriteriaBuilder criteriaBuilder) {
 
-        if (field.equalsIgnoreCase("shoeId")){
-            return criteriaBuilder.equal(root.get("shoeId") ,value);
+        if (field.equalsIgnoreCase("id")){
+            return criteriaBuilder.equal(root.get("id") ,value);
         }
 
-        if (field.equalsIgnoreCase("shoeName")){
-            return criteriaBuilder.like(root.get("shoeName") ,"%" + value  + "%");
+        if (field.equalsIgnoreCase("productName")){
+            return criteriaBuilder.like(root.get("productName") ,"%" + value  + "%");
         }
 
         if (field.equalsIgnoreCase("status")){
             return criteriaBuilder.equal(root.get("status"), value);
         }
 
-        if (field.equalsIgnoreCase("minCreateDate")){
-            return criteriaBuilder.greaterThanOrEqualTo(root.get("createDate").as(java.sql.Date.class) , (Date) value);
+        if (field.equalsIgnoreCase("minCreateTime")){
+            return criteriaBuilder.greaterThanOrEqualTo(root.get("createTime").as(java.sql.Date.class) , (Date) value);
         }
 
-        if (field.equalsIgnoreCase("maxCreateDate")){
-            return criteriaBuilder.lessThanOrEqualTo(root.get("createDate").as(java.sql.Date.class) , (Date) value);
+        if (field.equalsIgnoreCase("maxCreateTime")){
+            return criteriaBuilder.lessThanOrEqualTo(root.get("createTime").as(java.sql.Date.class) , (Date) value);
         }
 
         if (field.equalsIgnoreCase("brandId")){
-            return criteriaBuilder.equal(root.get("brand").get("brandId"), value);
+            return criteriaBuilder.equal(root.get("brand").get("id"), value);
         }
 
-        if (field.equalsIgnoreCase("shoeTypeId")){
-            return criteriaBuilder.equal(root.get("shoeType").get("shoeTypeId"), value);
+        if (field.equalsIgnoreCase("categoryId")){
+            return criteriaBuilder.equal(root.get("category").get("id"), value);
         }
 
-//        if (field.equalsIgnoreCase("minPrice")) {
-//            // Tạo một subquery để lấy giá trị nhỏ nhất của price từ ShoeSize
-//            Subquery<Integer> subquery = query.subquery(Integer.class);
-//
-//            // Tạo root cho subquery từ ShoeSize
-//            Root<ShoeSize> subRoot = subquery.from(ShoeSize.class);
-//
-//            // Chọn giá trị nhỏ nhất của price trong subquery
-//            subquery.select(criteriaBuilder.min(subRoot.get("price")));
-//
-//            // Điều kiện của subquery: shoeId của ShoeSize bằng shoeId của root (Product)
-//            subquery.where(criteriaBuilder.equal(subRoot.get("shoe").get("shoeId"), root.get("shoeId")));
-//
-//            // Trả về điều kiện: giá trị của subquery phải lớn hơn hoặc bằng giá trị được cung cấp
-//            return criteriaBuilder.greaterThanOrEqualTo(subquery, (Integer) value);
-//        }
-//
-//        if (field.equalsIgnoreCase("maxPrice")) {
-//            // Tạo một subquery để lấy giá trị nhỏ nhất của price từ ShoeSize
-//            Subquery<Integer> subquery = query.subquery(Integer.class);
-//
-//            // Tạo root cho subquery từ ShoeSize
-//            Root<ShoeSize> subRoot = subquery.from(ShoeSize.class);
-//
-//            // Chọn giá trị nhỏ nhất của price trong subquery
-//            subquery.select(criteriaBuilder.min(subRoot.get("price")));
-//
-//            // Điều kiện của subquery: shoeId của ShoeSize bằng shoeId của root (Product)
-//            subquery.where(criteriaBuilder.equal(subRoot.get("shoe").get("shoeId"), root.get("shoeId")));
-//
-//            // Trả về điều kiện: giá trị của subquery phải nhỏ hơn hoặc bằng giá trị được cung cấp
-//            return criteriaBuilder.lessThanOrEqualTo(subquery, (Integer) value);
-//        }
+        if (field.equalsIgnoreCase("minPrice")){
+            return criteriaBuilder.greaterThanOrEqualTo( root.get("price"), (Integer) value);
+        }
 
+        if (field.equalsIgnoreCase("maxPrice")){
+            return criteriaBuilder.lessThanOrEqualTo( root.get("price"), (Integer) value);
+        }
 
         return null;
     }
@@ -100,14 +73,14 @@ public class ProductSpecification implements Specification<Product> {
         //Filter cho thanh tìm kiếm
         if (!StringUtils.isEmptyOrWhitespaceOnly(search)) {
             search = search.trim();
-            ProductSpecification shoeName = new ProductSpecification("shoeName", search);
-            ProductSpecification shoeId = null;
+            ProductSpecification productName = new ProductSpecification("productName", search);
+            ProductSpecification id = null;
             try{
                 Integer num = Integer.parseInt(search);
-                shoeId = new ProductSpecification("shoeId", num);
-                where = Specification.where(shoeName).or(shoeId);
+                id = new ProductSpecification("id", num);
+                where = Specification.where(productName).or(id);
             }catch (NumberFormatException e){
-                where = Specification.where(shoeName);
+                where = Specification.where(productName);
             }
         }
 
@@ -127,8 +100,8 @@ public class ProductSpecification implements Specification<Product> {
 
 
             //Filter cho bộ lọc theo ngày ( Cận dưới )
-            if (form.getMinCreateDate() != null){
-                ProductSpecification minCreateDate = new ProductSpecification("minCreateDate", form.getMinCreateDate());
+            if (form.getMinCreateTime() != null){
+                ProductSpecification minCreateDate = new ProductSpecification("minCreateTime", form.getMinCreateTime());
                 if (where != null){
                     where = where.and(minCreateDate);
                 }else{
@@ -137,8 +110,8 @@ public class ProductSpecification implements Specification<Product> {
             }
 
             //Filter cho bộ lọc theo ngày ( Cận trên )
-            if (form.getMaxCreateDate() != null){
-                ProductSpecification maxCreateDate = new ProductSpecification("maxCreateDate", form.getMaxCreateDate());
+            if (form.getMaxCreateTime() != null){
+                ProductSpecification maxCreateDate = new ProductSpecification("maxCreateTime", form.getMaxCreateTime());
                 if (where != null){
                     where = where.and(maxCreateDate);
                 }else{
@@ -158,7 +131,7 @@ public class ProductSpecification implements Specification<Product> {
 
             //Filter cho bộ lọc theo loại sản phẩm
             if (form.getCategoryId() != null){
-                ProductSpecification shoeTypeId = new ProductSpecification("shoeTypeId", form.getCategoryId());
+                ProductSpecification shoeTypeId = new ProductSpecification("categoryId", form.getCategoryId());
                 if (where != null){
                     where = where.and(shoeTypeId);
                 }else{

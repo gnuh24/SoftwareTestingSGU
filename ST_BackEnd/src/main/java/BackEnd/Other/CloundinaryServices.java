@@ -60,7 +60,7 @@ public class CloundinaryServices {
             System.out.println("URL: " + uploadResult.get("url"));
 
             // Trả về endpoint
-            return uploadResult.get("public_id").toString();
+            return  uploadResult.get("public_id").toString();
 
         } catch (Exception e) {
             System.err.println(e.getMessage());;
@@ -71,19 +71,21 @@ public class CloundinaryServices {
 
     public static String createImageFromMultipart(MultipartFile file) {
         try {
-            // Chuyển MultipartFile thành InputStream
-            InputStream inputStream = file.getInputStream();
+            // Chuyển MultipartFile thành byte[]
+            byte[] fileBytes = file.getBytes();
 
             Map<String, Object> params = new HashMap<>();
-            params.put("folder", folder); // Thư mục lưu trên Cloudinary
+            params.put("folder", CloundinaryServices.folder); // Thư mục lưu trên Cloudinary
 
             // Tên của ảnh trên Cloudinary
             String fileName = file.getOriginalFilename();
-            String publicId = fileName != null ? fileName.substring(0, fileName.lastIndexOf('.')) : "default";
+            String publicId = (fileName != null && fileName.contains(".")) ?
+                fileName.substring(0, fileName.lastIndexOf('.')) : "default";
 
             params.put("public_id", publicId);
 
-            Map uploadResult = cloudinary.uploader().upload(inputStream, params);
+            // Upload ảnh
+            Map uploadResult = cloudinary.uploader().upload(fileBytes, params);
 
             System.out.println("Image uploaded successfully.");
             System.out.println("Public ID: " + uploadResult.get("public_id"));
@@ -91,7 +93,7 @@ public class CloundinaryServices {
 
             return uploadResult.get("public_id").toString();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace(); // In lỗi chi tiết
         }
         return null;
     }

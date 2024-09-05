@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class ProductUpdateForm {
 
+    @NotNull(message = "Id is required")
     private Integer id;
 
     private String productName;

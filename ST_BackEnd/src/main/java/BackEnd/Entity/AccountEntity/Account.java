@@ -27,8 +27,8 @@ public class Account implements UserDetails {
     @Column(nullable = false, length = 800)
     private String password;
 
-    @Column(name = "CreateAt", nullable = false, updatable = false)
-    private LocalDateTime createAt = LocalDateTime.now();
+    @Column(name = "CreateTime", nullable = false, updatable = false)
+    private LocalDateTime createTime = LocalDateTime.now();
 
     @Column(name = "Status", nullable = false)
     private Boolean status = true;
