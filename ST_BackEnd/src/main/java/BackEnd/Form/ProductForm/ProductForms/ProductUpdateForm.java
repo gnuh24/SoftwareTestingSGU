@@ -36,7 +36,6 @@ public class ProductUpdateForm {
     private String description;
 
 
-
     private Integer brandId;
 
     private Integer categoryId;
