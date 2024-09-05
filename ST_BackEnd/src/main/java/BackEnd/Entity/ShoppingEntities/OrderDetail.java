@@ -1,5 +1,6 @@
 package BackEnd.Entity.ShoppingEntities;
 
+import BackEnd.Entity.ProductEntity.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,10 +27,13 @@ public class OrderDetail {
     @Column(name = "Total", nullable = false)
     private Integer total;
 
-    // Thêm mối quan hệ với Order
     @ManyToOne
     @JoinColumn(name = "OrderId", insertable = false, updatable = false)
     private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "ProductId", insertable = false, updatable = false)
+    private Product product;
 
     @Embeddable
     @Data

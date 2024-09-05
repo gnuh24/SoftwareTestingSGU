@@ -5,6 +5,7 @@ import BackEnd.Form.ShoppingForms.OrderDetailForm.OrderDetailDTO;
 import BackEnd.Form.ShoppingForms.OrderStatusForms.OrderStatusDTO;
 import BackEnd.Form.UsersForms.UserInformationForms.UserInformationDTOForOrder;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,8 @@ public class OrderDTODetailAdmin {
 
     private String note;
 
-    private UserInformationDTOForOrder userInformation;
+    @JsonProperty("userInformation")
+    private UserInformationDTOForOrder accountUserInformation;
 
     private List<OrderStatusDTO> orderStatuses;
 
@@ -34,3 +36,4 @@ public class OrderDTODetailAdmin {
 
 
 }
+

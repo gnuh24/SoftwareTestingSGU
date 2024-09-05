@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "`Order`") // Bao bọc tên bảng bằng dấu backtick
 public class Order {
 
     @Id

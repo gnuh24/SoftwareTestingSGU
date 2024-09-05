@@ -97,14 +97,16 @@ public class OrderService implements IOrderService{
         Order newOrder = modelMapper.map(form, Order.class);
         newOrder = orderRepository.save(newOrder);
 
+
         // 2. Create new `OrderDetail`s
         for (OrderDetailCreateForm form1: form.getListOrderDetail()){
-            orderDetailService.createOrderDetail(form1);
+            orderDetailService.createOrderDetail(newOrder, form1);
         }
 
         // 3. Create new `OrderStatus`
         OrderStatusCreateFormForFirstTime orderStatusCreateForm = new OrderStatusCreateFormForFirstTime(newOrder.getId(), OrderStatus.Status.ChoDuyet);
         orderStatusService.createOrderStatusFirstTime(orderStatusCreateForm);
+
 
         // 4. Liên kết thông tin người dùng
         Account in4 = accountService.getAccountById(form.getAccountId());

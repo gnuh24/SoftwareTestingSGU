@@ -10,17 +10,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrderDetailDTO {
 
-//    private OrderDetailIdDTO id;
+    @JsonProperty("productId")
+    private  Integer idProductId;
 
-    @JsonProperty("shoeId")
-    private  Integer idShoeId;
+    private String productName;
 
-    @JsonProperty("size")
-    private Byte idSize;
-
-    private String shoeName;
-
-    private String defaultImage;
+    @JsonProperty("image")
+    private String productImage;
 
     private Integer quantity;
 

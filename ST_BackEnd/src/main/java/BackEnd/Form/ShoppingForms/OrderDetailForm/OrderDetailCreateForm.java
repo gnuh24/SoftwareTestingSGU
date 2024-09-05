@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetailCreateForm {
-    @NotNull(message = "Product ID cannot be null")
-    private Short shoeId;
 
-    @NotNull(message = "Size cannot be null")
-    private Byte idSize;
+    @NotNull(message = "Product ID cannot be null")
+    private Integer productId;
 
     @NotNull(message = "Quantity cannot be null")
     private Integer quantity;

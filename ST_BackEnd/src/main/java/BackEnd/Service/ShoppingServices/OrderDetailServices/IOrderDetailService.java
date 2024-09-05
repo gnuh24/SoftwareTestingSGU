@@ -9,6 +9,6 @@ public interface IOrderDetailService {
 
     List<OrderDetail> getAllOrderDetailByOrderId(String orderId);
 
-    OrderDetail createOrderDetail(OrderDetailCreateForm listForm);
+    OrderDetail createOrderDetail(Order order, OrderDetailCreateForm listForm);
 
 }

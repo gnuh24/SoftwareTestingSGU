@@ -19,9 +19,7 @@ public class OrderCreateFormForUser {
     @NotNull(message = "TotalPrice cannot be null")
     private Integer totalPrice;
 
-
     private String note;
-
 
     private List<OrderDetailCreateForm> listOrderDetail;
 

@@ -21,7 +21,6 @@ public class OrderDTOListUser {
 
     private Integer totalPrice;
 
-
     @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
     private LocalDateTime orderTime;
 
