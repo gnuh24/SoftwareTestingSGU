@@ -1,0 +1,77 @@
+.infomation {
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.information-child {
+    margin: 5px;
+    width: 200px;
+}
+
+#infomation-page {
+    /* Để trống vì không có phần tử cụ thể nào cần định dạng trong này */
+}
+
+#infomation-group {
+    width: 50%;
+}
+
+#Thongtincacnhan {
+    width: 100%;
+    text-align: center;
+    padding: 5px 0px;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #8d8d8d;
+    font-size: 20px;
+}
+
+#info-history-title {
+    background-color: rgb(143, 17, 17);
+    padding: 5px 5px;
+    margin-top: 0px;
+    border: 1px solid #d5d5d5;
+    color: white;
+}
+
+.info-history {
+    background-color: white;
+    border: 1px solid #d5d5d5;
+}
+
+#Infomation-title {
+    margin: 0;
+    padding: 2%;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+    background-color: rgb(69, 67, 67);
+    color: white;
+}
+
+#Info-logout {
+    margin: 10px 5px;
+}
+
+/* Định dạng cho input */
+.info-value {
+    width: 300px; /* Đặt kích thước của input */
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+/* Khóa ô email lại */
+.info-value[readonly] {
+    background-color: #f4f4f4; /* Màu nền xám */
+}
+
+#filter-button {
+    background-color: white;
+    color: rgb(146, 26, 26);
+    padding: 6px 18px !important;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+

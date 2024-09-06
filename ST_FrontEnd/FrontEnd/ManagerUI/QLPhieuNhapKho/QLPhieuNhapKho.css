@@ -1,0 +1,94 @@
+.wrapper {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.boxFeature {
+  background-color: rgb(236, 233, 233);
+  height: 5rem;
+  border-radius: 0.3rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+}
+.input {
+  height: 3rem;
+  border: 1px solid rgb(156, 155, 155);
+  width: 50rem;
+  padding: 0.5rem 1rem 0.5rem 2.5rem;
+  border-radius: 2px;
+}
+.input:focus {
+  border: 1px solid black;
+}
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 1%;
+  transform: translateY(-50%);
+}
+.boxTable {
+  margin-top: 1rem;
+  overflow-y: auto;
+  background-color: rgb(236, 233, 233);
+  height: 48rem;
+  border-radius: 0.3rem;
+}
+.Table_th__hCkcg {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+.Admin_boxTable__hLXRJ {
+  margin-top: 1rem;
+  overflow-y: auto;
+  background-color: rgb(236, 233, 233);
+  border-radius: 0.3rem;
+}
+.Table_table__BWPy {
+  width: 100%;
+  border-collapse: collapse;
+}
+.Table_head__FTUog {
+  background-color: rgb(56, 55, 55);
+}
+.Table_data{
+  text-align: center;
+  font-family: Arial;
+  background-color: rgb(255, 255, 255);
+  padding: 14px 0px;
+}
+.edit {
+  background-color: rgb(49, 147, 252);
+  color: white;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+.pagination{
+  height: 50px;
+  background-color: white; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+}
+.pageButton {
+  background-color: whitesmoke;
+  color: black;
+  border: none;
+  border-radius: 50%;
+  width: 30px; /* Điều chỉnh kích thước nút phân trang tùy theo nhu cầu */
+  height: 30px; /* Điều chỉnh kích thước nút phân trang tùy theo nhu cầu */
+  margin: 0 5px; /* Khoảng cách giữa các nút phân trang */
+  cursor: pointer;
+}
+
+.pageButton.active {
+  background-color: black; /* Màu nút phân trang khi được chọn */
+  color: whitesmoke;
+}

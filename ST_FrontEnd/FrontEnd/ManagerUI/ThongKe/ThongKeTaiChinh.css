@@ -1,0 +1,47 @@
+.boxTable2, .boxTable3{
+    margin-top: 40px;
+    background-color: white;
+
+}
+
+
+.boxTable3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding: 3px;
+}
+
+#title{
+    padding: 10px 20px;
+    text-align: center;
+}
+#sanPhamBanChayTable{
+    border-collapse:separate;
+    border: 2px solid black;
+    border-bottom: 0;
+
+}
+
+#sanPhamBanChayTable th{
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+}
+
+#sanPhamBanChayTable, #sanPhamBanChayTable > thead, #sanPhamBanChayTable > tbody{
+    width: 100%;
+}
+thead{
+    height: 50px;
+}
+
+tbody td{
+    height: 30px;
+    text-align: center;
+
+}
+
+tbody tr{
+    border: 2px solid black;
+
+
+}

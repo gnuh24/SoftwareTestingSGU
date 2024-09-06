@@ -1,0 +1,493 @@
+* {
+    font-family: "Gothic A1", sans-serif;
+  }
+  
+  .container,
+  .container_profile {
+    grid-template-columns: minmax(215px, min(371px, 29vw)) minmax(0, 1fr);
+    display: flex;
+  }
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100%;
+    background-color: #fff;
+    display: grid;
+    flex-grow: 1;
+  }
+  .sidebar_sidebar__wrapper {
+    background: #efebe4;
+    position: relative;
+    z-index: 0;
+  }
+  .orderManagement_divider {
+    margin: 16px 0;
+    width: 100%;
+    height: 0.5px;
+    background: #bdbdbd;
+  }
+  .containerPage {
+    width: 100%;
+    /* max-width: 1300px; */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .sidebar_background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100%;
+    background: #efebe4;
+    z-index: -1;
+  }
+  
+  .sidebar_sidebar__wrapper .sidebar_sidebar {
+    padding: 30px 40px 50px;
+    margin-left: 10px;
+    max-width: 300px;
+    position: sticky;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 0;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+  }
+  .sidebar_sidebar__wrapper .sidebar_avatar__wrapper .sidebar_avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+  }
+  .sidebar_sidebar__wrapper .sidebar_avatar__wrapper .sidebar_avatar img {
+    width: 50px;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+  .sidebar_sidebar__wrapper
+    .sidebar_avatar__wrapper
+    .sidebar_username__wrapper
+    p {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 152%;
+    color: #333;
+    text-align: left;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebar_sidebar__wrapper
+    .sidebar_avatar__wrapper
+    .sidebar_username__wrapper
+    label {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 152%;
+    color: #827766;
+    transition: all 0.2s ease-in-out;
+  }
+  .sidebar_sidebar__wrapper .sidebar_divider {
+    background-color: #bdbdbd;
+    width: 100%;
+    height: 0.5px;
+    margin: 20px 0;
+  }
+  .sidebar_sidebar__wrapper .sidebar_sidebar_item__wrapper {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 24px;
+    gap: 24px;
+  }
+  .sidebar_sidebar__wrapper .sidebar_sidebar__item {
+    display: flex;
+    align-items: center;
+    grid-gap: 16px;
+    gap: 16px;
+    text-decoration: none;
+  }
+  .sidebar_sidebar__item img {
+    width: 16px;
+    height: 16px;
+  }
+  /* .orderManagement_item img {
+    max-width: 100%;
+    height: auto;
+  } */
+  .sidebar_sidebar__wrapper .sidebar_sidebar__item span {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 152%;
+    color: #4f4f4f;
+    display: flex;
+    align-items: center;
+    grid-gap: 0.8vw;
+    gap: 0.8vw;
+  }
+  .sidebar_sidebar__wrapper .sidebar_divider {
+    background-color: #bdbdbd;
+    width: 100%;
+    height: 0.5px;
+    margin: 20px 0;
+  }
+  .sidebar_sidebar__wrapper .sidebar_sidebar__item {
+    display: flex;
+    align-items: center;
+    grid-gap: 16px;
+    gap: 16px;
+    text-decoration: none;
+  }
+  /* .orderManagement_detail__button__38nsO {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+    color: #827766;
+    text-decoration: none;
+  } */
+  .orderManagement_order_history {
+    /* padding: 80px 60px 80px; */
+    /* padding: 0px 0px 60px 80px;
+     */
+    padding: 0 40px 40px;
+    /* max-width: 1100px; */
+    flex: 1 1;
+    min-width: 0;
+  }
+
+  .orderManagement_order_actions{
+    display: flex;
+    justify-content: end;
+
+  }
+
+
+  .orderManagement_order_detail {
+    height: 120px;
+  }
+  
+  .orderManagement_order_title, .orderManagement_order_detail{
+    display: flex;
+    justify-content: space-around;
+    border: #666666 2px solid;
+    border-top: 0;
+
+
+  }
+
+  .orderManagement_order_info{
+    display: flex;
+    flex-direction: column;
+  }
+  .orderManagement_order_title {
+    height: 50px;
+    border: #666666 2px solid;
+
+  }
+
+  .orderManagement_order_title > p{
+    /* color: #7b181a; */
+    font-size: 20px !important;
+  }
+
+  .orderManagement_order_thanhTien{
+    display: flex;
+    justify-content: space-between;
+  }
+
+   .orderManagement_order_thanhTien > p{
+    /* color: #7b181a; */
+    font-size: 30px !important;
+  }
+
+  .orderManagement_order_history p{
+    font-size: 16px;
+    font-weight: 800px;
+  }
+
+  .orderManagement_order_history > .orderManagement_title {
+    margin-bottom: 20px;
+    margin-left: 60px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 140%;
+    color: #333;
+  }
+  .orderManagement_order_history .orderManagement_navbar__wrapper {
+    margin: 20px 0;
+    border-bottom: 0.5px solid #bdbdbd;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    grid-gap: min(2.5vw, 50px);
+    gap: min(2.5vw, 50px);
+  }
+  .orderManagement_order_history .orderManagement_navbar__wrapper label {
+    position: relative;
+    padding-bottom: 8px;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .orderManagement_order_history
+    .orderManagement_navbar__wrapper
+    label.orderManagement_active
+    .orderManagement_name {
+    color: #7b181a;
+  }
+  
+  .orderManagement_order_history
+    .orderManagement_navbar__wrapper
+    label
+    .orderManagement_name {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 160%;
+    color: #4f4f4f;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .orderManagement_order_history
+    .orderManagement_navbar__wrapper
+    label
+    .orderManagement_line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 86px;
+    height: 3px;
+    background-color: transparent;
+    transform: translateX(-50%);
+    transition: all 0.2s ease-in-out;
+  }
+  .orderManagement_order_history .orderManagement_order_list {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 24px;
+    gap: 24px;
+    margin-top: 50px;
+    align-items: stretch;
+  }
+  .orderManagement_order_list .orderManagement_order__wrapper {
+    padding: 24px;
+    background: #fff;
+    border: 0.5px solid #bdbdbd;
+  }
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    .orderManagement_title__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .orderManagement_title__wrapper__zxDbG {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .orderManagement_detail__button img {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+  
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    .orderManagement_title__wrapper
+    .orderManagement_title {
+    min-width: 0;
+    flex: 1 1;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 140%;
+    color: #333;
+  }
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    .orderManagement_title__wrapper
+    .orderManagement_detail__button {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 140%;
+    color: #827766;
+    text-decoration: none;
+  }
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    > .orderManagement_divider {
+    margin: 16px 0;
+    width: 100%;
+    height: 0.5px;
+    background: #bdbdbd;
+  }
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    .orderManagement_item_list__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    grid-gap: 24px;
+    gap: 24px;
+  }
+  .orderManagement_item__wrapper .orderManagement_item {
+    display: flex;
+    align-items: center;
+    grid-gap: 20px;
+    gap: 20px;
+  }
+  .orderManagement_item__wrapper .orderManagement_item img {
+    width: 80px;
+    height: 80px;
+    display: block;
+  }
+  .orderManagement_item__wrapper
+    .orderManagement_item
+    .orderManagement_item_info__wrapper {
+    min-width: 0;
+    flex: 1 1;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #4f4f4f;
+  }
+  
+  .orderManagement_item__wrapper
+    .orderManagement_item
+    .orderManagement_item_info__wrapper
+    .orderManagement_item_info {
+    display: flex;
+    justify-content: space-between;
+    grid-gap: 20px;
+    gap: 20px;
+  }
+  .orderManagement_item__wrapper
+    .orderManagement_item__VKJDp
+    .orderManagement_item_info__wrapper
+    .orderManagement_name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333;
+  }
+  /* .orderManagement_order_list
+    .orderManagement_order__wrapper
+    > .orderManagement_divider {
+    margin: 5px 0;
+    width: 100%;
+    height: 0.5px;
+    background: #bdbdbd;
+  } */
+  .orderManagement_cancel {
+    float: right;
+  }
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    .orderManagement_total {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 140%;
+    text-align: right;
+    color: #4f4f4f;
+  }
+  
+  .orderManagement_total {
+    display: inline-block;
+    margin-top: 5px;
+  }
+  .orderManagement_cancel button {
+    padding: 8px 15px;
+    background-color: #7b181a;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 15px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  
+  .orderManagement_order_list
+    .orderManagement_order__wrapper
+    .orderManagement_total
+    span {
+    color: #666666;
+    font-weight: 500;
+    margin-left: 10px;
+  }
+  
+  .order-status-blue {
+    color: blue;
+    /* Các thuộc tính CSS khác */
+  }
+  
+  .order-status-green {
+    color: #139f42;
+    /* Các thuộc tính CSS khác */
+  }
+  
+  .order-status-red {
+    color: red;
+    /* Các thuộc tính CSS khác */
+  }
+  
+  /* CSS cho bảng đơn hàng */
+.orderManagement_order_list {
+    border: 2px solid #666666;
+    margin-bottom: 20px;
+    padding: 20px 30px;
+}
+
+/* CSS cho nút chi tiết */
+.order_detail_button {
+    background-color: #ffffff; /* Màu nền trắng */
+    color: #7b181a; /* Màu chữ #7b181a */
+    border: 2px solid #7b181a; /* Viền màu #7b181a */
+    padding: 10px 40px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* CSS cho nút Hủy đơn hàng */
+.cancel_order_button {
+    background-color: #7b181a; /* Màu nền đỏ #7b181a */
+    color: #ffffff; /* Màu chữ trắng */
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+
+.tenSanPham{
+  min-width: 20%;
+  display: flex;
+  justify-content: center;
+
+  align-items: center;
+}
+
+
+.anhMinhHoa, .donGia, .soLuong, .thanhTien{
+  min-width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

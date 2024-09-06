@@ -1,0 +1,262 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 62.5%;
+  }
+  
+  body {
+    font-family: var(--font-family);
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-rendering: optimizespeed;
+    color: var(--text-color);
+    overflow-y: overlay;
+  }
+  
+  html *::-webkit-scrollbar {
+    display: none;
+    width: 8px;
+  }
+  
+  button,
+  input,
+  [tabindex] {
+    outline: none;
+    border: none;
+  }
+  
+  a {
+    color: var(--text-color);
+    text-decoration: none;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  .StaffLayout_wrapper__CegPk {
+    background-color: rgb(255, 255, 255);
+    width: 100dvw;
+    height: 100dvh;
+    position: relative;
+  }
+  
+  .StaffHeader_title__QxjW4 {
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  
+  .StaffHeader_signOut__i2pcu {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+  }
+  
+  .StaffHeader_wrapper__IQw-U {
+    z-index: 9;
+    background-color: rgb(50, 49, 49);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .Manager_wrapper__vOYy {
+    /* nayf của manager */
+    /* padding-top: 6rem; */
+    /* này của admin */
+    padding-top: 8.2rem;
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .Sidebar_sideBar__CC4MK {
+    position: fixed;
+    height: 100dvh;
+    width: 15%;
+    background-color: rgba(50, 49, 49, 0.918);
+  }
+  
+  .MenuItemSidebar_menuItem__56b1m.MenuItemSidebar_active__RPq {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .MenuItemSidebar_menuItem__56b1m {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .Products_boxFeature__0FLEt {
+    background-color: rgb(236, 233, 233);
+    height: 5rem;
+    border-radius: 0.3rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  svg:not(:root).svg-inline--fa,
+  svg:not(:host).svg-inline--fa {
+    overflow: visible;
+    box-sizing: content-box;
+  }
+  
+  .Products_input__Skvqe {
+    height: 3rem;
+    border: 1px solid rgb(156, 155, 155);
+    width: 50rem;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border-radius: 2px;
+  }
+  
+  .Products_boxTable__ufdxZ {
+    margin-top: 1rem;
+    overflow-y: auto;
+    background-color: rgb(236, 233, 233);
+    height: 48rem;
+    border-radius: 0.3rem;
+  }
+  
+  .Table_table__fUoNr {
+    width: 100%;
+    border-spacing: 0;
+    position: relative;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  }
+  
+  .Table_head__CEe3S {
+    position: sticky;
+    top: 0;
+    background-color: rgb(52, 51, 51);
+    color: white;
+  }
+  
+  .Table_th__RG2t4 {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 1rem;
+    text-align: center;
+    color: white;
+  }
+  
+  .wrapper {
+    font-family: arial, helvetica, sans-serif;
+  }
+  
+  .boxfeature {
+    background-color: rgb(236, 233, 233);
+    height: 5rem;
+    border-radius: 0.3rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  .input {
+    height: 3rem;
+    border: 1px solid rgb(156, 155, 155);
+    width: 50rem;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border-radius: 2px;
+  }
+  
+  .input:focus {
+    border: 1px solid black;
+  }
+  
+  .icon {
+    position: absolute;
+    top: 50%;
+    left: 1%;
+    transform: translatey(-50%);
+  }
+  
+  .boxtable {
+    margin-top: 1rem;
+    overflow-y: auto;
+    background-color: rgb(236, 233, 233);
+    height: 55rem;
+    border-radius: 0.3rem;
+  }
+  
+  .boxtable>table {
+    width: 100%;
+  }
+  
+  .boxtable tbody td {
+    padding-top: 10px;
+  }
+  
+  /* CSS cho liên kết "sửa" */
+  .editProduct {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid #2e8b57;
+    /* Màu viền xanh lục */
+    border-radius: 3px;
+    color: #2e8b57;
+    /* Màu chữ xanh lục */
+  }
+  
+  .editProduct:hover {
+    background-color: #d0e8c0;
+    /* Màu nền xanh lục nhạt khi di chuột qua */
+  }
+  
+  .editProduct:active,
+  .editProduct:focus {
+    outline: none;
+    background-color: #2e8b57;
+    /* Màu nền xanh lục khi được click hoặc được focus */
+    color: #fff;
+    /* Màu chữ trắng khi được click hoặc được focus */
+  }
+  
+  /* CSS cho liên kết "xóa" */
+  .deleteProduct {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 5px 10px;
+    text-decoration: none;
+    background-color: #dc3545;
+    /* Màu nền đỏ */
+    border: 1px solid #dc3545;
+    /* Màu viền đỏ */
+    border-radius: 3px;
+    color: #fff;
+    /* Màu chữ trắng */
+  }
+  
+  .deleteProduct:hover {
+    background-color: #ff7f7f;
+    /* Màu nền đỏ hồng nhạt khi di chuột qua */
+  }
+  
+  .deleteProduct:active,
+  .deleteProduct:focus {
+    outline: none;
+    background-color: #dc3545;
+    /* Màu nền đỏ khi được click hoặc được focus */
+  }

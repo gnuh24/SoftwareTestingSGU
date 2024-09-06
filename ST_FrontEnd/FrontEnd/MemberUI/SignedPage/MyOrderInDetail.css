@@ -1,0 +1,61 @@
+#chiTietTrangThaiContent{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.circle-container {
+    display: inline-block;
+    position: relative;
+    width: 150px; /* Độ dài và độ rộng của vòng tròn */
+    height: 150px;
+    border-radius: 50%; /* Tạo hình dạng vòng tròn */
+    border: 5px solid grey; /* Đường viền của vòng tròn */
+    text-align: center;
+}
+
+.chiTietTrangThaiElement{
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon{
+    font-size: 40px;
+    color: grey;
+}
+
+.trangThai{
+    font-size: 20px;
+    color: grey;
+
+}
+
+.thoiGian {
+    max-width: 60px;
+    font-size: 15px;
+    color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.line {
+    color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout__wrapper{
+    margin-top:L 20px;
+}
