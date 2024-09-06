@@ -50,7 +50,6 @@
                                                     <thead class="Table_head__FTUog">
                                                         <tr>
                                                             <th class="Table_th__hCkcg">Mã Tài Khoản</th>
-                                                            <th class="Table_th__hCkcg">Tên đăng nhập</th>
                                                             <th class="Table_th__hCkcg">Email</th>
                                                             <th class="Table_th__hCkcg">Ngày tạo</th>
                                                             <th class="Table_th__hCkcg">Trạng thái</th>
@@ -104,9 +103,12 @@
     // Hàm getAllTaiKhoan
     function getAllTaiKhoan(page, search, quyen) {
         $.ajax({ 
-            url: '../../BackEnd/AdminBE/TaiKhoanBE.php',
+            url: 'http://localhost:8080/Account',
             type: 'GET',
             dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3MjU1NDk1MjEsImV4cCI6MTcyODE0MTUyMX0.qFPlC4hzpshKLTahPf8csv1MNTA-BYa3UaTe9Yb2mAE" // Thêm JWT Token vào Authorization header
+            },
             data: {
                 page: page,
                 search: search,
@@ -114,7 +116,9 @@
             },
             success: function (response) {
             
-                var data = response.data;
+                console.log(response);
+
+                var data = response.content;
                 var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
                 var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
                 // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
@@ -122,30 +126,28 @@
                 if (data.length > 0){
                     data.forEach(function (record, index) {
                         var trClass = (index % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
-                        var ngayTao = new Date(record.NgayTao);
-                        var ngayTaoFormatted = ngayTao.toLocaleString();
+               
                         // Xác định trạng thái và văn bản của nút dựa trên trạng thái của tài khoản
-                        var buttonText = (record.TrangThai === 0) ? "Mở khóa" : "Khóa";
-                        var buttonClass = (record.TrangThai === 0) ? "unlock" : "block";
-                        var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
+                        var buttonText = (record.status === 0) ? "Mở khóa" : "Khóa";
+                        var buttonClass = (record.status === 0) ? "unlock" : "block";
+                        var buttonData = (record.status === 0) ? "unlock" : "block";
                         var trContent = `
                             <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php">
                                 <tr style="height: 20%"; max-height: 20%;>
-                                    <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
-                                    <td class="${trClass}">${record.TenDangNhap}</td>
-                                    <td class="${trClass}">${record.Email}</td>
-                                    <td class="${trClass}">${ngayTaoFormatted}</td>
-                                    <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
-                                    <td class="${trClass}">${record.Quyen}</td>`;
-                        if (record.Quyen != "Admin") {
-                            trContent += 
-                            `<td class="${trClass}">
-                                <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
-                                <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
-                            </td>`;
-                        } else {
-                            trContent += `<td class="${trClass}"></td>`; // Tạo một ô trống nếu quyền là "Admin"
-                        }
+                                    <td class="${trClass}" style="width: 130px;">${record.id}</td>
+                                    <td class="${trClass}">${record.email}</td>
+                                    <td class="${trClass}">${record.createTime}</td>
+                                    <td class="${trClass}">${record.status === 0 ? "Khóa" : "Hoạt động"}</td>
+                                    <td class="${trClass}">${record.role}</td>`;
+                        // if (record.role != "Admin") {
+                        //     trContent += 
+                        //     `<td class="${trClass}">
+                        //         <button class="edit" onclick="update(${record.id}, '${record.role}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
+                        //         <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
+                        //     </td>`;
+                        // } else {
+                        //     trContent += `<td class="${trClass}"></td>`; // Tạo một ô trống nếu quyền là "Admin"
+                        // }
                         trContent += `</tr></form>`;
                         // Nếu chỉ có ít hơn 5 phần tử và đã duyệt đến phần tử cuối cùng, thêm các hàng trống vào
                         if (data.length < 5 && index === data.length - 1) {
@@ -224,11 +226,6 @@
             paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
         }
     }
-
-
-
-
-
 
     // Hàm xử lý sự kiện khi select Quyen thay đổi
     document.querySelector('#selectQuyen').addEventListener('change', function () {
