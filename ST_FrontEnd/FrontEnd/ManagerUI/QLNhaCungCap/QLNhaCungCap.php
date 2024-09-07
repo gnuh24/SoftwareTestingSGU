@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="QLNhaCungCap.css" />
   <!-- <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.min.css"> -->
-  <title>Quản lý nhà cung cấp</title>
+  <title>Quản lý thương hiệu</title>
 </head>
 
 <body>
@@ -30,7 +30,7 @@
                           padding-top: 1rem;
                           padding-bottom: 1rem;
                         ">
-                      <h2>Nhà Cung Cấp</h2>
+                      <h2>Thương Hiệu</h2>
                       <button style="
                             margin-left: auto;
                             font-family: Arial;
@@ -42,14 +42,14 @@
                             border-radius: 0.6rem;
                             cursor: pointer;
                           ">
-                        <a href="./FormCreateNhaCungCap.php"> Thêm Nhà Cung Cấp</a>
+                        <a href="./FormCreateNhaCungCap.php"> Thêm Thương Hiệu</a>
                       </button>
                     </div>
                     <br>
 
                     <div class="boxFeature">
                       <div style="position: relative">
-                        <input class="Admin_input__LtEE-" placeholder="Tìm kiếm nhà cung cấp" />
+                        <input class="Admin_input__LtEE-" placeholder="Tìm kiếm thương hiệu" />
                         <button id="searchButton" style="cursor: pointer;"><i class="fa fa-search"></i></button>
                       </div>
                       <div style="margin-left: auto"></div>
@@ -60,8 +60,8 @@
                       <table class="Table_table__BWPy">
                         <thead class="Table_head__FTUog">
                           <tr>
-                            <th class="Table_th__hCkcg">Mã nhà cung cấp</th>
-                            <th class="Table_th__hCkcg">Nhà cung cấp</th>
+                            <th class="Table_th__hCkcg">Mã thương hiệu</th>
+                            <th class="Table_th__hCkcg">Thương hiệu</th>
                             <th class="Table_th__hCkcg">Email</th>
                             <th class="Table_th__hCkcg">Số điện thoại</th>
                             <th class="Table_th__hCkcg">Xoá</th>
@@ -90,6 +90,7 @@
   </div>
 </body>
 
+
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -106,9 +107,13 @@
 // Hàm getAllNhaCungCap
 function getAllNhaCungCap(page, search) {
     $.ajax({
-        url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+        url: 'http://localhost:8080/Brand',
         type: 'GET',
         dataType: "json",
+        headers: {
+        // Thêm JWT vào header
+        'Authorization': 'Bearer ' + token
+      },
         data: {
             page: page,
             search: search
@@ -152,9 +157,15 @@ function getAllNhaCungCap(page, search) {
             createPagination(page, response.totalPages);
         },
 
-        error: function (xhr, status, error) {
-            console.error('Lỗi khi gọi API: ', error);
+        error: function(xhr, status, error) {
+        // Nếu lỗi là do token hết hạn, chuyển hướng đến trang đăng nhập
+        if (xhr.status === 401) {
+          alert('Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.');
+          window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
+        } else {
+          console.error('Lỗi khi gọi API: ', error);
         }
+      }
     });
 }
 
@@ -248,7 +259,7 @@ function getAllNhaCungCap(page, search) {
     if (result.isConfirmed) {
       // Thực hiện gọi Ajax để xóa nhà cung cấp
       $.ajax({
-        url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+        url: 'http://localhost:8080/Brand',
         type: 'POST',
         dataType: "json",
         data: {
@@ -264,7 +275,7 @@ function getAllNhaCungCap(page, search) {
             Swal.fire({
               icon: 'success',
               title: 'Thành công!',
-              text: 'Xóa nhà cung cấp thành công !!',
+              text: 'Xóa thương hiệu thành công !!',
             }).then(function() {
               fetchDataAndUpdateTable(currentPage, '');
             });
@@ -272,9 +283,9 @@ function getAllNhaCungCap(page, search) {
             Swal.fire({
               icon: 'error',
               title: 'Lỗi!',
-              text: 'Đã xảy ra lỗi khi xóa nhà cung cấp',
+              text: 'Đã xảy ra lỗi khi xóa thương hiệu',
             });
-            console.error('Lỗi khi xóa nhà cung cấp: ', response.message);
+            console.error('Lỗi khi xóa thương hiệu: ', response.message);
           }
         },
         error: function(xhr, status, error) {
@@ -292,11 +303,11 @@ function getAllNhaCungCap(page, search) {
 
 
 
-  function updateNhaCungCap(MaNCC, TenNCC, Email, SoDienThoai) {
+  function updateNhaCungCap(MaNCC, TenNCC) {
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
 
-    form.action = `FormUpdateNhaCungCap.php?MaNCC=${MaNCC}&TenNCC=${TenNCC}&Email=${Email}&SoDienThoai=${SoDienThoai}`
+    form.action = `FormUpdateNhaCungCap.php?MaNCC=${MaNCC}&TenNCC=${TenNCC}`
 
     // Gửi form đi
     form.submit();
