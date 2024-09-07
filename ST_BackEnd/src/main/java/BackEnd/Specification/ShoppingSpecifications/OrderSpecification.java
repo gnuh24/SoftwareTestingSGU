@@ -37,11 +37,11 @@ public class OrderSpecification implements Specification<Order> {
         }
 
         if (field.equalsIgnoreCase("from")) {
-            return criteriaBuilder.greaterThanOrEqualTo(root.get("orderDate").as(java.sql.Date.class) , (Date) value);
+            return criteriaBuilder.greaterThanOrEqualTo(root.get("orderTime").as(java.sql.Date.class) , (Date) value);
         }
 
         if (field.equalsIgnoreCase("to")) {
-            return criteriaBuilder.lessThanOrEqualTo(root.get("orderDate").as(java.sql.Date.class) , (Date) value);
+            return criteriaBuilder.lessThanOrEqualTo(root.get("orderTime").as(java.sql.Date.class) , (Date) value);
         }
 
         if (field.equalsIgnoreCase("status")) {
@@ -92,7 +92,7 @@ public class OrderSpecification implements Specification<Order> {
                 }
             }
 
-            if (form.getStatus() != null) {
+            if (form.getStatus() != null && !form.getStatus().equals("")) {
                 OrderSpecification statusSpec = new OrderSpecification("status", form.getStatus());
                 if (where != null) {
                     where = where.and(statusSpec);
