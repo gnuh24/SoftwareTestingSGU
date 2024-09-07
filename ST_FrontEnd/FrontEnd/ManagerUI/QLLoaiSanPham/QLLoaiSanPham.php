@@ -101,20 +101,29 @@
 
   // Hàm getAllLoaiSanPham
   function getAllLoaiSanPham(page, search) {
-    $.ajax({
-      url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
-      type: 'GET',
+    // Lấy token JWT từ localStorage
+    var token = localStorage.getItem('token');
+
+    $.ajax({   
+      url: "http://localhost:8080/Category",
+      type: "GET",
       dataType: "json",
+      headers: {
+        // Thêm JWT vào header
+        'Authorization': 'Bearer ' + token
+      },
       data: {
         page: page,
         search: search
       },
       success: function(response) {
         var data = response.data;
+        console.log(response);
         var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+        if (data && data.length > 0) {
         data.forEach(function(record) {
             var trContent = `
             <form id="updateForm" method="POST" action="FormUpdateLoaiSanPham.php?MaLoaiSanPham=${record.MaLoaiSanPham}&TenLoaiSanPham=${record.TenLoaiSanPham}">
@@ -138,19 +147,29 @@
 
             tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
+      } else {
+  console.warn("Không có dữ liệu");
+}
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
         tableBody.innerHTML = tableContent;
 
-        //Tạo phân trang
+        // Tạo phân trang
         createPagination(page, response.totalPages);
       },
 
       error: function(xhr, status, error) {
-        console.error('Lỗi khi gọi API: ', error);
+        // Nếu lỗi là do token hết hạn, chuyển hướng đến trang đăng nhập
+        if (xhr.status === 401) {
+          alert('Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.');
+          window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
+        } else {
+          console.error('Lỗi khi gọi API: ', error);
+        }
       }
     });
   }
+
 
   // Hàm để gọi getAllNhaCungCap và cập nhật dữ liệu và phân trang
   function fetchDataAndUpdateTable(page, search) {
@@ -237,7 +256,7 @@
       if (result.isConfirmed) {
         // Gọi Ajax để xóa loại sản phẩm
         $.ajax({
-          url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
+          url: 'http://localhost:8080/Category',
           type: 'GET',
           dataType: "json",
           data: {
