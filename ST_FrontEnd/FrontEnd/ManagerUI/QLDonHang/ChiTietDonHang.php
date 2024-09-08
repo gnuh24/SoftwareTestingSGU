@@ -9,6 +9,17 @@
     <link rel="stylesheet" href="detail_donhang.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Quản lý đơn hàng</title>
+    <style>
+        .order_status.cancelled {
+            color: red;
+        }
+
+        .order_status.cancelled::before {
+            content: "✘";
+            font-size: 20px;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -149,9 +160,15 @@
                 var order_status_content = '';
 
                 data.orderStatuses.forEach(status => {
-                    order_status_content += `<div class="order_status completed">
-                        <li>${getTenTrangThai(status.status)}<br>${status.updateTime}</li>
-                    </div>`;
+                    if (status.status === 'Huy') {
+                        order_status_content += `<div class="order_status cancelled">
+                            <li>${getTenTrangThai(status.status)}<br>${status.updateTime}</li>
+                        </div>`;
+                    } else {
+                        order_status_content += `<div class="order_status completed">
+                            <li>${getTenTrangThai(status.status)}<br>${status.updateTime}</li>
+                        </div>`;
+                    }
                 });
 
                 order_status.innerHTML = order_status_content;
@@ -172,6 +189,8 @@
                 return 'Đang Giao';
             case 'GiaoThanhCong':
                 return 'Giao Thành Công';
+            case 'Huy':
+                return 'Đã hủy';
             default:
                 return 'Chưa rõ';
         }

@@ -87,6 +87,25 @@
     var udmaxNgayTao = 0;
     var udtrangThai = "";
 
+    $(document).ready(function() {
+        loadDataToTable(udPage, null, null, null);
+
+        $("#dateStart").on("change", function() {
+            udminNgayTao = $(this).val();
+            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
+        });
+
+        $("#dateEnd").on("change", function() {
+            udmaxNgayTao = $(this).val();
+            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
+        });
+
+        $("#TrangThai").on("change", function() {
+            udtrangThai = $(this).val();
+            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
+        });
+    });
+
     function clearTable() {
         var tableBody = document.getElementById("tableBody");
         tableBody.innerHTML = ''; // Xóa nội dung trong tbody
@@ -96,6 +115,63 @@
         return Number(number).toLocaleString('vi-VN', {
             style: 'currency',
             currency: 'VND'
+        });
+    }
+
+    function getUpdateStatusText(status) {
+      switch (status) {
+          case 'ChoDuyet':
+              return 'Duyệt';
+          case 'DaDuyet':
+              return 'Giao hàng';
+          case 'DangGiao':
+              return 'Hoàn tất';
+          default:
+              return 'Cập nhật trạng thái'; // Nội dung mặc định nếu không khớp với bất kỳ trạng thái nào
+      }
+    }
+
+    function getUpdateStatus(status) {
+        switch (status) {
+            case 'ChoDuyet':
+                return 'DaDuyet';
+            case 'DaDuyet':
+                return 'DangGiao';
+            case 'DangGiao':
+                return 'GiaoThanhCong';
+          }
+    }
+
+    function updateStatus(orderId, currentStatus) {
+        Swal.fire({
+            title: 'Bạn có chắc chắn?',
+            text: "Bạn muốn cập nhật trạng thái của đơn hàng này?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xác nhận'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/OrderStatus/Admin",
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token') 
+                    },
+                    data: {
+                        orderId: orderId,
+                        idStatus: currentStatus
+                    },
+                    success: function(response) {
+                        Swal.fire('Thành công!', 'Đã cập nhật trạng thái đơn hàng.', 'success');
+                        loadDataToTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai); 
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
         });
     }
 
@@ -111,8 +187,37 @@
             html += '<td>' + record.fullname + '</td>';
             html += '<td>' + record.phoneNumber + '</td>';
             html += '<td>' + formatStatus(record.status) + '</td>';
-            // html += '<td><button type="button" class="edit">' + formatStatus(record.status) + '</button></td>';
-            html += '<td><a href="./ChiTietDonHang.php?id=' + record.id +'" class="edit"> chi tiết</a> </td>';
+
+            html += '<td>';
+            html += '<a href="./ChiTietDonHang.php?id=' + record.id + '" class="edit">Chi tiết</a> '; // Nút Chi tiết
+
+            // Kiểm tra trạng thái trước khi hiển thị nút Hủy
+            if (record.status !== 'GiaoThanhCong') {
+                html += `
+                      <button 
+                          type="button" 
+                          class="cancel" 
+                          onclick="updateStatus('${record.id}', 'Huy')"
+                      >
+                          Hủy
+                      </button>`;        }
+
+          // Nút Cập nhật trạng thái (màu xanh lá) với nội dung tùy thuộc vào trạng thái
+            if (record.status !== 'GiaoThanhCong' && record.status !== 'DaHuy') {
+                const updateStatusText = getUpdateStatusText(record.status);
+                const nextStatus = getUpdateStatus(record.status);
+                
+                html += `
+                    <button 
+                        type="button" 
+                        class="update-status" 
+                        onclick="updateStatus('${record.id}', '${nextStatus}')"
+                    >
+                        ${updateStatusText}
+                    </button>`;
+            }
+
+            html += '</td>';
             html += '</tr>';
         });
         tableBody.innerHTML = html;
@@ -153,6 +258,7 @@
             },
             data: {
                 pageNumber: page,
+                pageSize: 1,
                 from: minNgayTao,
                 to: maxNgayTao,
                 status: trangThai,
@@ -169,49 +275,32 @@
     }
 
     function renderPagination(totalPages, currentPage) {
-      var pagination = document.getElementById("pagination");
-      var html = '';
+        var pagination = document.getElementById("pagination");
+        var html = '';
 
-      // Previous button
-      if (currentPage > 1) {
-          html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage - 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Trước</button>';
-      }
+        // Previous button
+        if (currentPage > 1) {
+            html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage - 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Trước</button>';
+        }
 
-      // Page numbers
-      for (var i = 1; i <= totalPages; i++) {
-          if (i === currentPage) {
-              html += '<button class="pageButton active">' + i + '</button>';
-          } else {
-              html += '<button class="pageButton" onclick="loadDataToTable(' + i + ', udminNgayTao, udmaxNgayTao, udtrangThai)">' + i + '</button>';
-          }
-      }
+        // Page numbers
+        for (var i = 1; i <= totalPages; i++) {
+            if (i === currentPage) {
+                html += '<button class="pageButton active">' + i + '</button>';
+            } else {
+                html += '<button class="pageButton" onclick="loadDataToTable(' + i + ', udminNgayTao, udmaxNgayTao, udtrangThai)">' + i + '</button>';
+            }
+        }
 
-      // Next button
-      if (currentPage < totalPages) {
-          html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage + 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Sau</button>';
-      }
+        // Next button
+        if (currentPage < totalPages) {
+            html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage + 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Sau</button>';
+        }
 
-      pagination.innerHTML = html;
-  }
+        pagination.innerHTML = html;
+    }
 
-    $(document).ready(function() {
-        loadDataToTable(udPage, null, null, null);
-
-        $("#dateStart").on("change", function() {
-            udminNgayTao = $(this).val();
-            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
-        });
-
-        $("#dateEnd").on("change", function() {
-            udmaxNgayTao = $(this).val();
-            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
-        });
-
-        $("#TrangThai").on("change", function() {
-            udtrangThai = $(this).val();
-            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
-        });
-    });
+    
 </script>
 
 </html>

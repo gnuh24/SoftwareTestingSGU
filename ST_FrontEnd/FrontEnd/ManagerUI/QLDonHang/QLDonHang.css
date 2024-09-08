@@ -171,7 +171,7 @@
       font-weight: 600;
       
   } */
-  .delete {
+  .cancel {
     background-color: rgb(235, 44, 44);
     color: white;
     padding: 1rem 1.5rem;
@@ -189,6 +189,15 @@
     border-radius: 10px;
   }
   
+  .update-status {
+    background-color: rgb(49, 252, 167);
+    color: white;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    border-radius: 10px;
+  }
+
   #Find-Quyen {
     border: 1px solid rgb(59, 58, 58);
     width: 500px;

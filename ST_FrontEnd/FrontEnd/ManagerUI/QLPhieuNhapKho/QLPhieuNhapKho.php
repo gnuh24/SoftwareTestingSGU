@@ -147,6 +147,8 @@
                             <td class="Table_data">${trangthai}</td>
                             <td class="Table_data">
                                 <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
+                                <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
+                                <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
                             </td>
                         </tr>
                     </form>

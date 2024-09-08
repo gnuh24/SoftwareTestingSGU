@@ -131,6 +131,7 @@ INSERT INTO `OrderStatus` (`OrderId`, `Status`, `UpdateTime`) VALUES
 
 
 						('ORD00000006', 'ChoDuyet', '2024-07-06 10:31:00'),
+						('ORD00000006', 'Huy', 		'2024-07-06 16:00:00'),
 
 
 						('ORD00000007', 'ChoDuyet', '2024-07-06 11:16:00'),
