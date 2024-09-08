@@ -17,21 +17,10 @@
         <div class="form-container sign-up">
             <form>
                 <h1>Create Account</h1>
-                <input type="text" placeholder="Tên đăng nhập" id="tenDangNhap" name="TenDangNhap" />
+                <input type="email" placeholder="Email" id="email" name="Email" />
                 <input type="password" placeholder="Mật khẩu" id="matKhau" name="MatKhau" />
                 <input type="password" placeholder="Xác thực mật khẩu" id="xacNhanMatKhau" name="XacThucMatKhau" />
 
-                <input type="text" placeholder="Họ và tên" id="hoTen" name="HoTen" />
-                <input type="date" placeholder="Ngày sinh" id="ngaySinh" name="NgaySinh" />
-                <div class="gender-selection" style="display: flex; align-items: center; margin-right: 200px">
-                    <span style="margin-right: 10px; font-size: 16px;">Giới tính:</span>
-                    <label style="margin-right: 10px; display: flex; align-items: center;">Nam<input type="radio" id="gioiTinhMale" name="GioiTinh" value="Male" style="margin-left: 10px" /></label>
-                    <label style="margin-right: 10px; display: flex; align-items: center;">Nữ<input type="radio" id="gioiTinhFemale" name="GioiTinh" value="Female" style="margin-left: 10px" /></label>
-                </div>
-
-                <input type="tel" placeholder="Số điện thoại" id="sdt" name="SoDienThoai" />
-                <input type="email" placeholder="Email" id="email" name="Email" />
-                <input type="text" placeholder="Địa chỉ" id="diaChi" name="DiaChi" />
 
                 <button type="button" class="btn btn-danger" id="signUpButton">Đăng kí</button>
             </form>
@@ -91,32 +80,14 @@
 
         const signUpButton = document.getElementById("signUpButton");
 
-        signUpButton.addEventListener('click', function check(event) {
+        signUpButton.addEventListener('click', async function check(event) {
             event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-            let tenDangNhap = document.getElementById("tenDangNhap");
             let matKhau = document.getElementById("matKhau");
             let xacNhanMatKhau = document.getElementById("xacNhanMatKhau");
-            let hoTen = document.getElementById("hoTen");
-            let sdt = document.getElementById("sdt");
-            let diaChi = document.getElementById("diaChi");
-            let gioiTinhMale = document.getElementById("gioiTinhMale");
-            let gioiTinhFemale = document.getElementById("gioiTinhFemale");
-            let vaiTro = document.getElementById("vaiTro");
             let email = document.getElementById("email");
-            let ngaySinh = document.getElementById("ngaySinh");
 
-            if (!tenDangNhap.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Tên đăng nhập không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                tenDangNhap.focus();
-                event.preventDefault();
-                return;
-            }
+
             if (!matKhau.value.trim()) {
                 Swal.fire({
                     title: 'Lỗi!',
@@ -151,17 +122,7 @@
                 event.preventDefault();
                 return;
             }
-            if (!hoTen.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Họ Tên không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                hoTen.focus();
-                event.preventDefault();
-                return;
-            }
+
             if (!email.value.trim()) {
                 Swal.fire({
                     title: 'Lỗi!',
@@ -170,50 +131,6 @@
                     confirmButtonText: 'OK'
                 });
                 email.focus();
-                event.preventDefault();
-                return;
-            }
-            if (!sdt.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Số điện thoại không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                sdt.focus();
-                event.preventDefault();
-                return;
-            }
-            if (!diaChi.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Địa chỉ không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                diaChi.focus();
-                event.preventDefault();
-                return;
-            }
-            if (!gioiTinhMale.checked && !gioiTinhFemale.checked) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Vui lòng chọn giới tính',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                event.preventDefault();
-                return;
-            }
-
-            if (!ngaySinh.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Ngày sinh không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                ngaySinh.focus();
                 event.preventDefault();
                 return;
             }
@@ -230,83 +147,57 @@
                 event.preventDefault();
                 return;
             }
-
-            // Kiểm tra tuổi
-            let ngaySinhDate = new Date(ngaySinh.value);
-            let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
-            if (tuoi < 18) {
+            try {
+                const emailExists = await checkEmail(email.value); // đợi kết quả
+                if (emailExists === true) {
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Email tồn tại',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    email.focus();
+                    return;
+                }
+            } catch (error) {
                 Swal.fire({
                     title: 'Lỗi!',
-                    text: "Bạn phải đủ 18 tuổi để đăng ký tài khoản",
+                    text: 'Đã xảy ra lỗi khi kiểm tra tài khoản!',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-                ngaySinh.focus();
-                event.preventDefault();
-                return;
             }
+            var formData = new FormData();
+            formData.append('email', email.value.trim());
+            formData.append('password', matKhau.value);
+            $.ajax({
+                url: 'http://localhost:8080/Auth/Registration',
+                type: 'POST',
+                data: formData, // Gửi FormData
+                processData: false, // Ngăn jQuery tự động xử lý dữ liệu
+                contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
+                success: function(response) {
+                    // Kiểm tra xem phản hồi có thành công hay không
+                    Swal.fire({
+                        title: response.message,
+                        text: "Vui lòng xác thực email",
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
 
-
-
-            //Kiểm tra tên đăng nhập
-            if (checkTenDangNhap(tenDangNhap.value.trim())) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Tên đăng nhập đã tồn tại',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                tenDangNhap.focus();
-                event.preventDefault();
-                return;
-            }
-
-            //Kiểm tra xem email đã tồn tại hay chưa
-            if (checkEmailTonTai(email.value.trim())) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Email đã tồn tại',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                email.focus();
-                event.preventDefault();
-                return;
-            }
-
-            //Sau khi qua được tất cả ta bắt đầu tạo TaiKhoan
-            let isCreateTaiKhoanComplete = createTaiKhoan(tenDangNhap.value,
-                matKhau.value,
-                "Member");
-
-            var gioiTinhValue = "Female";
-
-            //XỬ lý giới tính
-            if (gioiTinhMale.checked) {
-                gioiTinhValue = "Male";
-            }
-
-
-            //Tạo thông tin người dùng đi kèm
-            let isCreateNguoiDungComplete = createNguoiDung(hoTen.value,
-                ngaySinh.value,
-                gioiTinhValue,
-                sdt.value,
-                email.value,
-                diaChi.value)
-
-
-            //Sau khi tạo xong chuyển về trang QLTaiKHoan
-            Swal.fire({
-                title: 'Thành công!',
-                text: 'Tạo tài khoản mới thành công !!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = 'LoginUI.php';
+                },
+                error: function(xhr, status, error) {
+                    console.error('Lỗi:', error);
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đã xảy ra lỗi khi đăng kí tài khoản!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
+
         });
 
         function isValidEmail(email) {
@@ -315,98 +206,28 @@
             return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
         }
 
-        function checkTenDangNhap(value) {
-            let exists = false;
-            $.ajax({
-                url: '../../../BackEnd/AdminBE/TaiKhoanBE.php',
-                type: 'GET',
-                dataType: "json",
-                async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-                data: {
-                    tenDangNhap: value
-                },
-                success: function(data) {
-                    if (data.status === 200) {
-                        exists = data.isExists == 1;
-                    } else {
-                        console.error('Error:', data.message);
+        async function checkEmail(email) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: 'http://localhost:8080/Account/isThisEmailExists',
+                    type: 'GET',
+                    data: {
+                        email: email
+                    },
+                    success: function(response) {
+                        resolve(response); // Resolve the promise with the response
+                    },
+                    error: function(error) {
+                        reject(error); // Reject the promise if there's an error
                     }
-                },
-                error: function(xhr, status, error) {
-
-                    console.error('Error: ' + xhr.status + ' - ' + error);
-                }
-            });
-            return exists;
-        }
-
-
-        function checkEmailTonTai(value) {
-            let exists = false;
-            $.ajax({
-                url: '../../../BackEnd/AdminBE/NguoiDungBE.php',
-                type: 'GET',
-                dataType: "json",
-                async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-                data: {
-                    email: value
-                },
-                success: function(data) {
-
-                    if (data.status === 200) {
-                        exists = data.isExists == 1;
-                    } else {
-                        console.error('Error:', data.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error: ' + xhr.status + ' - ' + error);
-                }
-            });
-            return exists;
-        }
-
-        function createTaiKhoan(tenDangNhap, matKhau, quyen) {
-            $.ajax({
-                url: '../../../BackEnd/AdminBE/TaiKhoanBE.php',
-                type: 'POST',
-                dataType: "json",
-                data: {
-                    tenDangNhap: tenDangNhap,
-                    matKhau: matKhau,
-                    quyen: quyen
-                },
-                success: function(data) {
-                    return data.status === 200;
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error: ' + xhr.status + ' - ' + error);
-                }
-            });
-        }
-
-        function createNguoiDung(hoTen, ngaySinh, gioiTinh, soDienThoai, email, diaChi) {
-            $.ajax({
-                url: '../../../BackEnd/AdminBE/NguoiDungBE.php',
-                type: 'POST',
-                dataType: "json",
-                data: {
-                    hoTen: hoTen,
-                    ngaySinh: ngaySinh,
-                    gioiTinh: gioiTinh,
-                    soDienThoai: soDienThoai,
-                    email: email,
-                    diaChi: diaChi
-                },
-                success: function(data) {
-                    return data.status === 200;
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error: ' + xhr.status + ' - ' + error);
-                }
+                });
             });
         }
     </script>
+
+
+
+
 
     <script>
         const loginButton = document.getElementById("signInButton");
@@ -434,59 +255,63 @@
                 matKhau.focus();
                 return
             }
-            checkTaiKhoan(tenDangNhap.value.trim())
+
+            checkTaiKhoan(tenDangNhap.value, matKhau.value)
         });
 
 
 
         // Hàm xử lý kiểm tra tài khoản
-        function checkTaiKhoan(tenDangNhap) {
+        function checkTaiKhoan(email, password) {
+            // Tạo đối tượng FormData
+            var formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+
             $.ajax({
-                url: '../../../BackEnd/AdminBE/TaiKhoanBE.php',
-                type: 'GET',
-                dataType: "json",
-                async: false,
-                data: {
-                    tenDangNhap: tenDangNhap,
-                    isLogin: true
-                },
-                success: function(data) {
-                    console.log(data);
-                    // console.log(data.data.TrangThai);
-                    if (data.status === 200 && data.data && data.data.MatKhau === matKhau.value) {
-                        if (data.data.TrangThai == 0) {
-                            Swal.fire({
-                                title: 'Lỗi!',
-                                text: 'Tài khoản của bạn đã bị khóa !!',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Thành công!',
-                                text: 'Đăng nhập thành công!',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    quyen = data.data.Quyen
-                                    // Lưu dữ liệu vào localStorage
-                                    localStorage.setItem('key', JSON.stringify(data.data));
+                url: 'http://localhost:8080/Auth/SignIn',
+                type: 'POST',
+                data: formData, // Gửi FormData
+                processData: false, // Ngăn jQuery tự động xử lý dữ liệu
+                contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
+                success: function(response) {
+                    // Kiểm tra xem phản hồi có thành công hay không
+                    if (response.code === 8) {
+                        Swal.fire({
+                            title: response.message,
+                            text: response.detailMessage,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+                    if (response.statusCode === 200) {
+                        Swal.fire({
+                            title: 'Thành công!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result) {
+                                const quyen = response.role;
 
-                                    if (quyen === "Admin") {
+                                // Lưu dữ liệu vào localStorage
+                                localStorage.setItem('key', JSON.stringify(response));
+                                switch (quyen) {
+                                    case 'Admin':
                                         window.location.href = `../../AdminUI/QLTaiKhoan.php`;
-
-                                    } else if (quyen === "Manager") {
+                                        break;
+                                    case 'Manager':
                                         window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
-
-                                    } else {
+                                        break;
+                                    default:
                                         window.location.href = `../SignedPage/SignedHomePage.php`;
-
-                                    }
+                                        break;
                                 }
-                            });
-                        }
+                            }
+                        });
                     } else {
+                        // Trường hợp đăng nhập thất bại
                         Swal.fire({
                             title: 'Lỗi!',
                             text: 'Đăng nhập thất bại, hãy kiểm tra lại tên đăng nhập và mật khẩu !!',
@@ -494,7 +319,6 @@
                             confirmButtonText: 'OK'
                         });
                     }
-
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi:', error);

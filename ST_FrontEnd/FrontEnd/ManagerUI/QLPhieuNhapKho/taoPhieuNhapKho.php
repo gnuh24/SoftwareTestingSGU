@@ -1,15 +1,3 @@
-<?php
-if (isset($_GET['MaPhieu'])) {
-    require_once "../../../BackEnd/ManagerBE/ChiTietPhieuNhapKhoBE.php";
-    $result = getAllChiTietphieunhapkho(1, $_GET['MaPhieu'], null);
-    $totalPage = $result->totalPages;
-    $Ketqua1 = $result->data;
-    $MaNCC;
-    foreach ($Ketqua1 as $record) {
-        $MaNCC = $record['MaNCC'];
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -81,35 +69,23 @@ if (isset($_GET['MaPhieu'])) {
                                     ?>
                                 </div>
                             </div>
-                            <div class="boxFeature">
-                                <select style="height: 3rem; padding: 0.3rem; width: 50rem;" id="manhacungcap" <?php if (isset($_GET['MaPhieu']) && $_GET['trangthai'] !== 'ChoDuyet') echo 'disabled="true"'; ?>>
-                                    <option value="">Chọn nhà cung cấp</option>
-                                    <?php
-                                    require_once "../../../BackEnd/ManagerBE/NhaCungCapBE.php";
-                                    $result = getAllNhaCungCapNotPage();
-                                    $result1 = $result->data;
-                                    foreach ($result1 as $Ketqua) {
-                                        echo $Ketqua["MaNCC"];
-                                        if (isset($_GET['MaPhieu'])) {
-                                            if ($Ketqua["MaNCC"] == $_GET['MaNCC1'])
-                                                echo '<option value="' . $Ketqua["MaNCC"] . '" selected>' . $Ketqua["TenNCC"] . '</option>';
-                                            else
-                                                echo '<option value="' . $Ketqua["MaNCC"] . '">' . $Ketqua["TenNCC"] . '</option>';
-                                        } else {
-                                            echo '<option value="' . $Ketqua["MaNCC"] . '">' . $Ketqua["TenNCC"] . '</option>';
-                                        }
-                                    }
-                                    ?>
-                                </select>
-
-                                <?php
-                                if (!isset($_GET['trangthai']) || ($_GET['trangthai'] == 'ChoDuyet')) {
-                                    echo '<button style="margin-left: auto; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">Lưu</button>';
-                                }
-
-                                ?>
-
+                            <div class="boxFeature d-flex flex-wrap" style="gap: 2rem;">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="manhacungcap"
+                                    placeholder="Nhập tên nhà cung cấp"
+                                    style="width: 40%;padding: 10px 0px" />
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="sodienthoainhacungcap"
+                                    placeholder="Nhập số điện thoại nhà cung cấp"
+                                    style="width: 40%;padding: 10px 0;" />
                             </div>
+
+
+
                             <div class="boxTable">
                                 <div style="background-color: rgb(236, 233, 233); width: 75%;">
                                     <table style="border-collapse: collapse; width: 100%; margin-top: 1rem; border-radius: 1rem;">
@@ -215,7 +191,7 @@ if (isset($_GET['MaPhieu'])) {
                 <div style="margin-top: 1rem;">
                     <div style="position: relative;">
                         <i class="fa fa-search"></i>
-                        <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" />
+                        <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" onkeyup="handleSearchChange(event)"/>
                     </div>
                     <div class="table_wrapper"> 
                         <table class="product_table"> 
@@ -231,6 +207,8 @@ if (isset($_GET['MaPhieu'])) {
                         </table>
                     </div>
                 </div>
+                <div class="pagination" id="pagination"></div>
+
             </div>
         </div>';
     };
@@ -241,35 +219,18 @@ if (isset($_GET['MaPhieu'])) {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    // Function to handle form submission
-function formatCurrency(input) {
-    // Lấy giá trị nhập vào từ trường input
-    let value = input.value;
-    // Loại bỏ các dấu phân tách và ký tự không phải số
-    value = value.replace(/[^\d]/g, '');
-    // Định dạng lại giá trị thành định dạng tiền tệ
-    input.value = Number(value).toLocaleString('en-US');
-}
-function clearFormat(input) {
-    // Loại bỏ các dấu phân tách khi trường nhận trọng tâm
-    let value = input.value;
-    value = value.replace(/[,]/g, '');
-    input.value = value;
-}
-function clearFormat1(value) {
-    // Loại bỏ các dấu phân tách từ giá trị
-    return value.replace(/[,]/g, '');
-}
+    function formatCurrency(input) {
+        let value = input.value;
+        value = value.replace(/[^\d]/g, '');
+        input.value = Number(value).toLocaleString('en-US');
+    }
 
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var userData = localStorage.getItem("key");
         userData = JSON.parse(userData);
-        try {
-            var trangthai = document.getElementById("status").value;
-            var maPNK = document.getElementById("maPNK").value;
-
-        } catch (error) {}
+        var trangthai = document.getElementById("status").value;
+        var maPNK = document.getElementById("maPNK").value;
         var maQuanLy = userData.MaTaiKhoan;
         var totalValue = document.getElementById('totalvalue').value;
         var productData = [];
@@ -325,8 +286,6 @@ function clearFormat1(value) {
                         window.location.href = 'QLPhieuNhapKho.php';
                     }
                 });
-
-
             },
             error: function(xhr, status, error) {
                 console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
@@ -334,10 +293,30 @@ function clearFormat1(value) {
         });
     }
 
-    // Function to toggle modal display
     function setShowModal(show) {
         var modalOverlay = document.querySelector('.modal_overlay');
         modalOverlay.style.display = show ? '' : 'none';
+    }
+
+    function clearSelectedProducts() {
+        localStorage.removeItem('selectedProducts');
+    }
+
+    function saveSelectedProducts() {
+        let selectedProducts = [];
+        $('.product_checkbox:checked').each(function() {
+            selectedProducts.push($(this).attr('id'));
+        });
+        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+    }
+
+    function loadSelectedProducts() {
+        let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+        $('.product_checkbox').each(function() {
+            if (selectedProducts.includes($(this).attr('id'))) {
+                $(this).prop('checked', true);
+            }
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -346,12 +325,6 @@ function clearFormat1(value) {
         inputElement.innerHTML = '';
         if (quanLyData && !inputElement.value) {
             inputElement.value = quanLyData.HoTen;
-        }
-        try {
-            loaddatasp();
-
-        } catch (error) {
-            
         }
         calculateTotalPrice();
         setInterval(calculateTotalPrice, 2000);
@@ -374,7 +347,6 @@ function clearFormat1(value) {
                 style: 'currency',
                 currency: 'VND'
             });
-            console.log(formattedTongGiaTri);
             var totalPriceElement = document.getElementById('totalvalue');
             if (totalPriceElement) {
                 totalPriceElement.value = formattedTongGiaTri;
@@ -383,6 +355,7 @@ function clearFormat1(value) {
     });
 
     $(document).on('change', '.product_checkbox', function() {
+        saveSelectedProducts(); // Lưu trạng thái của các sản phẩm đã chọn
         $('#tableBody').empty();
         $('.product_checkbox').each(function() {
             if ($(this).prop('checked')) {
@@ -400,6 +373,7 @@ function clearFormat1(value) {
         });
     });
 
+
     function validateDonGia(input) {
         var donGia = parseFloat(input.value);
         if (donGia < 1 || isNaN(donGia)) {
@@ -412,47 +386,69 @@ function clearFormat1(value) {
             input.value = "1";
         }
     }
+
     function validateSoLuong(input) {
-    var soLuong = parseInt(input.value);
-    if (soLuong < 1 || isNaN(soLuong)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: "Số lượng phải là một số nguyên lớn hơn hoặc bằng 1",
-        });
-        input.value = "1";
+        var soLuong = parseInt(input.value);
+        if (soLuong < 1 || isNaN(soLuong)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: "Số lượng phải là một số nguyên lớn hơn hoặc bằng 1",
+            });
+            input.value = "1";
+        }
     }
-}
+    let currentSearch = ''; // Biến toàn cục để lưu trữ giá trị tìm kiếm hiện tại
 
+    function handleSearchChange(event) {
+        // Lưu giá trị tìm kiếm và gọi hàm load dữ liệu cho trang đầu tiên
+        currentSearch = event.target.value.trim();
+        loaddatasp(1, currentSearch);
+    }
 
-    // Function to load product data
-    function loaddatasp() {
-        $('#tableBody1').empty();
+    function loaddatasp(page, search) {
+        const token = localStorage.getItem("token");
+
+        $('#tableBody1').empty(); // Xóa nội dung cũ của bảng
+        let ajaxData = {
+            pageNumber: page
+        }; // Thêm tham số trang vào AJAX
+
+        // Nếu search có giá trị, thêm tham số vào object data
+        if (search) {
+            ajaxData.search = search;
+        }
+
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+            url: 'http://localhost:8080/Product/Admin',
             type: 'GET',
             dataType: "json",
-            data: {
-                search: timkiemsp.value
+            data: ajaxData, // Truyền object ajaxData
+            headers: {
+                'Authorization': 'Bearer ' + token
             },
             success: function(response) {
-                var data = response.data;
+                var data = response.content;
                 var tableBody = document.getElementById("tableBody1");
                 var tableContent = "";
                 data.forEach(function(record) {
+                    var checked = localStorage.getItem('selectedProducts') ?
+                        JSON.parse(localStorage.getItem('selectedProducts')).includes(record['id']) :
+                        false;
                     var trContent = `
-                    <tr style="text-align: center;">
-                        <td style="padding: 0.5rem;">${record['MaSanPham']}</td>
-                        <td style="padding: 0.5rem;">${record['TenSanPham']}</td>
-                        <td style="padding: 0.5rem;">
-                            <input type="checkbox" class="product_checkbox" id="${record['MaSanPham']}"/>
-                        </td>
-                    </tr>`;
-
+                <tr style="text-align: center;">
+                    <td style="padding: 0.5rem;">${record['id']}</td>
+                    <td style="padding: 0.5rem;">${record['productName']}</td>
+                    <td style="padding: 0.5rem;">
+                        <input type="checkbox" class="product_checkbox" id="${record['id']}" ${checked ? 'checked' : ''}/>
+                    </td>
+                </tr>`;
                     tableContent += trContent;
                 });
 
                 tableBody.innerHTML = tableContent;
+                loadSelectedProducts(); // Khôi phục trạng thái các sản phẩm đã chọn
+                createPagination(page, response.totalPages);
             },
             error: function(xhr, status, error) {
                 console.error('Lỗi khi gọi API: ', error);
@@ -460,24 +456,37 @@ function clearFormat1(value) {
         });
     }
 
-    // Function to search products
-    function searchProducts(keyword) {
-        keyword = keyword.toLowerCase();
-        var tableRows = document.querySelectorAll('#tableBody1 tr');
-        tableRows.forEach(function(row) {
-            var productName = row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase();
-            if (productName.includes(keyword)) {
-                row.style.display = 'table-row';
-            } else {
-                row.style.display = 'none';
+
+    function createPagination(currentPage, totalPages) {
+        var paginationContainer = document.getElementById("pagination");
+
+        // Xóa nút phân trang cũ (nếu có)
+        paginationContainer.innerHTML = '';
+
+        if (totalPages > 1) {
+            // Tạo nút cho từng trang và thêm vào chuỗi HTML
+            var paginationHTML = '';
+            for (var i = 1; i <= totalPages; i++) {
+                paginationHTML += '<button class="pageButton">' + i + '</button>';
             }
-        });
+
+            // Thiết lập nút phân trang vào paginationContainer
+            paginationContainer.innerHTML = paginationHTML;
+
+            // Thêm sự kiện click cho từng nút phân trang
+            paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
+                button.addEventListener('click', function() {
+                    // Gọi hàm loaddatasp khi người dùng click vào nút phân trang
+                    loaddatasp(index + 1, currentSearch); // Sử dụng currentSearch thay vì lấy từ input
+                });
+            });
+
+            // Đánh dấu trang hiện tại
+            paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active');
+        }
     }
 
-    // Event listener for search input
-    var timkiemsp = document.getElementById('timkiemsp');
-    timkiemsp.addEventListener('input', function() {
-        var searchKeyword = this.value.trim();
-        searchProducts(searchKeyword);
+    $(document).ready(function() {
+        loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
     });
 </script>

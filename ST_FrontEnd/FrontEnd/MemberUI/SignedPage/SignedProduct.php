@@ -219,7 +219,6 @@
 
         function getAllSanPham(page, search, minGia, maxGia, brandId, categoryId) {
             // Gọi API để lấy dữ liệu sản phẩm
-            console.log(page, search, minGia, maxGia, brandId, categoryId)
             $.ajax({
                 url: "http://localhost:8080/Product/CommonUser",
                 method: "GET",

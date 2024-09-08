@@ -1,7 +1,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <?php
-if (isset($_GET['MaNguoiDung'])) {
+if (isset($_GET['maTaiKhoan'])) {
     $hoten = $_POST['hoten'];
     $ngaysinh = $_POST['ngaysinh'];
     $gioitinh = $_POST['gioitinh'];
@@ -9,9 +9,9 @@ if (isset($_GET['MaNguoiDung'])) {
     $sodienthoai = $_POST['sodienthoai'];
     require_once "../../../BackEnd/AdminBE/NguoiDungBE.php";
     require_once "../../../BackEnd/AdminBE/TaiKhoanBE.php";
-    $id = $_GET['MaNguoiDung'];
+    $id = $_GET['maTaiKhoan'];
     $mess = updateNguoiDung($id, $hoten, $ngaysinh, $gioitinh, $sodienthoai, null, $diachi);
-    $nguoidung= getTaiKhoanByMaTaiKhoan($id)->data;
+    $nguoidung = getTaiKhoanByMaTaiKhoan($id)->data;
     $jsonNguoiDung = json_encode($nguoidung);
     if ($mess->status == '200') {
         echo '
@@ -34,12 +34,13 @@ if (isset($_GET['MaNguoiDung'])) {
         });
         </script>';
     }
-    
-    exit();     
+
+    exit();
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +53,7 @@ if (isset($_GET['MaNguoiDung'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
+
 <body>
     <?php require_once "../Header/SignedHeader.php" ?>
     <div class="col-12">
@@ -82,7 +84,7 @@ if (isset($_GET['MaNguoiDung'])) {
             var infoPage = document.getElementById("contentprofile");
             infoPage.innerHTML = `
             <div class='col-xxl-8 mb-5 mb-xxl-0'>
-            <form name="profileForm" action="Profile.php?MaNguoiDung=${userData['MaNguoiDung']}" method="POST" onsubmit="return validateForm()">
+            <form name="profileForm" action="Profile.php?maTaiKhoan=${userData['maTaiKhoan']}" method="POST" onsubmit="return validateForm()">
                     <div class='bg-secondary-soft px-4 py-5 rounded'>
                         <div class='row g-3' style='text-align:left;'>
                             <div class='col-md-6'>
@@ -124,6 +126,7 @@ if (isset($_GET['MaNguoiDung'])) {
             `;
         }
         window.onload = loadUserInfoFromLocalStorage;
+
         function validateForm() {
             var hoten = document.forms["profileForm"]["hoten"].value;
             var sodienthoai = document.forms["profileForm"]["sodienthoai"].value;
@@ -181,4 +184,5 @@ if (isset($_GET['MaNguoiDung'])) {
         }
     </script>
 </body>
+
 </html>

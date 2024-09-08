@@ -124,8 +124,8 @@
             <div class="header-option" onclick="toMyOrder()">
                 <i class="fa-solid fa-truck-fast"></i>
             </div>
-            <div class="header-option">
-                <a href="Profile.php"><i class="fa-solid fa-user"></i></a>
+            <div class="header-option" onclick="toProfile()">
+                <i class="fa-solid fa-user"></i>
             </div>
             <div class="header-option" onclick="logout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -169,7 +169,7 @@
             const localStorageData = JSON.parse(localStorage.getItem("key"));
             console.log(localStorage.getItem("key"))
 
-            const maTaiKhoan = localStorageData.MaTaiKhoan;
+            const maTaiKhoan = localStorageData.id;
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "Cart.php?maTaiKhoan=" + maTaiKhoan;
@@ -179,14 +179,31 @@
             console.error("Form not found!");
         }
     }
+    //profile
+    function toProfile() {
+        const form = document.getElementById("search");
+        if (form) {
+            // Lấy dữ liệu từ localStorage
+            const localStorageData = JSON.parse(localStorage.getItem("key"));
+            console.log(localStorage.getItem("key"))
 
+            const maTaiKhoan = localStorageData.id;
+
+            // Thêm MaTaiKhoan vào action của form
+            form.action = "Profile.php?maTaiKhoan=" + maTaiKhoan;
+            // Gửi form đi
+            form.submit();
+        } else {
+            console.error("Form not found!");
+        }
+    }
     //Sự kiện đơn hàng cá nhân
     function toMyOrder() {
         const form = document.getElementById("search");
         if (form) {
             // Lấy dữ liệu từ localStorage
             const localStorageData = JSON.parse(localStorage.getItem("key"));
-            const maTaiKhoan = localStorageData.MaTaiKhoan;
+            const maTaiKhoan = localStorageData.id;
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "MyOrder.php?maTaiKhoan=" + maTaiKhoan;
