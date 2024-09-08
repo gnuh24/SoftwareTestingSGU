@@ -52,7 +52,7 @@
                             <div style="display: flex; padding-top: 1rem; padding-bottom: 1rem;">
                                 <h2>Phiếu Nhập Kho</h2>
                                 <div style="margin-left: auto;">
-                                    <button style="font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; color: rgb(65, 64, 64); border: 1px solid rgb(65, 64, 64); background-color: white; padding: 1rem; border-radius: 0.6rem; cursor: pointer;">
+                                    <button style="font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; color: rgb(65, 64, 64); border: 1px solid rgb(65, 64, 64); background-color: white; padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="clearSelectedProducts()">
                                         <a href="QLPhieuNhapKho.php">
                                             <?php
                                             if (!isset($_GET['MaPhieu'])) echo 'Hủy';
@@ -75,13 +75,18 @@
                                     class="form-control"
                                     id="manhacungcap"
                                     placeholder="Nhập tên nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0px" />
+                                    style="width: 40%;padding: 10px 0px"
+                                    <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
                                 <input
                                     type="text"
                                     class="form-control"
                                     id="sodienthoainhacungcap"
                                     placeholder="Nhập số điện thoại nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0;" />
+                                    style="width: 40%;padding: 10px 0;"
+                                    <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
+                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
+                                    Tạo phiếu nhập
+                                </button>
                             </div>
 
 
@@ -137,14 +142,8 @@
                                         <input id="maPNK" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['MaPhieu']; ?>" disabled="true" />
                                     </label>
                                     <label>
-                                        <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tên Người Quản Lý</p>
-                                        <input id="maquanly" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['HoTen']; ?>" disabled="true" ;>
-
-                                        </input>
-                                    </label>
-                                    <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
-                                        <input id="totalvalue" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php echo (isset($_GET['MaPhieu'])) ? number_format($_GET['TongTien'], 0, '.', ',') . ' ₫' : ''; ?>" <?php echo (isset($_GET['MaPhieu'])) ? 'disabled="true"' : ''; ?> />
+                                        <input id="totalvalue" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="" disabled="true" />
                                     </label>
                                     <?php
                                     if (isset($_GET['MaPhieu']))
@@ -221,24 +220,68 @@
 <script>
     function formatCurrency(input) {
         let value = input.value;
-        value = value.replace(/[^\d]/g, '');
-        input.value = Number(value).toLocaleString('en-US');
+        value = value.replace(/[^\d]/g, ''); // Loại bỏ ký tự không phải số
+        input.value = Number(value).toLocaleString('en-US'); // Định dạng tiền tệ
     }
+
+    function clearFormat(input) {
+        let value = input.value;
+        value = value.replace(/[,]/g, ''); // Loại bỏ dấu phân cách hàng nghìn
+        input.value = value;
+    }
+
+    function validatePhoneNumber(sodienthoainhacungcap) {
+        // Xóa các ký tự không phải số như khoảng trắng hoặc dấu gạch ngang
+        let phoneNumber = sodienthoainhacungcap.replace(/\D/g, '');
+
+        // Kiểm tra độ dài của số điện thoại (ví dụ, 10-11 chữ số cho số tại Việt Nam)
+        if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại phải từ 10 đến 11 chữ số.',
+            });
+            return false;
+        }
+
+        // Kiểm tra xem số điện thoại chỉ chứa các chữ số
+        if (!/^\d+$/.test(phoneNumber)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại không hợp lệ. Chỉ bao gồm chữ số.',
+            });
+            return false;
+        }
+
+        return true; // Nếu số điện thoại hợp lệ
+    }
+
+    function clearCurrencyFormat(value) {
+        return parseInt(value.replace(/[^\d]/g, ''), 10); // Loại bỏ tất cả các ký tự không phải số và chuyển đổi thành số nguyên
+    }
+
 
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
-        var userData = localStorage.getItem("key");
-        userData = JSON.parse(userData);
-        var trangthai = document.getElementById("status").value;
-        var maPNK = document.getElementById("maPNK").value;
-        var maQuanLy = userData.MaTaiKhoan;
-        var totalValue = document.getElementById('totalvalue').value;
+        var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
+        var trangthai = document.getElementById("status");
+        var maPNK = document.getElementById("maPNK");
+        var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
         var productData = [];
         if (maNhaCungCap === '') {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
-                text: 'Vui lòng chọn nhà cung cấp',
+                text: 'Vui lòng điền tên nhà cung cấp',
+            });
+            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+        }
+        if (sodienthoainhacungcap === '' || !validatePhoneNumber(sodienthoainhacungcap)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại nhà cung cấp không hợp lệ',
             });
             return; // Dừng hàm nếu nhà cung cấp chưa được chọn
         }
@@ -246,16 +289,17 @@
             var maSanPham = $(this).find('td:nth-child(1)').text().trim();
             var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
             var donGia = $(this).find('td:nth-child(3) input').val().trim();
-            var dongia = clearFormat1(donGia);
+            var dongia = donGia;
             var soLuong = $(this).find('td:nth-child(4) input').val().trim();
 
-            var productItem = {
-                'MaSanPham': maSanPham,
-                'TenSanPham': tenSanPham,
-                'DonGia': dongia,
-                'SoLuong': soLuong
-            };
+            var totalItemValue = parseFloat(dongia) * parseInt(soLuong);
 
+            var productItem = {
+                'idProductId': maSanPham,
+                'unitPrice': dongia,
+                'quantity': soLuong,
+                'total': totalItemValue
+            };
             productData.push(productItem);
         });
         if (productData.length === 0) {
@@ -266,15 +310,42 @@
             });
             return false; // Dừng việc gửi form nếu productData trống
         }
+        const token = localStorage.getItem("token");
+        var formData = new FormData();
+        var totalPrice = parseInt(totalValue);
+        if (isNaN(totalPrice)) {
+            console.error("Invalid totalPrice");
+            return;
+        }
+        formData.append('totalPrice', totalPrice);
+
+        formData.append('supplier', maNhaCungCap);
+        formData.append('supplierPhone', sodienthoainhacungcap);
+
+        productData.forEach((item, index) => {
+            var idProductId = parseInt(item.idProductId);
+            var unitPrice = parseInt(item.unitPrice);
+            var quantity = parseInt(item.quantity);
+            var total = parseInt(item.total);
+
+            if (isNaN(idProductId) || isNaN(unitPrice) || isNaN(quantity) || isNaN(total)) {
+                console.error(`Invalid data for product ${index}`);
+                return;
+            }
+
+            formData.append(`inventoryReportDetailCreateFormList[${index}].idProductId`, idProductId);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, unitPrice);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, quantity);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].total`, total);
+        });
         $.ajax({
-            type: 'GET',
-            url: 'xulyPhieuNhapKho.php',
-            data: {
-                'MaNhaCungCap': maNhaCungCap,
-                'trangthai': trangthai,
-                'MaQuanLy': maQuanLy,
-                'MaPhieuNhapKho': maPNK,
-                'ProductData': JSON.stringify(productData)
+            type: 'POST',
+            url: 'http://localhost:8080/InventoryReport',
+            data: formData,
+            contentType: false, // Không gửi tiêu đề Content-Type
+            processData: false, // Không xử lý dữ liệu
+            headers: {
+                'Authorization': 'Bearer ' + token
             },
             success: function(response) {
                 Swal.fire({
@@ -302,76 +373,123 @@
         localStorage.removeItem('selectedProducts');
     }
 
-    function saveSelectedProducts() {
-        let selectedProducts = [];
-        $('.product_checkbox:checked').each(function() {
-            selectedProducts.push($(this).attr('id'));
+    function calculateTotalPrice() {
+        var totalPrice = 0; // Biến lưu tổng giá trị
+        var tableRows = document.querySelectorAll('#tableBody tr'); // Lấy tất cả các dòng trong bảng
+
+        // Duyệt qua từng dòng để tính tổng
+        tableRows.forEach(function(row) {
+            var quantityCell = row.querySelector('input[name="soLuong[]"]'); // Ô số lượng
+            var priceCell = row.querySelector('input[name="donGia[]"]'); // Ô đơn giá
+
+            // Kiểm tra nếu các ô tồn tại và có giá trị hợp lệ
+            if (quantityCell && priceCell) {
+                var quantity = parseInt(quantityCell.value) || 0; // Chuyển đổi số lượng thành số, nếu không hợp lệ thì mặc định là 0
+                var price = parseFloat(priceCell.value.replace(/,/g, '')) || 0; // Chuyển đổi giá thành số, loại bỏ dấu phẩy nếu có, nếu không hợp lệ thì mặc định là 0
+
+                // Tính giá trị cho dòng này và cộng vào tổng
+                totalPrice += quantity * price;
+            }
         });
-        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+
+        // Định dạng lại tổng giá trị thành chuỗi tiền tệ
+        var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+
+        // Cập nhật vào ô hiển thị tổng giá trị
+        var totalPriceElement = document.getElementById('totalvalue');
+        if (totalPriceElement) {
+            totalPriceElement.value = formattedTongGiaTri; // Gán giá trị đã định dạng vào ô tổng giá trị
+        }
     }
+
+    function saveSelectedProducts() {
+        let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+        let selectedMap = new Map(selectedProducts.map(product => [product.id, product]));
+
+        $('.product_checkbox').each(function() {
+            let productId = $(this).attr('id');
+            let productName = $(this).closest('tr').find('td:eq(1)').text().trim();
+
+            // Lấy giá và số lượng hiện tại của sản phẩm
+            let donGiaElement = document.getElementById(`donGia${productId}`);
+            let soLuongElement = document.getElementById(`soLuong${productId}`);
+
+            // Nếu phần tử tồn tại, lấy giá trị, nếu không, đặt giá trị mặc định là "1"
+            let donGia = donGiaElement ? donGiaElement.value : "1";
+            let soLuong = soLuongElement ? soLuongElement.value : "1";
+
+            if ($(this).prop('checked')) {
+                if (!selectedMap.has(productId)) {
+                    selectedMap.set(productId, {
+                        id: productId,
+                        name: productName,
+                        donGia: donGia,
+                        soLuong: soLuong
+                    });
+                } else {
+                    // Cập nhật thông tin giá và số lượng nếu sản phẩm đã có trong danh sách
+                    let product = selectedMap.get(productId);
+                    product.donGia = donGia;
+                    product.soLuong = soLuong;
+                }
+            } else {
+                selectedMap.delete(productId);
+            }
+        });
+
+        localStorage.setItem('selectedProducts', JSON.stringify([...selectedMap.values()]));
+
+        // Tính toán lại tổng giá trị ngay sau khi lưu sản phẩm vào localStorage
+        calculateTotalPrice();
+    }
+
+
+    $(document).on('input', 'input[name="donGia[]"], input[name="soLuong[]"]', function() {
+        calculateTotalPrice();
+        saveSelectedProducts(); // Cập nhật thông tin trong localStorage
+    });
+
 
     function loadSelectedProducts() {
         let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+        let selectedIds = new Set(selectedProducts.map(product => product.id));
+
         $('.product_checkbox').each(function() {
-            if (selectedProducts.includes($(this).attr('id'))) {
-                $(this).prop('checked', true);
-            }
+            $(this).prop('checked', selectedIds.has($(this).attr('id')));
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var quanLyData = JSON.parse(localStorage.getItem("key"));
-        var inputElement = document.getElementById("maquanly");
-        inputElement.innerHTML = '';
-        if (quanLyData && !inputElement.value) {
-            inputElement.value = quanLyData.HoTen;
-        }
-        calculateTotalPrice();
-        setInterval(calculateTotalPrice, 2000);
-
-        function calculateTotalPrice() {
-            var totalPrice = 0;
-            var tableRows = document.querySelectorAll('#tableBody tr');
-            tableRows.forEach(function(row) {
-                var quantityCell = row.querySelector('td:nth-child(4) input');
-                var priceCell = row.querySelector('td:nth-child(3) input');
-                if (quantityCell && priceCell) {
-                    var quantity = parseInt(quantityCell.value);
-                    var price = clearFormat1(priceCell.value);
-                    if (!isNaN(quantity) && !isNaN(price)) { // Kiểm tra nếu quantity và price là số hợp lệ
-                        totalPrice += quantity * price;
-                    }
-                }
-            });
-            var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            });
-            var totalPriceElement = document.getElementById('totalvalue');
-            if (totalPriceElement) {
-                totalPriceElement.value = formattedTongGiaTri;
-            }
-        }
-    });
-
     $(document).on('change', '.product_checkbox', function() {
         saveSelectedProducts(); // Lưu trạng thái của các sản phẩm đã chọn
-        $('#tableBody').empty();
-        $('.product_checkbox').each(function() {
-            if ($(this).prop('checked')) {
-                var productId = $(this).attr('id');
-                var productName = $(this).closest('tr').find('td:eq(1)').text().trim();
 
-                var selectedProductHTML = '<tr style="text-align: center;">' +
-                    '<td style="padding: 0.5rem; name=MaSanPham[]">' + productId + '</td>' +
-                    '<td style="padding: 0.5rem;">' + productName + '</td>' +
-                    '<td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="1" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
-                    '<td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="1" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
-                    '</tr>';
-                $('#tableBody').append(selectedProductHTML);
-            }
+        // Xóa nội dung hiện tại của bảng
+        $('#tableBody').empty();
+
+        // Tải tất cả sản phẩm từ localStorage
+        let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+
+        selectedProducts.forEach(function(product) {
+            var selectedProductHTML = `
+        <tr style="text-align: center;">
+            <td style="padding: 0.5rem;" name="MaSanPham[]">${product.id}</td>
+            <td style="padding: 0.5rem;">${product.name}</td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="donGia[]" id="donGia${product.id}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${product.donGia}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="soLuong[]" id="soLuong${product.id}" value="${product.soLuong}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+        </tr>`;
+            $('#tableBody').append(selectedProductHTML);
         });
+
+        // Gọi ngay tính tổng sau khi thêm sản phẩm vào bảng
+        calculateTotalPrice(); // Tính toán lại tổng giá trị ngay sau khi thêm sản phẩm
     });
+
 
 
     function validateDonGia(input) {
@@ -487,6 +605,9 @@
     }
 
     $(document).ready(function() {
+        localStorage.removeItem('selectedProducts');
+        loadSelectedProducts();
+
         loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
     });
 </script>
