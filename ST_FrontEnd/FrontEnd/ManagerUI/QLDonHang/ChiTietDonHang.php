@@ -9,17 +9,6 @@
     <link rel="stylesheet" href="detail_donhang.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Quản lý đơn hàng</title>
-    <style>
-        .order_status.cancelled {
-            color: red;
-        }
-
-        .order_status.cancelled::before {
-            content: "✘";
-            font-size: 20px;
-            margin-right: 5px;
-        }
-    </style>
 </head>
 
 <body>
@@ -51,6 +40,8 @@
                                                         <p id='sodienthoai'></p>
                                                         <p id='ngaysinh'></p> <!-- Added birthday -->
                                                         <p id='gioitinh'></p> <!-- Added gender -->
+                                                        <p id="orderTime"></p> <!-- Added order time -->
+
                                                     </div>
                                                 </div>
                                                 <div class="payment_method__wrapper">
@@ -79,15 +70,9 @@
                                                     <p id="totalPrice"></p>
                                                 </div>
                                             </div>
-                                            <div class="order_time_wrapper">
-                                                <p class="title">Thời gian đặt hàng:</p>
-                                                <div class="divider"></div>
-                                                <p id="orderTime"></p> <!-- Added order time -->
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!--  -->
                             </div>
                         </div>
                     </div>
@@ -120,7 +105,6 @@
                 'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
             },
             success: function(response) {
-                console.log(response);
                 var data = response;
                 
                 // Handle order details
@@ -153,7 +137,7 @@
                 document.getElementById("tenphuongthuc").innerHTML = `Chưa có thông tin<br>`;
                 document.getElementById("note").innerText = data.note; // Added note
                 document.getElementById("totalPrice").innerText = number_format_vnd(data.totalPrice);
-                document.getElementById("orderTime").innerText = data.orderTime; // Added order time
+                document.getElementById("orderTime").innerHTML = `<span>Thời gian đặt: </span>${data.orderTime}`; // Added order time
 
                 // Handle order status
                 var order_status = document.getElementById("order_status");

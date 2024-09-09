@@ -22,7 +22,10 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                localStorage.removeItem("key");
+                localStorage.removeItem("id");
+                localStorage.removeItem("token");
+                localStorage.removeItem("refreshToken");
+
                 window.location.href =  "../../MemberUI/Login/LoginUI.php";
             }
         });

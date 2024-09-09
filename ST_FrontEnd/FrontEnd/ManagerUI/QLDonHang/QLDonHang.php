@@ -188,22 +188,11 @@
             html += '<td>' + record.phoneNumber + '</td>';
             html += '<td>' + formatStatus(record.status) + '</td>';
 
-            html += '<td>';
+            html += '<td style="display: flex; gap: 5px;">';
             html += '<a href="./ChiTietDonHang.php?id=' + record.id + '" class="edit">Chi tiết</a> '; // Nút Chi tiết
 
-            // Kiểm tra trạng thái trước khi hiển thị nút Hủy
-            if (record.status !== 'GiaoThanhCong') {
-                html += `
-                      <button 
-                          type="button" 
-                          class="cancel" 
-                          onclick="updateStatus('${record.id}', 'Huy')"
-                      >
-                          Hủy
-                      </button>`;        }
-
-          // Nút Cập nhật trạng thái (màu xanh lá) với nội dung tùy thuộc vào trạng thái
-            if (record.status !== 'GiaoThanhCong' && record.status !== 'DaHuy') {
+            // Nút Cập nhật trạng thái (màu xanh lá) với nội dung tùy thuộc vào trạng thái
+            if (record.status !== 'GiaoThanhCong' && record.status !== 'Huy') {
                 const updateStatusText = getUpdateStatusText(record.status);
                 const nextStatus = getUpdateStatus(record.status);
                 
@@ -216,6 +205,21 @@
                         ${updateStatusText}
                     </button>`;
             }
+
+            // Kiểm tra trạng thái trước khi hiển thị nút Hủy
+            if (record.status !== 'GiaoThanhCong' && record.status !== 'Huy') {
+                html += `
+                      <button 
+                          type="button" 
+                          class="cancel" 
+                          onclick="updateStatus('${record.id}', 'Huy')"
+                      >
+                          Hủy
+                      </button>`;        
+                    }
+
+            
+            
 
             html += '</td>';
             html += '</tr>';
