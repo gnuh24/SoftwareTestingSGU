@@ -1,5 +1,26 @@
 USE `SGU_Software_Testing`;
 
+SELECT s.Id AS productId, 
+       s.ProductName AS productName, 
+       COUNT(od.Quantity) AS quantity, 
+       SUM(od.Total) AS total 
+FROM `Order` o 
+JOIN `OrderDetail` od ON o.Id = od.OrderId 
+JOIN `Product` s ON od.ProductId = s.Id
+JOIN `OrderStatus` os ON os.OrderId = o.Id 
+JOIN `Brand` b ON s.BrandId = b.Id 
+JOIN `Category` st ON s.CategoryId = st.Id 
+WHERE os.Status = 'GiaoThanhCong' 
+  AND DATE(os.UpdateTime) BETWEEN COALESCE(:maxDate, '2022-01-01') AND COALESCE(:maxDate, CURRENT_DATE()) 
+  AND (:brandId IS NULL OR b.BrandId = :brandId) 
+  AND (:categoryId IS NULL OR st.Id = :categoryId) 
+GROUP BY s.Id, s.ProductName
+ORDER BY total DESC, quantity DESC ;
+
+LIMIT :limit;
+
+
+
 
 INSERT INTO `Category` 	(`CategoryName`) VALUES
 						('Các loại sản phẩm khác'),

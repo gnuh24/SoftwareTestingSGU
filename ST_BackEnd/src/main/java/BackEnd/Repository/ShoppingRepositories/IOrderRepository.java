@@ -1,10 +1,10 @@
 package BackEnd.Repository.ShoppingRepositories;
 
 import BackEnd.Entity.ShoppingEntities.Order;
-import BackEnd.Form.StatisticForms.BestSellerForm;
 import BackEnd.Form.StatisticForms.BestSellerSizeForm;
 import BackEnd.Form.StatisticForms.IncomeSummaryForm;
 import BackEnd.Form.StatisticForms.OrderStatusSummary;
+import BackEnd.Form.StatisticForms.ProductSalesSummary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -24,27 +24,28 @@ public interface IOrderRepository extends JpaRepository<Order, String>, JpaSpeci
     Boolean isOrderBelongToThisId(@Param("accountId") Integer accountId,
                                   @Param("orderId") String orderId);
 
-    @Query(value = "SELECT s.ShoeId AS shoeId, s.ShoeName AS shoeName, " +
-        "COUNT(od.Quantity) AS quantity, SUM(od.Total) AS total " +
+    @Query(value = "SELECT s.Id AS productId, " +
+        "s.ProductName AS productName, " +
+        "COUNT(od.Quantity) AS quantity, " +
+        "SUM(od.Total) AS total " +
         "FROM `Order` o " +
         "JOIN `OrderDetail` od ON o.Id = od.OrderId " +
-        "JOIN `Product` s ON od.ShoeId = s.ShoeId " +
+        "JOIN `Product` s ON od.ProductId = s.Id " +
         "JOIN `OrderStatus` os ON os.OrderId = o.Id " +
-        "JOIN `Brand` b ON s.BrandId = b.BrandId " + // Join with Brand table
-        "JOIN `Category` st ON s.ShoeTypeId = st.ShoeTypeId " + // Join with Category table
-        "WHERE os.Status = 'GiaoThanhCong' AND " +
-        "DATE(os.UpdateTime) BETWEEN COALESCE(:minDate, '2022-01-01') AND COALESCE(:maxDate, CURRENT_DATE()) " +
-        "AND (:brandId IS NULL OR b.BrandId = :brandId) " + // Filter by brandId if provided
-        "AND (:shoeTypeId IS NULL OR st.ShoeTypeId = :shoeTypeId) " + // Filter by shoeTypeId if provided
-        "GROUP BY s.ShoeId, s.ShoeName " +
+        "JOIN `Brand` b ON s.BrandId = b.Id " +
+        "JOIN `Category` st ON s.CategoryId = st.Id " +
+        "WHERE os.Status = 'GiaoThanhCong' " +
+        "AND DATE(os.UpdateTime) BETWEEN COALESCE(:minDate, '2022-01-01') AND COALESCE(:maxDate, CURRENT_DATE()) " +
+        "AND (:brandId IS NULL OR b.Id = :brandId) " +
+        "AND (:categoryId IS NULL OR st.Id = :categoryId) " +
+        "GROUP BY s.Id, s.ProductName " +
         "ORDER BY total DESC, quantity DESC " +
         "LIMIT :limit", nativeQuery = true)
-    List<BestSellerForm> findShoeSales(@Param("minDate") String minDate,
-                                       @Param("maxDate") String maxDate,
-                                       @Param("limit") Integer limit,
-                                       @Param("brandId") Integer brandId,
-                                       @Param("shoeTypeId") Integer shoeTypeId);
-
+    List<ProductSalesSummary> findProductSales(@Param("minDate") String minDate,
+                                               @Param("maxDate") String maxDate,
+                                               @Param("limit") Integer limit,
+                                               @Param("brandId") Integer brandId,
+                                               @Param("categoryId") Integer categoryId);
 
     @Query(value = "SELECT s.ShoeId AS shoeId, s.ShoeName AS shoeName, od.Size AS size, " +
         "COUNT(od.Quantity) AS quantity, SUM(od.Total) AS total " +
