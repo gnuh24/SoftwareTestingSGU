@@ -43,9 +43,9 @@
                                 <p class="titlePriceTotal">Tổng giá trị:</p>
                                 <p class="priceTotal fw-bold">0đ</p>
                             </div>
-                            <button class="btn btn-danger w-100 my-3 hidden btnCheckout">Tiến hành đặt hàng</button>
+                            <button class="btn btn-danger w-100 my-3 hidden btnCheckout" style="background-color:rgb(146, 26, 26) !important;">Tiến hành đặt hàng</button>
                             <a href="SignedProduct.php">
-                                <button class="btn btn-outline-danger w-100">Tiếp tục mua hàng</button>
+                                <button class="btn btn-outline-danger w-100" style=" border:1px solid rgb(146, 26, 26) !important;color:rgb(146, 26, 26) ;">Tiếp tục mua hàng</button>
                             </a>
                         </div>
                     </div>
@@ -58,6 +58,12 @@
         <?php require_once "../Footer/Footer.php" ?>
 
     </div>
+    <style>
+        .btn-outline-danger:hover {
+            background-color: rgb(146, 26, 26) !important;
+            color: white !important;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

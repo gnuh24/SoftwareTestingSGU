@@ -60,13 +60,10 @@
                                             ?>
                                         </a>
                                     </button>
-                                    <?php
-                                    if (!isset($_GET['MaPhieu']))
-                                        echo '
-                                        <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="setShowModal(true)">
-                                            Thêm Sản Phẩm
-                                        </button>';
-                                    ?>
+
+                                    <button id="addsp" style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="setShowModal(true)">
+                                        Thêm Sản Phẩm
+                                    </button>
                                 </div>
                             </div>
                             <div class="boxFeature d-flex flex-wrap" style="gap: 2rem;">
@@ -75,15 +72,13 @@
                                     class="form-control"
                                     id="manhacungcap"
                                     placeholder="Nhập tên nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0px"
-                                    <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
+                                    style="width: 40%;padding: 10px 0px" />
                                 <input
                                     type="text"
                                     class="form-control"
                                     id="sodienthoainhacungcap"
                                     placeholder="Nhập số điện thoại nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0;"
-                                    <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
+                                    style="width: 40%;padding: 10px 0;" />
                                 <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" <?php if (isset($_GET['MaPhieu'])) echo 'onclick="handleSubmitChange()"';
                                                                                                                                                                                                                                     else echo 'onclick="handleSubmit()"'; ?>>
                                     <?php if (isset($_GET['MaPhieu'])) echo 'Xác nhận';
@@ -321,6 +316,8 @@
                     text: 'Tạo phiếu nhập kho thành công',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+                        localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
                         window.location.href = 'QLPhieuNhapKho.php';
                     }
                 });
@@ -331,15 +328,7 @@
         });
     }
 
-    function handleSubmitChange() {
-        var selectElement = document.getElementById('status');
-        var selectedValue = selectElement.value;
-        console.log(selectedValue)
-        if (selectedValue === 'Huy' || selectedValue === "DaNhapKho") {
-            window.location.href = 'QLPhieuNhapKho.php';
-        }
 
-    }
 
     function setShowModal(show) {
         var modalOverlay = document.querySelector('.modal_overlay');
@@ -395,7 +384,7 @@
             let soLuongElement = document.getElementById(`soLuong${productId}`);
 
             // Nếu phần tử tồn tại, lấy giá trị, nếu không, đặt giá trị mặc định là "1"
-            let donGia = donGiaElement ? donGiaElement.value : "1";
+            let donGia = donGiaElement ? clearCurrencyFormat(donGiaElement.value) : "1";
             let soLuong = soLuongElement ? soLuongElement.value : "1";
 
             if ($(this).prop('checked')) {
@@ -583,9 +572,11 @@
 
     $(document).ready(function() {
         localStorage.removeItem('selectedProducts');
-        loadSelectedProducts();
+        if (!checkMaPhieuInUrl()) {
+            loadSelectedProducts();
 
-        loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
+            loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
+        }
     });
 
 
@@ -621,14 +612,16 @@
                 var selectedProducts = [];
                 var selectedProducts = productData.map(function(product) {
                     return {
-                        id: product.productId,
+                        id: product.productId.toString(),
                         name: product.productName,
                         donGia: product.quantity,
                         soLuong: product.unitPrice
                     };
                 });
-                localStorage.setItem('selectedproduct', JSON.stringify(selectedProducts));
+                localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+                localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
 
+                localStorage.setItem('status', response.inventoryReportStatuses.slice(-1)[0].status)
                 // Cập nhật bảng sản phẩm
                 var tableBody = document.getElementById("tableBody");
                 tableBody.innerHTML = ""; // Xóa nội dung cũ của bảng
@@ -684,6 +677,9 @@
                     document.querySelectorAll('input[name="donGia[]"], input[name="soLuong[]"]').forEach(function(input) {
                         input.disabled = true;
                     });
+                    document.getElementById('manhacungcap').disabled = true;
+                    document.getElementById('sodienthoainhacungcap').disabled = true;
+                    document.getElementById('addsp').style.display = 'none';
                 }
             },
             error: function(xhr, status, error) {
@@ -704,6 +700,220 @@
             loadDataAllWhenUrlHaveId(maPhieu);
         }
     }
+
+    function handleSubmitChange() {
+        const status = localStorage.getItem("status");
+        if (status === 'Huy' || status === "DaNhapKho") {
+            localStorage.removeItem('selectedProducts');
+            localStorage.removeItem('selectedProductsOld');
+
+            window.location.href = 'QLPhieuNhapKho.php';
+        } else {
+            try {
+                xuLyPNK();
+                localStorage.removeItem('selectedProducts');
+                localStorage.removeItem('selectedProductsOld');
+                window.location.href = 'QLPhieuNhapKho.php';
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+    }
+
+    function xuLyPNK() {
+        var maNhaCungCap = document.getElementById('manhacungcap').value;
+        var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
+        var trangthai = document.getElementById("status");
+        var maPNK = document.getElementById("maPNK");
+        var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
+        var productData = [];
+        if (maNhaCungCap === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng điền tên nhà cung cấp',
+            });
+            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+        }
+        if (sodienthoainhacungcap === '' || !validatePhoneNumber(sodienthoainhacungcap)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại nhà cung cấp không hợp lệ',
+            });
+            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+        }
+        $('#tableBody tr').each(function() {
+            var maSanPham = $(this).find('td:nth-child(1)').text().trim();
+            var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
+            var donGia = $(this).find('td:nth-child(3) input').val().trim();
+            var dongia = donGia;
+            var soLuong = $(this).find('td:nth-child(4) input').val().trim();
+
+            var totalItemValue = parseFloat(dongia) * parseInt(soLuong);
+
+            var productItem = {
+                'idProductId': maSanPham,
+                'unitPrice': dongia,
+                'quantity': soLuong,
+                'total': totalItemValue
+            };
+            productData.push(productItem);
+        });
+        if (productData.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng thêm ít nhất một sản phẩm.',
+            });
+            return false; // Dừng việc gửi form nếu productData trống
+        }
+        const token = localStorage.getItem("token");
+        var formData = new FormData();
+        var formData1 = new FormData();
+
+        var totalPrice = parseInt(totalValue);
+        if (isNaN(totalPrice)) {
+            console.error("Invalid totalPrice");
+            return;
+        }
+        formData.append('totalPrice', totalPrice);
+        formData.append('supplier', maNhaCungCap);
+        formData.append('supplierPhone', sodienthoainhacungcap);
+        formData.append('id', maPNK.value)
+        $.ajax({
+            type: 'PATCH',
+            url: 'http://localhost:8080/InventoryReport',
+            data: formData,
+            contentType: false, // Không gửi tiêu đề Content-Type
+            processData: false, // Không xử lý dữ liệu
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
+            }
+        });
+        if (trangthai.value !== "ChoNhapKho") {
+            var formData2 = new FormData()
+            formData2.append('idStatus', trangthai.value);
+            formData2.append('inventoryReportId', maPNK.value)
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/InventoryReportStatus',
+                data: formData2,
+                contentType: false, // Không gửi tiêu đề Content-Type
+                processData: false, // Không xử lý dữ liệu
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {},
+                error: function(xhr, status, error) {
+                    console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
+                }
+            });
+        }
+        xuLyDetail()
+    }
+
+    function xuLyDetail() {
+        var selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+        var selectedProductsOld = JSON.parse(localStorage.getItem('selectedProductsOld')) || [];
+        var maPNK = document.getElementById("maPNK");
+        var token = localStorage.getItem("token"); // Đảm bảo lấy token từ localStorage
+
+        // Xử lý tạo mới và cập nhật
+        for (let product of selectedProducts) {
+            let oldProduct = selectedProductsOld.find(p => p.id === product.id);
+
+            // Tạo mới nếu sản phẩm không tồn tại trong selectedProductsOld
+            if (!oldProduct) {
+                var formData = new FormData();
+                formData.append('total', product.soLuong * product.donGia);
+                formData.append('unitPrice', product.donGia);
+                formData.append('quantity', product.soLuong);
+                formData.append('idProductId', product.id);
+                formData.append('idInventoryReportId', maPNK.value);
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8080/InventoryReportDetail',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(response) {
+                        console.log('Sản phẩm mới đã được tạo thành công');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Đã xảy ra lỗi khi tạo sản phẩm mới.');
+                    }
+                });
+            } else {
+                // Cập nhật nếu giá trị đã thay đổi
+                if (oldProduct.donGia !== product.donGia || oldProduct.soLuong !== product.soLuong) {
+                    var formData = new FormData();
+                    formData.append('total', product.soLuong * product.donGia);
+                    formData.append('unitPrice', product.donGia);
+                    formData.append('quantity', product.soLuong);
+                    formData.append('idProductId', product.id);
+                    formData.append('idInventoryReportId', maPNK.value);
+
+                    $.ajax({
+                        type: 'PATCH',
+                        url: 'http://localhost:8080/InventoryReportDetail',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        success: function(response) {},
+                        error: function(xhr, status, error) {
+                            console.error('Đã xảy ra lỗi khi cập nhật sản phẩm.');
+                        }
+                    });
+                }
+            }
+        }
+
+        // Xử lý xóa
+        for (let oldProduct of selectedProductsOld) {
+            if (!selectedProducts.find(p => p.id === oldProduct.id)) {
+                var formData = new FormData();
+                formData.append('idProductId', oldProduct.id);
+                formData.append('idInventoryReportId', maPNK.value);
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'http://localhost:8080/InventoryReportDetail',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(response) {},
+                    error: function(xhr, status, error) {
+                        console.error('Đã xảy ra lỗi khi xóa sản phẩm.');
+                    }
+                });
+            }
+        }
+
+        // Cập nhật selectedProductsOld với selectedProducts hiện tại
+        localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
+    }
+
 
     // Gọi hàm khi trang được tải
     window.onload = checkMaPhieuInUrl;

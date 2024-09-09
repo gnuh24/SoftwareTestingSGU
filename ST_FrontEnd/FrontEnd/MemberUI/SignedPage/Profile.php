@@ -1,43 +1,4 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<?php
-if (isset($_GET['maTaiKhoan'])) {
-    $hoten = $_POST['hoten'];
-    $ngaysinh = $_POST['ngaysinh'];
-    $gioitinh = $_POST['gioitinh'];
-    $diachi = $_POST['diachi'];
-    $sodienthoai = $_POST['sodienthoai'];
-    require_once "../../../BackEnd/AdminBE/NguoiDungBE.php";
-    require_once "../../../BackEnd/AdminBE/TaiKhoanBE.php";
-    $id = $_GET['maTaiKhoan'];
-    $mess = updateNguoiDung($id, $hoten, $ngaysinh, $gioitinh, $sodienthoai, null, $diachi);
-    $nguoidung = getTaiKhoanByMaTaiKhoan($id)->data;
-    $jsonNguoiDung = json_encode($nguoidung);
-    if ($mess->status == '200') {
-        echo '
-        <script> 
-        localStorage.removeItem("key");
-        var data = localStorage.getItem("key");
-        var jsonData = ' . $jsonNguoiDung . ';
-        localStorage.setItem("key", JSON.stringify(jsonData));
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                title: "Thành công!",
-                text: "Cập nhật thông tin thành công!",
-                icon: "success",
-                confirmButtonText: "OK"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "Profile.php";
-                }
-            });
-        });
-        </script>';
-    }
-
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,7 +12,7 @@ if (isset($_GET['maTaiKhoan'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
     <title>Thông tin cá nhân</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -75,48 +36,52 @@ if (isset($_GET['maTaiKhoan'])) {
     <?php require_once "../Footer/Footer.php" ?>
     <script>
         function loadUserInfoFromLocalStorage() {
-            var userData = localStorage.getItem("key");
-            if (!userData) {
-                console.error("Không có dữ liệu trong local storage");
-                return;
-            }
-            userData = JSON.parse(userData);
-            var infoPage = document.getElementById("contentprofile");
-            infoPage.innerHTML = `
+            const token = localStorage.getItem("token");
+            var userData = localStorage.getItem("id");
+            $.ajax({
+                url: "http://localhost:8080/Account/" + userData,
+                method: "GET",
+                dataType: "json",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {
+                    var infoPage = document.getElementById("contentprofile");
+                    infoPage.innerHTML = `
             <div class='col-xxl-8 mb-5 mb-xxl-0'>
-            <form name="profileForm" action="Profile.php?maTaiKhoan=${userData['maTaiKhoan']}" method="POST" onsubmit="return validateForm()">
+            <form name="profileForm" action="Profile.php?maTaiKhoan=${response.accountId}" method="POST" onsubmit="return validateForm()">
                     <div class='bg-secondary-soft px-4 py-5 rounded'>
                         <div class='row g-3' style='text-align:left;'>
                             <div class='col-md-6'>
                                 <label class='form-label'>Họ tên *</label>
-                                <input type='text' class='form-control' name='hoten' value='${userData['HoTen']}'>
+                                <input type='text' class='form-control' name='hoten' value='${response.fullname}'>
                             </div>
                             <div class='col-md-6'>
                                 <label class='form-label'>Số điện thoại *</label>
-                                <input type='text' class='form-control' name='sodienthoai' value='${userData['SoDienThoai']}'>
+                                <input type='text' class='form-control' name='sodienthoai' value='${response.phoneNumber}'>
                             </div>
                             <div class='col-md-6'>
                                 <label for='gioitinh'>Giới tính</label>
                                 <div class='form-check form-check-inline'>
-                                    <input class='form-check-input' type='radio' name='gioitinh' id='inlineRadio1' value='Male' ${userData['GioiTinh'] === 'Male' ? 'checked' : ''}>
+                                    <input class='form-check-input' type='radio' name='gioitinh' id='inlineRadio1' value='Male' ${response.gender === 'Male' ? 'checked' : ''}>
                                     <label class='form-check-label' for='inlineRadio1'>Nam</label>
                                 </div>
                                 <div class='form-check form-check-inline'>
-                                    <input class='form-check-input' type='radio' name='gioitinh' id='inlineRadio2' value='Female' ${userData['GioiTinh'] === 'Female' ? 'checked' : ''}>
+                                    <input class='form-check-input' type='radio' name='gioitinh' id='inlineRadio2' value='Female' ${response.gender === 'Female' ? 'checked' : ''}>
                                     <label class='form-check-label' for='inlineRadio2'>Nữ</label>
                                 </div>
                             </div>
                             <div class='col-md-6'>
                                 <label for='birthday'>Ngày sinh</label>
-                                <input type='date' class='form-control' id='birthday' name='ngaysinh' value='${userData['NgaySinh']}'>
+                                <input type='date' class='form-control' id='birthday' name='ngaysinh' value='${response.birthday}'>
                             </div>
                             <div class='col-md-6'>
                                 <label for='inputEmail4' class='form-label'>Email *</label>
-                                <input type='email' class='form-control' id='inputEmail4' name='email' value='${userData['Email']}' readonly>
+                                <input type='email' class='form-control' id='inputEmail4' name='email' value='${response.email}' readonly>
                             </div>
                             <div class='col-md-6'>
                                 <label class='form-label'>Địa chỉ *</label>
-                                <input type='text' class='form-control' name='diachi' value='${userData['DiaChi']}'>
+                                <input type='text' class='form-control' name='diachi' value='${response.address}'>
                             </div>
                             <button class='btn btn-primary' type='submit' style='background-color: rgb(146, 26, 26);'>Thay đổi thông tin</button>
                         </div>
@@ -124,6 +89,12 @@ if (isset($_GET['maTaiKhoan'])) {
                 </form>
             </div>
             `;
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+
         }
         window.onload = loadUserInfoFromLocalStorage;
 
