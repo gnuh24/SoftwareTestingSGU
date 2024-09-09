@@ -250,12 +250,8 @@
         console.log( quantity);
 
     // Lấy thông tin người dùng từ localStorage
-    const key = localStorage.getItem("key");
-    const userObj = JSON.parse(key);
-
-    // Lấy accountId và token từ userObj
-    const accountId = userObj.id;
-    const token = userObj.token; // Giả sử token đã được lưu trong userObj
+    const token = localStorage.getItem("key");
+        const accountId = localStorage.getItem("id")
 
     // Tính tổng
     const total = unitPrice * quantity; // Chuyển đổi sang số
