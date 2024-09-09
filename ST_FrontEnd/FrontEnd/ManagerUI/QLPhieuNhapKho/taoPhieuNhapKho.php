@@ -84,8 +84,10 @@
                                     placeholder="Nhập số điện thoại nhà cung cấp"
                                     style="width: 40%;padding: 10px 0;"
                                     <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
-                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
-                                    Tạo phiếu nhập
+                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" <?php if (isset($_GET['MaPhieu'])) echo 'onclick="handleSubmitChange()"';
+                                                                                                                                                                                                                                    else echo 'onclick="handleSubmit()"'; ?>>
+                                    <?php if (isset($_GET['MaPhieu'])) echo 'Xác nhận';
+                                    else echo 'Tạo phiếu nhập' ?>
                                 </button>
                             </div>
 
@@ -103,40 +105,10 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tableBody">
-                                            <?php
-                                            require_once "../../../BackEnd/ManagerBE/ChiTietPhieuNhapKhoBE.php";
-
-                                            if (isset($_GET['MaPhieu'])) {
-                                                $data = getChiTietPhieuNhapByMaPhieuNhap($_GET["MaPhieu"]);
-                                                $data1 = $data->data;
-                                                if (!empty($data1) && $_GET['trangthai'] == 'ChoDuyet') {
-                                                    foreach ($data1 as $tmp) {
-                                                        echo '<tr style="text-align: center;">
-                                                                <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;">
-                                                                <input type="text" name="donGia[]" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"  style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" >
-                                                            </td>
-                                                             <td style="padding: 0.5rem;"><input type="text" name="soLuong[]"  onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
-                                                            </tr>';
-                                                    }
-                                                } else
-                                                    foreach ($data1 as $tmp) {
-                                                        echo '<tr style="text-align: center;">
-                                                            <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
-                                                            <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                            <td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
-                                                            <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
-                                                        </tr>';
-                                                    }
-                                            }
-
-                                            ?>
-
                                         </tbody>
                                     </table>
                                 </div>
-                                <div style="width: 25%; background-color: rgb(236, 233, 233); padding: 1rem;">
+                                <div style="width: 25%; background-color: rgb(236, 233, 233); padding: 1rem;" id="here">
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700;">Mã Phiếu</p>
                                         <input id="maPNK" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['MaPhieu']; ?>" disabled="true" />
@@ -145,29 +117,8 @@
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
                                         <input id="totalvalue" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="" disabled="true" />
                                     </label>
-                                    <?php
-                                    if (isset($_GET['MaPhieu']))
-                                        if ($_GET['trangthai'] == 'DaDuyet') {
-                                            echo ' <select id="status" disabled="true">
-                                                <option value="choduyet">Chờ duyệt</option>
-                                                <option value="daduyet" selected>Đã duyệt</option>
-                                                <option value="huy">Hủy</option>
-                                              </select>';
-                                        } elseif ($_GET['trangthai'] == 'ChoDuyet') {
-                                            echo ' <select id="status">
-                                                <option value="choduyet" selected>Chờ duyệt</option>
-                                                <option value="daduyet">Đã duyệt</option>
-                                                <option value="huy">Hủy</option>
-                                              </select>';
-                                        } else {
-                                            echo ' <select id="status" disabled="true">
-                                                <option value="ChoDuyet">Chờ duyệt</option>
-                                                <option value="DaDuyet">Đã duyệt</option>
-                                                <option value="Huy" selected>Hủy</option>
-                                              </select>';
-                                        }
 
-                                    ?>
+                                    <div id="statusContainer"></div>
 
                                 </div>
                             </div>
@@ -177,41 +128,41 @@
             </div>
         </div>
     </div>
-    <?php
-    if (!isset($_GET['MaPhieu'])) {
-        echo '
-        <div class="modal_overlay">
-            <div class="modal_content">
-                <!-- Đầu modal_content -->
-                <span class="close_btn">
-                    <h3>Chọn Sản Phẩm</h3>
-                    <i onclick="setShowModal(false)">X</i>
-                </span>
-                <div style="margin-top: 1rem;">
-                    <div style="position: relative;">
-                        <i class="fa fa-search"></i>
-                        <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" onkeyup="handleSearchChange(event)"/>
-                    </div>
-                    <div class="table_wrapper"> 
-                        <table class="product_table"> 
-                            <thead>
-                                <tr style="background-color: rgb(40, 40, 40); color: white;">
-                                    <th style="padding: 0.5rem;">Mã Sản Phẩm</th>
-                                    <th style="padding: 0.5rem;width: 477px;">Tên Sản Phẩm</th>
-                                    <th style="padding: 0.5rem;">Thao Tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody1">                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="pagination" id="pagination"></div>
 
+    <div class="modal_overlay" style="<?php
+                                        if (isset($_GET['MaPhieu'])) {
+                                            echo 'display:none';
+                                        };
+                                        ?>">
+        <div class="modal_content">
+            <!-- Đầu modal_content -->
+            <span class="close_btn">
+                <h3>Chọn Sản Phẩm</h3>
+                <i onclick="setShowModal(false)">X</i>
+            </span>
+            <div style="margin-top: 1rem;">
+                <div style="position: relative;">
+                    <i class="fa fa-search"></i>
+                    <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" onkeyup="handleSearchChange(event)" />
+                </div>
+                <div class="table_wrapper">
+                    <table class="product_table">
+                        <thead>
+                            <tr style="background-color: rgb(40, 40, 40); color: white;">
+                                <th style="padding: 0.5rem;">Mã Sản Phẩm</th>
+                                <th style="padding: 0.5rem;width: 477px;">Tên Sản Phẩm</th>
+                                <th style="padding: 0.5rem;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody1">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>';
-    };
-    ?>
+            <div class="pagination" id="pagination"></div>
+
+        </div>
+    </div>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -223,6 +174,22 @@
         value = value.replace(/[^\d]/g, ''); // Loại bỏ ký tự không phải số
         input.value = Number(value).toLocaleString('en-US'); // Định dạng tiền tệ
     }
+
+    function formatCurrency1(input) {
+        let value = parseFloat(input); // Chuyển đổi đầu vào thành số
+        if (!isNaN(value)) {
+            // Định dạng tiền tệ Việt Nam
+            return value.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+        } else {
+            console.error('Input must be a number.');
+            return '';
+        }
+    }
+
+
 
     function clearFormat(input) {
         let value = input.value;
@@ -362,6 +329,16 @@
                 console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
             }
         });
+    }
+
+    function handleSubmitChange() {
+        var selectElement = document.getElementById('status');
+        var selectedValue = selectElement.value;
+        console.log(selectedValue)
+        if (selectedValue === 'Huy' || selectedValue === "DaNhapKho") {
+            window.location.href = 'QLPhieuNhapKho.php';
+        }
+
     }
 
     function setShowModal(show) {
@@ -610,4 +587,124 @@
 
         loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
     });
+
+
+    function loadDataAllWhenUrlHaveId(maPhieu) {
+        const token = localStorage.getItem("token");
+
+        $.ajax({
+            url: 'http://localhost:8080/InventoryReport/' + maPhieu,
+            type: 'GET',
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                // Cập nhật thông tin nhà cung cấp
+                var maNhaCungCap = document.getElementById('manhacungcap');
+                maNhaCungCap.value = response.supplier;
+
+                var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap');
+                sodienthoainhacungcap.value = response.supplierPhone;
+
+                // Cập nhật mã phiếu
+                var maPNK = document.getElementById("maPNK");
+                maPNK.value = response.id; // Đúng cách gán giá trị cho thuộc tính value
+
+                // Cập nhật tổng giá trị
+                var totalValue = document.getElementById('totalvalue');
+                totalValue.value = formatCurrency1(response.totalPrice);
+
+                var productData = response.inventoryReportDetails;
+
+                // Lưu danh sách các sản phẩm vào localStorage
+                var selectedProducts = [];
+                var selectedProducts = productData.map(function(product) {
+                    return {
+                        id: product.productId,
+                        name: product.productName,
+                        donGia: product.quantity,
+                        soLuong: product.unitPrice
+                    };
+                });
+                localStorage.setItem('selectedproduct', JSON.stringify(selectedProducts));
+
+                // Cập nhật bảng sản phẩm
+                var tableBody = document.getElementById("tableBody");
+                tableBody.innerHTML = ""; // Xóa nội dung cũ của bảng
+                productData.forEach(function(product) {
+                    var selectedProductHTML = `
+                <tr style="text-align: center;">
+                    <td style="padding: 0.5rem;" name="MaSanPham[]">${product.productId}</td>
+                    <td style="padding: 0.5rem;">${product.productName}</td>
+                    <td style="padding: 0.5rem;">
+                        <input type="text" name="donGia[]" id="donGia${product.productId}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${formatCurrency1(product.unitPrice)}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                    </td>
+                    <td style="padding: 0.5rem;">
+                        <input type="text" name="soLuong[]" id="soLuong${product.productId}" value="${product.quantity}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                    </td>
+                </tr>`;
+                    tableBody.insertAdjacentHTML('beforeend', selectedProductHTML);
+                });
+
+                // Tải thêm dữ liệu và tạo phân trang nếu cần
+                loaddatasp(1, '');
+                loadSelectedProducts(); // Khôi phục trạng thái các sản phẩm đã chọn
+                var trangthai = response.inventoryReportStatuses.slice(-1)[0].status;
+                let selectHTML = '';
+                if (trangthai === 'DaNhapKho') {
+                    selectHTML = `
+            <select id="status" disabled="true">
+                <option value="ChoNhapKho">Chờ nhập kho</option>
+                <option value="DaNhapKho" selected>Đã nhập kho</option>
+                <option value="Huy">Hủy</option>
+            </select>
+        `;
+                } else if (trangthai === 'ChoNhapKho') {
+                    selectHTML = `
+            <select id="status">
+                <option value="ChoNhapKho" selected>Chờ nhập kho</option>
+                <option value="DaNhapKho">Đã nhập kho</option>
+                <option value="Huy">Hủy</option>
+            </select>
+        `;
+                } else {
+                    selectHTML = `
+            <select id="status" disabled="true">
+                <option value="ChoNhapKho">Chờ nhập kho</option>
+                <option value="DaNhapKho">Đã nhập kho</option>
+                <option value="Huy" selected>Hủy</option>
+            </select>
+        `;
+                }
+
+                // Append the select element to the div with id 'statusContainer'
+                document.getElementById('statusContainer').innerHTML = selectHTML;
+                if (trangthai === 'DaNhapKho' || trangthai === 'Huy') {
+                    document.querySelectorAll('input[name="donGia[]"], input[name="soLuong[]"]').forEach(function(input) {
+                        input.disabled = true;
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        });
+    }
+
+
+    // Hàm kiểm tra URL và gọi hàm nếu MaPhieu tồn tại
+    function checkMaPhieuInUrl() {
+        // Lấy các tham số từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const maPhieu = urlParams.get('MaPhieu');
+
+        // Nếu MaPhieu tồn tại trong URL
+        if (maPhieu) {
+            loadDataAllWhenUrlHaveId(maPhieu);
+        }
+    }
+
+    // Gọi hàm khi trang được tải
+    window.onload = checkMaPhieuInUrl;
 </script>
