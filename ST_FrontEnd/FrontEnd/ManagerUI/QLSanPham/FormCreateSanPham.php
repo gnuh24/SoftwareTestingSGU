@@ -55,7 +55,7 @@
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                             <p class="text">Thương hiệu</p>
-                                                            <input id="thuongHieu" class="input"  name="thuongHieu" style="width: 40rem" />
+                                                            <select id="thuongHieu" class="input"  name="thuongHieu" style="width: 40rem"></select>
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                             <p class="text">Thể tích</p>
@@ -69,6 +69,9 @@
                                                     
                                                             <p class="text">Giá</p>
                                                             <input id="gia" class="input" name="gia"  style="width: 40rem" />
+                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                            <p class="text">Mô Tả</p>
+                                                            <input id="moTa" class="input" name="moTa"  style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                         </div>
                                                         <div style="    display: flex;
@@ -102,6 +105,7 @@
 
 
     getCategories();
+    getBrand();
     anhMinhHoa = document.getElementById("anhMinhHoa");
     anhMinhHoa.addEventListener("change", function() {
 
@@ -139,6 +143,7 @@
         let nongDoCon = document.getElementById("nongDoCon");
         let gia = document.getElementById("gia");
         let anhMinhHoa = document.getElementById("anhMinhHoa");
+        let moTa = document.getElementById("moTa");
 
         if (!tenSanPham.value.trim()) {
             showErrorAlert('Lỗi!', 'Tên sản phẩm không được để trống');
@@ -197,6 +202,12 @@
             event.preventDefault();
             return;
         }
+        if (!moTa.value.trim()) {
+            showErrorAlert('Lỗi!', 'Mô tả không được để trống');
+            mota.focus();
+            event.preventDefault();
+            return;
+        }
         // Kiểm tra giá là số dương
         if (parseFloat(gia.value) <= 0 || isNaN(parseFloat(gia.value))) {
             showErrorAlert('Lỗi!', 'Giá phải là số dương');
@@ -206,15 +217,10 @@
         }
 
         //Kiểm tra tên loại sản phẩm
-        if (checkTenSanPham(tenSanPham.value.trim())) {
-            showErrorAlert('Lỗi!', 'Tên sản phẩm đã tồn tại !! Vui lòng chọn tên khác');
-            tenSanPham.focus();
-            event.preventDefault();
-            return;
-        }
+      
 
         var base64Image = "";
-
+        console.log(anhMinhHoa.files);
         if (anhMinhHoa.files.length > 0) {
             var file = anhMinhHoa.files[0];
             var reader = new FileReader();
@@ -231,7 +237,7 @@
                                 theTich.value,
                                 nongDoCon.value,
                                 gia.value,
-                                base64Image);
+                                file,moTa.value);
 
             };
 
@@ -248,7 +254,7 @@
                                         theTich.value,
                                         nongDoCon.value,
                                         gia.value,
-                                        base64Image);
+                                        base64Image,moTa.value);
         }
 
 
@@ -262,24 +268,45 @@
 
     function getCategories() {
             $.ajax({
-                url: "../../../BackEnd/ManagerBE/LoaiSanPhamBE.php",
+                url: "http://localhost:8080/Category/noPaging",
                 method: "GET",
                 dataType: "json",
-                data: {
-                    isDemoHome: true
-                },
                 success: function(response) {
-                    if (response.data && response.data.length > 0) {
+                    console.log(response)
+                    if (response && response.length > 0) {
                         // Xóa tất cả các option hiện có trong dropdown
                         $('#loaiSanPham').empty();
                         // Thêm option "Tất cả"
                         $('#loaiSanPham').append('<option value="">Chọn loại sản phẩm</option>');
                         // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
-                        $.each(response.data, function(index, category) {
-                            $('#loaiSanPham').append(`<option value="${category.MaLoaiSanPham}">${category.TenLoaiSanPham}</option>`);
+                        $.each(response, function(index, category) {
+                            $('#loaiSanPham').append(`<option value="${category.id}">${category.categoryName}</option>`);
                         });
                     } else {
                         console.log("Không có loại sản phẩm nào được trả về từ API.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function getBrand() {
+            $.ajax({
+                url: "http://localhost:8080/Brand/noPaging",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response)
+                    if (response && response.length > 0) {
+                        $('#thuongHieu').empty();
+                        $('#thuongHieu').append('<option value="">Chọn thương hiệu sản phẩm</option>');
+                        $.each(response, function(index, brand) {
+                            $('#thuongHieu').append(`<option value="${brand.brandId}">${brand.brandName}</option>`);
+                        });
+                    } else {
+                        console.log("Không có thương hiệu sản phẩm nào được trả về từ API.");
                     }
                 },
                 error: function(xhr, status, error) {
@@ -338,31 +365,48 @@
     }
 
 
+    function createSanPham(tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa,moTa) {
+    var formData = new FormData();
+    formData.append("productName", tenSanPham);
+    formData.append("categoryId", maLoaiSanPham);
+    formData.append("origin", xuatXu);
+    formData.append("brandId", 1);
+    formData.append("capacity", theTich);
+    formData.append("abv", nongDoCon);
+    formData.append("price", gia);
+    formData.append("image", anhMinhHoa); 
+    formData.append("description", moTa);
+    for (var pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    } 
 
-    function createSanPham(tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa) {
-        $.ajax({
-            url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-            type: 'POST',
-            dataType: "json",
-            data: {
-                action: "create",
-                tenSanPham: tenSanPham,
-                maLoaiSanPham: maLoaiSanPham,
-                xuatXu: xuatXu,
-                thuongHieu: thuongHieu,
-                theTich: theTich,
-                nongDoCon: nongDoCon,
-                gia: gia,
-                anhMinhHoa: anhMinhHoa
-            },
-            success: function(data) {
-                return data.status === 200;
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
+    var token = localStorage.getItem('token'); // Hoặc sessionStorage.getItem('token')
+
+
+    $.ajax({
+        url: 'http://localhost:8080/Product', // Kiểm tra URL chính xác
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            "Authorization": "Bearer " + token // Gửi token trong header
+        },
+        success: function(data) {
+            console.log(data); // Log dữ liệu trả về để kiểm tra
+            if (data) {
+                console.log("Sản phẩm được tạo thành công!");
+            } else {
+                console.log("Đã xảy ra lỗi khi tạo sản phẩm!");
             }
-        });
-    }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error: ' + xhr.status + ' - ' + error);
+            console.log(xhr.responseText); // Kiểm tra phản hồi lỗi từ máy chủ
+        }
+    });
+}
+
 
  
 
