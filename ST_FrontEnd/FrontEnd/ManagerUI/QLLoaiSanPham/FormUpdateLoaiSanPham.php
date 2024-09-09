@@ -40,13 +40,13 @@
                                                     <div>
                                                         <?php
 
-                                                        $MaLoaiSanPham = "";
-                                                        $TenLoaiSanPham =  "";
+                                                        $id = "";
+                                                        $categoryName =  "";
                                                         
-                                                        if (isset($_GET['MaLoaiSanPham'])) {
+                                                        if (isset($_GET['id'])) {
                                                             // Lấy các tham số được gửi từ AJAX
-                                                            $MaLoaiSanPham = $_GET['MaLoaiSanPham'];
-                                                            $TenLoaiSanPham = $_GET['TenLoaiSanPham'];
+                                                            $id = $_GET['id'];
+                                                            $categoryName = $_GET['categoryName'];
                                                         }
                                                         echo '
                                                             <div style="padding-left: 1rem">
@@ -54,12 +54,12 @@
                                                                 <div style="display: flex; gap: 2rem">
                                                                     <div>
                                                                         <p class="text">Mã loại sản phẩm<span style="color: red; margin-left: 10px;">🔒</span></p>
-                                                                        <input style="user-select: none; pointer-events: none; caret-color: transparent;" id="MaLoaiSanPham" class="input" name="MaLoaiSanPham" readonly value="' . ($MaLoaiSanPham) . '" />
+                                                                        <input style="user-select: none; pointer-events: none; caret-color: transparent;" id="Id" class="input" name="Id" readonly value="' . ($id) . '" />
                                                                     </div>
                                                                 </div>
 
                                                                 <p class="text">Loại sản phẩm</p>
-                                                                <input id="TenLoaiSanPham" class="input" type="text" name="TenLoaiSanPham" style="width: 40rem" value="' . ($TenLoaiSanPham) . '" />
+                                                                <input id="CategoryName" class="input" type="text" name="CategoryName" style="width: 40rem" value="' . ($categoryName) . '" />
 
                                                             </div>';
 
@@ -86,10 +86,10 @@
     document.getElementById("updateLoaiSanPham_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-        let MaLoaiSanPham = document.getElementById("MaLoaiSanPham");
-        let TenLoaiSanPham = document.getElementById("TenLoaiSanPham");
+        let Id = document.getElementById("Id");
+        let Category = document.getElementById("CategoryName");
 
-        if (!TenLoaiSanPham.value.trim()) {
+        if (!CategoryName.value.trim()) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
@@ -99,21 +99,21 @@
             event.preventDefault();
             return;
         }
-        if (isTenLoaiSanPhamExists(TenLoaiSanPham.value.trim())) {
+        if (isTenLoaiSanPhamExists(CategoryName.value.trim())) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên loại sản phẩm đã tồn tại',
             });
-            TenLoaiSanPham.focus();
+            CategoryName.focus();
             event.preventDefault();
             return;
         }
 
         //Bắt đầu cập nhật thông tin loại sản phẩm sau khi đã qua các bước xác nhận
         let isUpdateLoaiSanPhamComplete = updateLoaiSanPham(
-            MaLoaiSanPham.value,
-            TenLoaiSanPham.value)
+            Id.value,
+            CategoryName.value)
 
         //Sau khi tạo xong chuyển về trang QLLoaiSanPham
         Swal.fire({
@@ -129,12 +129,12 @@
     function isTenLoaiSanPhamExists(value) {
         let exists = false;
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
+            url: 'http://localhost:8080/Category',
             type: 'GET',
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                TenLoaiSanPham: value
+                CategoryName: value
             },
             success: function(data) {
                 if (data.status === 200) {
@@ -150,14 +150,18 @@
         return exists;
     }
 
-    function updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham) {
+    function updateLoaiSanPham(Id, CategoryName) {
+        var token = localStorage.getItem('token');
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
-            type: 'POST',
+            url: 'http://localhost:8080/Category',
+            type: 'PATCH',
             dataType: "json",
+            headers: {
+        'Authorization': 'Bearer ' + token
+      },
             data: {
-                MaLoaiSanPham: MaLoaiSanPham,
-                TenLoaiSanPham: TenLoaiSanPham
+                Id: Id,
+                CategoryName: CategoryName
             },
             success: function(data) {
                 return data.status === 200;
