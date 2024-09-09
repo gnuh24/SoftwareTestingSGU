@@ -64,7 +64,7 @@
                                                    
                                                         <div style="padding-left: 1rem">
                                                             <p class="text">Loại sản phẩm</p>
-                                                            <input id="TenLoaiSanPham" class="input" type="text" name="TenLoaiSanPham" style="width: 40rem" />
+                                                            <input id="categoryName" class="input" type="text" name="categoryName" style="width: 40rem" />
                                                             <span style="
                                                             margin-left: 1rem;
                                                             font-weight: 700;
@@ -99,16 +99,16 @@
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
 
-        let TenLoaiSanPham = document.getElementById("TenLoaiSanPham");
+        let categoryName = document.getElementById("categoryName");
         
-        if (!TenLoaiSanPham.value.trim()) {
+        if (!categoryName.value.trim()) {
 
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên loại sản phẩm không được để trống',
             });
-            TenLoaiSanPham.focus();
+            categoryName.focus();
             event.preventDefault();
             return;
         }
@@ -116,13 +116,13 @@
       
 
         //Kiểm tra tên loại sản phẩm
-        if (isTenLoaiSanPhamExists(TenLoaiSanPham.value.trim())) {
+        if (isTenLoaiSanPhamExists(categoryName.value.trim())) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên loại sản phẩm đã tồn tại',
             });
-            TenLoaiSanPham.focus();
+            categoryName.focus();
             event.preventDefault();
             return;
         }
@@ -131,7 +131,7 @@
 
         //Tạo thông tin nhà cung cấp
         let isCreateLoaiSanPhamComplete = createLoaiSanPham(
-            TenLoaiSanPham.value
+            categoryName.value
         );
         
         //Sau khi tạo xong chuyển về trang QLLoaiSanPham
@@ -144,21 +144,18 @@
                 window.location.href = 'QLLoaiSanPham.php';
             }
         });
-
-
-        
     });
 
     
     function isTenLoaiSanPhamExists(value) {
         let exists = false;
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
+            url: 'http://localhost:8080/Category',
             type: 'GET',
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                TenLoaiSanPham: value
+                categoryName: value
             },
             success: function(data) {
                 if (data.status === 200) {
@@ -174,13 +171,17 @@
         return exists;
     }
 
-    function createLoaiSanPham(TenLoaiSanPham) {
+    function createLoaiSanPham(categoryName) {
+        var token = localStorage.getItem('token');
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
+            url: 'http://localhost:8080/Category',
             type: 'POST',
             dataType: "json",
+            headers: {
+        'Authorization': 'Bearer ' + token
+      },
             data: {
-                TenLoaiSanPham: TenLoaiSanPham
+                categoryName: categoryName
             },
             success: function(data) {
                 return data.status === 200;
