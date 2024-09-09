@@ -1,20 +1,6 @@
 * {
     font-family: "Gothic A1", sans-serif;
   }
-  
-  .container,
-  .container_profile {
-    grid-template-columns: minmax(215px, min(371px, 29vw)) minmax(0, 1fr);
-    display: flex;
-  }
-  .container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    width: 100%;
-    background-color: #fff;
-    display: grid;
-    flex-grow: 1;
-  }
   .sidebar_sidebar__wrapper {
     background: #efebe4;
     position: relative;

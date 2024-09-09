@@ -114,7 +114,7 @@
                         'Authorization': `Bearer ${token}` // Thêm JWT token vào header
                     },
                     success: function(response) {
-                        console.log(response);
+                        console.log(1);
 
                         var cartHTML = ''; // Dùng để chứa HTML của các sản phẩm
                         var totalAmount = 0; // Tổng tiền của giỏ hàng
@@ -129,7 +129,7 @@
                                     <p>Thành tiền: <span class="valueTotalPrice">${formatMoney(item.total)}</span></p>
                                     <button class="btnRemove">Xóa</button>
                                 </div>`;
-                            
+
                             // Cộng dồn vào tổng tiền
                             totalAmount += item.total;
                         });
@@ -157,37 +157,36 @@
                 });
             }
 
-                // Gọi hàm fetchCartItems() khi trang tải xong
-                fetchCartItems();
+            // Gọi hàm fetchCartItems() khi trang tải xong
+            fetchCartItems();
 
-                // Hàm định dạng số tiền thành chuỗi có dấu chấm ngăn cách hàng nghìn
-                function formatMoney(amount) {
-                    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
-                }
+            // Hàm định dạng số tiền thành chuỗi có dấu chấm ngăn cách hàng nghìn
+            function formatMoney(amount) {
+                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
+            }
 
-                // Gắn sự kiện xóa sản phẩm sau khi sản phẩm được tải
-                function bindCartItemEvents(accountId, productId) {
-                    $('.btnRemove').on('click', function() {
-                        var productId = $(this).closest('.cartItem').attr('id');
-                        $.ajax({
-                            url: `http://localhost:8080/CartItem`,
-                            method: 'DELETE',
-                            data: {
-                                accountId: accountId,
-                                productId: productId
-                            },
-                            success: function(response) {
-                                $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
-                                $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(error);
-                            }
-                        });
+            // Gắn sự kiện xóa sản phẩm sau khi sản phẩm được tải
+            function bindCartItemEvents(accountId, productId) {
+                $('.btnRemove').on('click', function() {
+                    var productId = $(this).closest('.cartItem').attr('id');
+                    $.ajax({
+                        url: `http://localhost:8080/CartItem`,
+                        method: 'DELETE',
+                        data: {
+                            accountId: accountId,
+                            productId: productId
+                        },
+                        success: function(response) {
+                            $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
+                            $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
                     });
-                }
-            });
-
+                });
+            }
+        });
     </script>
 </body>
 

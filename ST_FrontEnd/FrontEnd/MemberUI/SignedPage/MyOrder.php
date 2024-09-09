@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="../GuestPage/HomePage.css" />
     <link rel="stylesheet" href="../GuestPage/login.css" />
+    <link rel="stylesheet" href="MyOrder.css" />
+
     <!-- <link rel="stylesheet" href="MyOrder.css" /> -->
     <title>Đơn hàng của tôi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -37,25 +39,30 @@
     <?php require_once "../Footer/Footer.php" ?>
 
     <script>
-        // Hàm load thông tin đơn hàng từ server bằng AJAX
         function loadOrders() {
             var customerId = localStorage.getItem("id");
+            var token = localStorage.getItem("token");
 
             $.ajax({
                 url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
                 type: 'GET',
-                data: {
-                    MaKH: customerId
+                headers: {
+                    'Authorization': 'Bearer ' + token
                 },
                 success: function(response) {
-                    const orders = response;
-                    const numberOfProducts = orders.length;
+                    // Kiểm tra kiểu dữ liệu của response
+                    if (Array.isArray(response)) {
+                        const orders = response;
+                        const numberOfProducts = orders.length;
 
-                    if (numberOfProducts <= 0) {
-                        $('#emptyCartMessage').show();
+                        if (numberOfProducts <= 0) {
+                            $('#emptyCartMessage').show();
+                        } else {
+                            $('#emptyCartMessage').hide();
+                            displayOrders(orders);
+                        }
                     } else {
-                        $('#emptyCartMessage').hide();
-                        displayOrders(orders);
+                        console.error('Dữ liệu trả về không phải là mảng.');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -64,59 +71,59 @@
             });
         }
 
-        // Hàm hiển thị thông tin đơn hàng trong HTML
         function displayOrders(orders) {
             const orderHistory = document.getElementById('orderHistory');
             orderHistory.innerHTML = ''; // Xóa dữ liệu cũ
 
             orders.forEach(hoaDon => {
                 var orderHtml = `
-                <div class='orderManagement_order_list'>
-                    <table class='orderManagement_order_info'>
-                        <thead>
-                            <tr class='orderManagement_order_title'>
-                                <th class='anhMinhHoa'>Ảnh minh họa</th>
-                                <th class='tenSanPham'>Tên sản phẩm</th>
-                                <th class='donGia'>Đơn giá</th>
-                                <th class='soLuong'>Số lượng</th>
-                                <th class='thanhTien'>Thành tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
-
+        <div class='orderManagement_order_list'>
+            <table class='orderManagement_order_info'>
+                <thead>
+                    <tr class='orderManagement_order_title'>
+                        <th class='anhMinhHoa'>Ảnh minh họa</th>
+                        <th class='tenSanPham'>Tên sản phẩm</th>
+                        <th class='donGia'>Đơn giá</th>
+                        <th class='soLuong'>Số lượng</th>
+                        <th class='thanhTien'>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+                var token = localStorage.getItem("token");
+                console.log(hoaDon.id)
                 // AJAX call to get chiTietDonHang
                 $.ajax({
-                    url: 'http://localhost:8080/api/getChiTietDonHang', // Đường dẫn API lấy chi tiết đơn hàng
+                    url: `http://localhost:8080/Order/MyOrder/${hoaDon.id}`, // Đường dẫn API lấy chi tiết đơn hàng
                     type: 'GET',
-                    data: {
-                        MaDonHang: hoaDon.MaDonHang
+                    headers: {
+                        'Authorization': 'Bearer ' + token
                     },
                     async: false, // Đảm bảo AJAX này hoàn tất trước khi tiếp tục
                     success: function(chiTietDonHangResponse) {
-                        const listCTDH = chiTietDonHangResponse.data;
+
+                        const listCTDH = chiTietDonHangResponse.orderDetails;
 
                         listCTDH.forEach(chiTiet => {
                             orderHtml += `
-                            <tr class='orderManagement_order_detail'>
-                                <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='${chiTiet.AnhMinhHoa}'></td>
-                                <td class='tenSanPham'>${chiTiet.TenSanPham}</td>
-                                <td class='donGia'>${formatMoney(chiTiet.DonGia)}</td>
-                                <td class='soLuong'>${chiTiet.SoLuong}</td>
-                                <td class='thanhTien'>${formatMoney(chiTiet.ThanhTien)}</td>
-                            </tr>`;
+                    <tr class='orderManagement_order_detail'>
+                        <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${chiTiet.image}'></td>
+                        <td class='tenSanPham'>${chiTiet.productName}</td>
+                        <td class='donGia'>${formatMoney(chiTiet.unitPrice)}</td>
+                        <td class='soLuong'>${chiTiet.quantity}</td>
+                        <td class='thanhTien'>${formatMoney(chiTiet.total)}</td>
+                    </tr>`;
                         });
-
                         orderHtml += `
-                        </tbody>
-                    </table>
-                    <div class='orderManagement_order_thanhTien'>
-                        <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.TrangThai)}</p>
-                        <p>Tổng giá trị: ${formatMoney(hoaDon.TongGiaTri)}</p>
-                        <button class='order_detail_button' onclick='toOrderDetail(${hoaDon.MaDonHang})'> Chi tiết</button>`;
+                </tbody>
+            </table>
+            <div class='orderManagement_order_thanhTien'>
+                <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.status)}</p>
+                <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
+                <button class='order_detail_button' onclick='toOrderDetail(${hoaDon.id})'> Chi tiết</button>`;
 
                         if (hoaDon.TrangThai !== 'GiaoThanhCong' && hoaDon.TrangThai !== 'Huy') {
                             const listSanPham = JSON.stringify(listCTDH);
-                            orderHtml += `<button class='cancel_order_button' onclick='cancelOrder(${hoaDon.MaDonHang}, "${hoaDon.TrangThai}", ${listSanPham})'>Hủy đơn hàng</button>`;
+                            orderHtml += `<button class='cancel_order_button' onclick='cancelOrder(${hoaDon.id}, "${hoaDon.status}", ${listSanPham})'>Hủy đơn hàng</button>`;
                         }
 
                         orderHtml += `</div></div>`;
@@ -264,8 +271,9 @@
             });
         }
 
-        function toOrderDetail(maDonHang, maTaiKhoan) {
-            window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}&maTaiKhoan=${maTaiKhoan}`;
+        function toOrderDetail(maDonHang) {
+            console.log(maDonHang)
+            window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}`;
         }
     </script>
 </body>
