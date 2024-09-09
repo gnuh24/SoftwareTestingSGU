@@ -60,13 +60,10 @@
                                             ?>
                                         </a>
                                     </button>
-                                    <?php
-                                    if (!isset($_GET['MaPhieu']))
-                                        echo '
-                                        <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="setShowModal(true)">
-                                            Thêm Sản Phẩm
-                                        </button>';
-                                    ?>
+
+                                    <button id="addsp" style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="setShowModal(true)">
+                                        Thêm Sản Phẩm
+                                    </button>
                                 </div>
                             </div>
                             <div class="boxFeature d-flex flex-wrap" style="gap: 2rem;">
@@ -75,17 +72,17 @@
                                     class="form-control"
                                     id="manhacungcap"
                                     placeholder="Nhập tên nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0px"
-                                    <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
+                                    style="width: 40%;padding: 10px 0px" />
                                 <input
                                     type="text"
                                     class="form-control"
                                     id="sodienthoainhacungcap"
                                     placeholder="Nhập số điện thoại nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0;"
-                                    <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"' ?> />
-                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
-                                    Tạo phiếu nhập
+                                    style="width: 40%;padding: 10px 0;" />
+                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" <?php if (isset($_GET['MaPhieu'])) echo 'onclick="handleSubmitChange()"';
+                                                                                                                                                                                                                                    else echo 'onclick="handleSubmit()"'; ?>>
+                                    <?php if (isset($_GET['MaPhieu'])) echo 'Xác nhận';
+                                    else echo 'Tạo phiếu nhập' ?>
                                 </button>
                             </div>
 
@@ -103,40 +100,10 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tableBody">
-                                            <?php
-                                            require_once "../../../BackEnd/ManagerBE/ChiTietPhieuNhapKhoBE.php";
-
-                                            if (isset($_GET['MaPhieu'])) {
-                                                $data = getChiTietPhieuNhapByMaPhieuNhap($_GET["MaPhieu"]);
-                                                $data1 = $data->data;
-                                                if (!empty($data1) && $_GET['trangthai'] == 'ChoDuyet') {
-                                                    foreach ($data1 as $tmp) {
-                                                        echo '<tr style="text-align: center;">
-                                                                <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;">
-                                                                <input type="text" name="donGia[]" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"  style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" >
-                                                            </td>
-                                                             <td style="padding: 0.5rem;"><input type="text" name="soLuong[]"  onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
-                                                            </tr>';
-                                                    }
-                                                } else
-                                                    foreach ($data1 as $tmp) {
-                                                        echo '<tr style="text-align: center;">
-                                                            <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
-                                                            <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                            <td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
-                                                            <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
-                                                        </tr>';
-                                                    }
-                                            }
-
-                                            ?>
-
                                         </tbody>
                                     </table>
                                 </div>
-                                <div style="width: 25%; background-color: rgb(236, 233, 233); padding: 1rem;">
+                                <div style="width: 25%; background-color: rgb(236, 233, 233); padding: 1rem;" id="here">
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700;">Mã Phiếu</p>
                                         <input id="maPNK" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['MaPhieu']; ?>" disabled="true" />
@@ -145,29 +112,8 @@
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
                                         <input id="totalvalue" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="" disabled="true" />
                                     </label>
-                                    <?php
-                                    if (isset($_GET['MaPhieu']))
-                                        if ($_GET['trangthai'] == 'DaDuyet') {
-                                            echo ' <select id="status" disabled="true">
-                                                <option value="choduyet">Chờ duyệt</option>
-                                                <option value="daduyet" selected>Đã duyệt</option>
-                                                <option value="huy">Hủy</option>
-                                              </select>';
-                                        } elseif ($_GET['trangthai'] == 'ChoDuyet') {
-                                            echo ' <select id="status">
-                                                <option value="choduyet" selected>Chờ duyệt</option>
-                                                <option value="daduyet">Đã duyệt</option>
-                                                <option value="huy">Hủy</option>
-                                              </select>';
-                                        } else {
-                                            echo ' <select id="status" disabled="true">
-                                                <option value="ChoDuyet">Chờ duyệt</option>
-                                                <option value="DaDuyet">Đã duyệt</option>
-                                                <option value="Huy" selected>Hủy</option>
-                                              </select>';
-                                        }
 
-                                    ?>
+                                    <div id="statusContainer"></div>
 
                                 </div>
                             </div>
@@ -177,41 +123,41 @@
             </div>
         </div>
     </div>
-    <?php
-    if (!isset($_GET['MaPhieu'])) {
-        echo '
-        <div class="modal_overlay">
-            <div class="modal_content">
-                <!-- Đầu modal_content -->
-                <span class="close_btn">
-                    <h3>Chọn Sản Phẩm</h3>
-                    <i onclick="setShowModal(false)">X</i>
-                </span>
-                <div style="margin-top: 1rem;">
-                    <div style="position: relative;">
-                        <i class="fa fa-search"></i>
-                        <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" onkeyup="handleSearchChange(event)"/>
-                    </div>
-                    <div class="table_wrapper"> 
-                        <table class="product_table"> 
-                            <thead>
-                                <tr style="background-color: rgb(40, 40, 40); color: white;">
-                                    <th style="padding: 0.5rem;">Mã Sản Phẩm</th>
-                                    <th style="padding: 0.5rem;width: 477px;">Tên Sản Phẩm</th>
-                                    <th style="padding: 0.5rem;">Thao Tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody1">                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="pagination" id="pagination"></div>
 
+    <div class="modal_overlay" style="<?php
+                                        if (isset($_GET['MaPhieu'])) {
+                                            echo 'display:none';
+                                        };
+                                        ?>">
+        <div class="modal_content">
+            <!-- Đầu modal_content -->
+            <span class="close_btn">
+                <h3>Chọn Sản Phẩm</h3>
+                <i onclick="setShowModal(false)">X</i>
+            </span>
+            <div style="margin-top: 1rem;">
+                <div style="position: relative;">
+                    <i class="fa fa-search"></i>
+                    <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" onkeyup="handleSearchChange(event)" />
+                </div>
+                <div class="table_wrapper">
+                    <table class="product_table">
+                        <thead>
+                            <tr style="background-color: rgb(40, 40, 40); color: white;">
+                                <th style="padding: 0.5rem;">Mã Sản Phẩm</th>
+                                <th style="padding: 0.5rem;width: 477px;">Tên Sản Phẩm</th>
+                                <th style="padding: 0.5rem;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody1">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>';
-    };
-    ?>
+            <div class="pagination" id="pagination"></div>
+
+        </div>
+    </div>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -223,6 +169,22 @@
         value = value.replace(/[^\d]/g, ''); // Loại bỏ ký tự không phải số
         input.value = Number(value).toLocaleString('en-US'); // Định dạng tiền tệ
     }
+
+    function formatCurrency1(input) {
+        let value = parseFloat(input); // Chuyển đổi đầu vào thành số
+        if (!isNaN(value)) {
+            // Định dạng tiền tệ Việt Nam
+            return value.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+        } else {
+            console.error('Input must be a number.');
+            return '';
+        }
+    }
+
+
 
     function clearFormat(input) {
         let value = input.value;
@@ -354,6 +316,8 @@
                     text: 'Tạo phiếu nhập kho thành công',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+                        localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
                         window.location.href = 'QLPhieuNhapKho.php';
                     }
                 });
@@ -363,6 +327,8 @@
             }
         });
     }
+
+
 
     function setShowModal(show) {
         var modalOverlay = document.querySelector('.modal_overlay');
@@ -418,7 +384,7 @@
             let soLuongElement = document.getElementById(`soLuong${productId}`);
 
             // Nếu phần tử tồn tại, lấy giá trị, nếu không, đặt giá trị mặc định là "1"
-            let donGia = donGiaElement ? donGiaElement.value : "1";
+            let donGia = donGiaElement ? clearCurrencyFormat(donGiaElement.value) : "1";
             let soLuong = soLuongElement ? soLuongElement.value : "1";
 
             if ($(this).prop('checked')) {
@@ -606,8 +572,349 @@
 
     $(document).ready(function() {
         localStorage.removeItem('selectedProducts');
-        loadSelectedProducts();
+        if (!checkMaPhieuInUrl()) {
+            loadSelectedProducts();
 
-        loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
+            loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
+        }
     });
+
+
+    function loadDataAllWhenUrlHaveId(maPhieu) {
+        const token = localStorage.getItem("token");
+
+        $.ajax({
+            url: 'http://localhost:8080/InventoryReport/' + maPhieu,
+            type: 'GET',
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                // Cập nhật thông tin nhà cung cấp
+                var maNhaCungCap = document.getElementById('manhacungcap');
+                maNhaCungCap.value = response.supplier;
+
+                var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap');
+                sodienthoainhacungcap.value = response.supplierPhone;
+
+                // Cập nhật mã phiếu
+                var maPNK = document.getElementById("maPNK");
+                maPNK.value = response.id; // Đúng cách gán giá trị cho thuộc tính value
+
+                // Cập nhật tổng giá trị
+                var totalValue = document.getElementById('totalvalue');
+                totalValue.value = formatCurrency1(response.totalPrice);
+
+                var productData = response.inventoryReportDetails;
+
+                // Lưu danh sách các sản phẩm vào localStorage
+                var selectedProducts = [];
+                var selectedProducts = productData.map(function(product) {
+                    return {
+                        id: product.productId.toString(),
+                        name: product.productName,
+                        donGia: product.quantity,
+                        soLuong: product.unitPrice
+                    };
+                });
+                localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+                localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
+
+                localStorage.setItem('status', response.inventoryReportStatuses.slice(-1)[0].status)
+                // Cập nhật bảng sản phẩm
+                var tableBody = document.getElementById("tableBody");
+                tableBody.innerHTML = ""; // Xóa nội dung cũ của bảng
+                productData.forEach(function(product) {
+                    var selectedProductHTML = `
+                <tr style="text-align: center;">
+                    <td style="padding: 0.5rem;" name="MaSanPham[]">${product.productId}</td>
+                    <td style="padding: 0.5rem;">${product.productName}</td>
+                    <td style="padding: 0.5rem;">
+                        <input type="text" name="donGia[]" id="donGia${product.productId}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${formatCurrency1(product.unitPrice)}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                    </td>
+                    <td style="padding: 0.5rem;">
+                        <input type="text" name="soLuong[]" id="soLuong${product.productId}" value="${product.quantity}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                    </td>
+                </tr>`;
+                    tableBody.insertAdjacentHTML('beforeend', selectedProductHTML);
+                });
+
+                // Tải thêm dữ liệu và tạo phân trang nếu cần
+                loaddatasp(1, '');
+                loadSelectedProducts(); // Khôi phục trạng thái các sản phẩm đã chọn
+                var trangthai = response.inventoryReportStatuses.slice(-1)[0].status;
+                let selectHTML = '';
+                if (trangthai === 'DaNhapKho') {
+                    selectHTML = `
+            <select id="status" disabled="true">
+                <option value="ChoNhapKho">Chờ nhập kho</option>
+                <option value="DaNhapKho" selected>Đã nhập kho</option>
+                <option value="Huy">Hủy</option>
+            </select>
+        `;
+                } else if (trangthai === 'ChoNhapKho') {
+                    selectHTML = `
+            <select id="status">
+                <option value="ChoNhapKho" selected>Chờ nhập kho</option>
+                <option value="DaNhapKho">Đã nhập kho</option>
+                <option value="Huy">Hủy</option>
+            </select>
+        `;
+                } else {
+                    selectHTML = `
+            <select id="status" disabled="true">
+                <option value="ChoNhapKho">Chờ nhập kho</option>
+                <option value="DaNhapKho">Đã nhập kho</option>
+                <option value="Huy" selected>Hủy</option>
+            </select>
+        `;
+                }
+
+                // Append the select element to the div with id 'statusContainer'
+                document.getElementById('statusContainer').innerHTML = selectHTML;
+                if (trangthai === 'DaNhapKho' || trangthai === 'Huy') {
+                    document.querySelectorAll('input[name="donGia[]"], input[name="soLuong[]"]').forEach(function(input) {
+                        input.disabled = true;
+                    });
+                    document.getElementById('manhacungcap').disabled = true;
+                    document.getElementById('sodienthoainhacungcap').disabled = true;
+                    document.getElementById('addsp').style.display = 'none';
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        });
+    }
+
+
+    // Hàm kiểm tra URL và gọi hàm nếu MaPhieu tồn tại
+    function checkMaPhieuInUrl() {
+        // Lấy các tham số từ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const maPhieu = urlParams.get('MaPhieu');
+
+        // Nếu MaPhieu tồn tại trong URL
+        if (maPhieu) {
+            loadDataAllWhenUrlHaveId(maPhieu);
+        }
+    }
+
+    function handleSubmitChange() {
+        const status = localStorage.getItem("status");
+        if (status === 'Huy' || status === "DaNhapKho") {
+            localStorage.removeItem('selectedProducts');
+            localStorage.removeItem('selectedProductsOld');
+
+            window.location.href = 'QLPhieuNhapKho.php';
+        } else {
+            try {
+                xuLyPNK();
+                localStorage.removeItem('selectedProducts');
+                localStorage.removeItem('selectedProductsOld');
+                window.location.href = 'QLPhieuNhapKho.php';
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+
+    }
+
+    function xuLyPNK() {
+        var maNhaCungCap = document.getElementById('manhacungcap').value;
+        var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
+        var trangthai = document.getElementById("status");
+        var maPNK = document.getElementById("maPNK");
+        var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
+        var productData = [];
+        if (maNhaCungCap === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng điền tên nhà cung cấp',
+            });
+            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+        }
+        if (sodienthoainhacungcap === '' || !validatePhoneNumber(sodienthoainhacungcap)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại nhà cung cấp không hợp lệ',
+            });
+            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+        }
+        $('#tableBody tr').each(function() {
+            var maSanPham = $(this).find('td:nth-child(1)').text().trim();
+            var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
+            var donGia = $(this).find('td:nth-child(3) input').val().trim();
+            var dongia = donGia;
+            var soLuong = $(this).find('td:nth-child(4) input').val().trim();
+
+            var totalItemValue = parseFloat(dongia) * parseInt(soLuong);
+
+            var productItem = {
+                'idProductId': maSanPham,
+                'unitPrice': dongia,
+                'quantity': soLuong,
+                'total': totalItemValue
+            };
+            productData.push(productItem);
+        });
+        if (productData.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng thêm ít nhất một sản phẩm.',
+            });
+            return false; // Dừng việc gửi form nếu productData trống
+        }
+        const token = localStorage.getItem("token");
+        var formData = new FormData();
+        var formData1 = new FormData();
+
+        var totalPrice = parseInt(totalValue);
+        if (isNaN(totalPrice)) {
+            console.error("Invalid totalPrice");
+            return;
+        }
+        formData.append('totalPrice', totalPrice);
+        formData.append('supplier', maNhaCungCap);
+        formData.append('supplierPhone', sodienthoainhacungcap);
+        formData.append('id', maPNK.value)
+        $.ajax({
+            type: 'PATCH',
+            url: 'http://localhost:8080/InventoryReport',
+            data: formData,
+            contentType: false, // Không gửi tiêu đề Content-Type
+            processData: false, // Không xử lý dữ liệu
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
+            }
+        });
+        if (trangthai.value !== "ChoNhapKho") {
+            var formData2 = new FormData()
+            formData2.append('idStatus', trangthai.value);
+            formData2.append('inventoryReportId', maPNK.value)
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8080/InventoryReportStatus',
+                data: formData2,
+                contentType: false, // Không gửi tiêu đề Content-Type
+                processData: false, // Không xử lý dữ liệu
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {},
+                error: function(xhr, status, error) {
+                    console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
+                }
+            });
+        }
+        xuLyDetail()
+    }
+
+    function xuLyDetail() {
+        var selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+        var selectedProductsOld = JSON.parse(localStorage.getItem('selectedProductsOld')) || [];
+        var maPNK = document.getElementById("maPNK");
+        var token = localStorage.getItem("token"); // Đảm bảo lấy token từ localStorage
+
+        // Xử lý tạo mới và cập nhật
+        for (let product of selectedProducts) {
+            let oldProduct = selectedProductsOld.find(p => p.id === product.id);
+
+            // Tạo mới nếu sản phẩm không tồn tại trong selectedProductsOld
+            if (!oldProduct) {
+                var formData = new FormData();
+                formData.append('total', product.soLuong * product.donGia);
+                formData.append('unitPrice', product.donGia);
+                formData.append('quantity', product.soLuong);
+                formData.append('idProductId', product.id);
+                formData.append('idInventoryReportId', maPNK.value);
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: ${value}`);
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:8080/InventoryReportDetail',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(response) {
+                        console.log('Sản phẩm mới đã được tạo thành công');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Đã xảy ra lỗi khi tạo sản phẩm mới.');
+                    }
+                });
+            } else {
+                // Cập nhật nếu giá trị đã thay đổi
+                if (oldProduct.donGia !== product.donGia || oldProduct.soLuong !== product.soLuong) {
+                    var formData = new FormData();
+                    formData.append('total', product.soLuong * product.donGia);
+                    formData.append('unitPrice', product.donGia);
+                    formData.append('quantity', product.soLuong);
+                    formData.append('idProductId', product.id);
+                    formData.append('idInventoryReportId', maPNK.value);
+
+                    $.ajax({
+                        type: 'PATCH',
+                        url: 'http://localhost:8080/InventoryReportDetail',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        success: function(response) {},
+                        error: function(xhr, status, error) {
+                            console.error('Đã xảy ra lỗi khi cập nhật sản phẩm.');
+                        }
+                    });
+                }
+            }
+        }
+
+        // Xử lý xóa
+        for (let oldProduct of selectedProductsOld) {
+            if (!selectedProducts.find(p => p.id === oldProduct.id)) {
+                var formData = new FormData();
+                formData.append('idProductId', oldProduct.id);
+                formData.append('idInventoryReportId', maPNK.value);
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'http://localhost:8080/InventoryReportDetail',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(response) {},
+                    error: function(xhr, status, error) {
+                        console.error('Đã xảy ra lỗi khi xóa sản phẩm.');
+                    }
+                });
+            }
+        }
+
+        // Cập nhật selectedProductsOld với selectedProducts hiện tại
+        localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
+    }
+
+
+    // Gọi hàm khi trang được tải
+    window.onload = checkMaPhieuInUrl;
 </script>

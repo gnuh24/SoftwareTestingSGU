@@ -296,7 +296,9 @@
                                 const quyen = response.role;
 
                                 // Lưu dữ liệu vào localStorage
-                                localStorage.setItem('key', JSON.stringify(response));
+                                localStorage.setItem('id', response.id);
+                                localStorage.setItem('token', response.token);
+                                localStorage.setItem('refreshToken', response.refreshToken);
                                 switch (quyen) {
                                     case 'Admin':
                                         window.location.href = `../../AdminUI/QLTaiKhoan.php`;

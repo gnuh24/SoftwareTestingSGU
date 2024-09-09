@@ -1,4 +1,6 @@
 <div class="Sidebar_sideBar__CC4MK">
+     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLTaiKhoan/QLTaiKhoan.php">
+     <span class="MenuItemSidebar_title__LLBtx">Tài khoản</span> </a>
     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
         <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
     </a>

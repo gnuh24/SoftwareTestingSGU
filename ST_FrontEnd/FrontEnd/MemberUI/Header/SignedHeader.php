@@ -166,10 +166,10 @@
         const form = document.getElementById("search");
         if (form) {
             // Lấy dữ liệu từ localStorage
-            const localStorageData = JSON.parse(localStorage.getItem("key"));
-            console.log(localStorage.getItem("key"))
+            const localStorageData = JSON.parse(localStorage.getItem("id"));
+            const maTaiKhoan = localStorageData;
 
-            const maTaiKhoan = localStorageData.id;
+
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "Cart.php?maTaiKhoan=" + maTaiKhoan;
@@ -184,10 +184,8 @@
         const form = document.getElementById("search");
         if (form) {
             // Lấy dữ liệu từ localStorage
-            const localStorageData = JSON.parse(localStorage.getItem("key"));
-            console.log(localStorage.getItem("key"))
-
-            const maTaiKhoan = localStorageData.id;
+            const localStorageData = JSON.parse(localStorage.getItem("id"));
+            const maTaiKhoan = localStorageData;
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "Profile.php?maTaiKhoan=" + maTaiKhoan;
@@ -202,8 +200,9 @@
         const form = document.getElementById("search");
         if (form) {
             // Lấy dữ liệu từ localStorage
-            const localStorageData = JSON.parse(localStorage.getItem("key"));
-            const maTaiKhoan = localStorageData.id;
+            const localStorageData = JSON.parse(localStorage.getItem("id"));
+            const maTaiKhoan = localStorageData;
+
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "MyOrder.php?maTaiKhoan=" + maTaiKhoan;

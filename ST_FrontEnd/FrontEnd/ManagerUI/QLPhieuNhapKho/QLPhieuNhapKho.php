@@ -114,6 +114,9 @@
         url: 'http://localhost:8080/InventoryReport',
         type: 'GET',
         dataType: "json",
+        data: {
+          pageNumber: page
+        },
         headers: {
           'Authorization': 'Bearer ' + token
         },
