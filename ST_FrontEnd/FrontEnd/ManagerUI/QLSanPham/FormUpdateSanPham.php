@@ -54,7 +54,7 @@
                                                         <div style="padding-left: 1rem; margin-left: 25px;">
                                                         
                                                             <p class="text">Tên sản phẩm</p>
-                                                            <input id="tenSanPham" class="input" value="<?php echo $sanPham["TenSanPham"] ?>" type="text" name="tenSanPham" style="width: 40rem" />
+                                                            <input id="tenSanPham" class="input"  type="text" name="tenSanPham" style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                             <p class="text">Loại sản phẩm</p>
@@ -63,30 +63,30 @@
 
 
                                                             <p class="text">Xuất xứ</p>
-                                                            <input id="xuatXu" class="input" value="<?php echo $sanPham["XuatXu"] ?>" name="xuatXu" style="width: 40rem" />
+                                                            <input id="xuatXu" class="input" name="xuatXu" style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                             <p class="text">Thương hiệu</p>
-                                                            <input id="thuongHieu" class="input" value="<?php echo $sanPham["ThuongHieu"] ?>" name="thuongHieu" style="width: 40rem" />
+                                                            <select id="thuongHieu" class="input"  name="thuongHieu" style="width: 40rem"></select>
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                             <p class="text">Thể tích</p>
-                                                            <input id="theTich" class="input" value="<?php echo $sanPham["TheTich"] ?>" type="text" name="theTich" style="width: 40rem" />
+                                                            <input id="theTich" class="input"  type="text" name="theTich" style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                             <p class="text">Nồng độ cồn</p>
-                                                            <input id="nongDoCon" type="text" value="<?php echo $sanPham["NongDoCon"] ?>" class="input" name="nongDoCon"  style="width: 40rem" />
+                                                            <input id="nongDoCon" type="text"  class="input" name="nongDoCon"  style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
                                                     
                                                             <p class="text">Giá</p>
-                                                            <input id="gia" class="input" value="<?php echo $sanPham["Gia"] ?>" name="gia"  style="width: 40rem" />
+                                                            <input id="gia" class="input"  name="gia"  style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                         </div>
                                                         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                                             <p class="text">Ảnh minh họa</p>
-                                                            <img id="xuatAnh" style="width: 350px; height: 400px;" src="<?php echo $sanPham["AnhMinhHoa"] ?>" alt="">
-                                                            <input id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*" value="<?php echo $sanPham["AnhMinhHoa"] ?>">
+                                                            <img id="xuatAnh" style="width: 350px; height: 400px;"alt="">
+                                                            <input id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*" >
                                                         </div>
 
                                             
@@ -111,6 +111,7 @@
 
 
     getCategories();
+    getBrand();
     anhMinhHoa = document.getElementById("anhMinhHoa");
     anhMinhHoa.addEventListener("change", function() {
 
@@ -274,35 +275,70 @@
         showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
     });
 
+    function fetchProductDetails(productId) {
+    $.ajax({
+        url: `http://localhost:8080/Admin/${productId}`,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // Điền dữ liệu vào form
+            $('#tenSanPham').val(data.productName);
+            $('#xuatXu').val(data.origin);
+            $('#thuongHieu').val(data.brand.name); 
+            $('#theTich').val(data.capacity);
+            $('#nongDoCon').val(data.abv);
+            $('#gia').val(data.price);
+            $('#xuatAnh').attr('src', data.image);
 
+          
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
 
-    function getCategories() {
+function getCategories() {
             $.ajax({
-                url: "../../../BackEnd/ManagerBE/LoaiSanPhamBE.php",
+                url: "http://localhost:8080/Category/noPaging",
                 method: "GET",
                 dataType: "json",
-                data: {
-                    isDemoHome: true
-                },
                 success: function(response) {
-
-                    let maLoaiSanPham = <?php echo $sanPham["MaLoaiSanPham"]?>;
-                    if (response.data && response.data.length > 0) {
-
+                    console.log(response)
+                    if (response && response.length > 0) {
                         // Xóa tất cả các option hiện có trong dropdown
                         $('#loaiSanPham').empty();
                         // Thêm option "Tất cả"
                         $('#loaiSanPham').append('<option value="">Chọn loại sản phẩm</option>');
                         // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
-                        $.each(response.data, function(index, category) {
-
-
-                            isSelect = category.MaLoaiSanPham == maLoaiSanPham ? "selected" : "";
-
-                            $('#loaiSanPham').append(`<option ${isSelect} value="${category.MaLoaiSanPham}">${category.TenLoaiSanPham}</option>`);
+                        $.each(response, function(index, category) {
+                            $('#loaiSanPham').append(`<option value="${category.id}">${category.categoryName}</option>`);
                         });
                     } else {
                         console.log("Không có loại sản phẩm nào được trả về từ API.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function getBrand() {
+            $.ajax({
+                url: "http://localhost:8080/Brand/noPaging",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response)
+                    if (response && response.length > 0) {
+                        $('#thuongHieu').empty();
+                        $('#thuongHieu').append('<option value="">Chọn thương hiệu sản phẩm</option>');
+                        $.each(response, function(index, brand) {
+                            $('#thuongHieu').append(`<option value="${brand.brandId}">${brand.brandName}</option>`);
+                        });
+                    } else {
+                        console.log("Không có thương hiệu sản phẩm nào được trả về từ API.");
                     }
                 },
                 error: function(xhr, status, error) {
@@ -388,33 +424,49 @@
 
 
 
-    function updateSanPham(maSanPham, tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa) {
-        $.ajax({
-            url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-            type: 'POST',
-            dataType: "json",
-            data: {
-                action: "update",
-                maSanPham: maSanPham,
-                tenSanPham: tenSanPham,
-                maLoaiSanPham: maLoaiSanPham,
-                xuatXu: xuatXu,
-                thuongHieu: thuongHieu,
-                theTich: theTich,
-                nongDoCon: nongDoCon,
-                gia: gia,
-                soLuongConLai:  <?php echo $sanPham["SoLuongConLai"] ?>,
-                trangThai: <?php echo $sanPham["TrangThai"] ?>,
-                anhMinhHoa: anhMinhHoa
-            },
-            success: function(data) {
-                return data.status === 200;
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
+    function updateSanPham(id, tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa, moTa, trangThai) {
+    var formData = new FormData();
+    formData.append("id", id); // ID là bắt buộc cho việc cập nhật
+    formData.append("productName", tenSanPham);
+    formData.append("categoryId", maLoaiSanPham);
+    formData.append("origin", xuatXu);
+    formData.append("brandId", thuongHieu);
+    formData.append("capacity", theTich);
+    formData.append("abv", nongDoCon);
+    formData.append("price", gia);
+    formData.append("description", "moTa");
+    
+    // Kiểm tra xem có file ảnh không và thêm vào FormData
+    if (anhMinhHoa instanceof File) {
+        formData.append("image", anhMinhHoa);
     }
+
+    formData.append("status", true);
+    for (var pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    } 
+    var token = localStorage.getItem('token');
+
+    $.ajax({
+        url: 'http://localhost:8080/Product', // Thay URL bằng đúng API của bạn
+        type: 'PATCH', // Sử dụng PATCH cho việc cập nhật
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            "Authorization": "Bearer " + token // Gửi token trong header
+        },
+        success: function(data) {
+            if (data.status === 200) {
+                console.log("Sản phẩm được cập nhật thành công!");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error: ' + xhr.status + ' - ' + error);
+        }
+    });
+}
+
 
  
 

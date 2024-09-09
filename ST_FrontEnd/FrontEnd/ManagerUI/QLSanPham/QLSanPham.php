@@ -115,7 +115,7 @@
         function getAllSanPham(page, search, minGia, maxGia, trangThai, maLoaiSanPham) {
             // Gọi API để lấy dữ liệu sản phẩm
             $.ajax({
-                url: "../../../BackEnd/ManagerBE/SanPhamBE.php",
+                url: "http://localhost:8080/Product/Admin",
                 method: "GET",
                 dataType: "json",
                 data: {
@@ -128,45 +128,40 @@
                     maLoaiSanPham: maLoaiSanPham
                 },
                 success: function(response) {
-                    var data = response.data;
+                  
                     var tableBody = document.getElementById("tableBody");
                     var tableContent = "";
 
-                    if (data.length > 0) {
-                        data.forEach(function(record, index) {
-                            var trangThai = record.TrangThai == 0 ? "Ngừng kinh doanh" : "Kinh doanh";
-                            var buttonText = (record.TrangThai === 0) ? "Mở khóa" : "Khóa";
-                            var buttonClass = (record.TrangThai === 0) ? "unlock" : "block";
-                            var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
-                            var trContent = `
-                            <tr>
-                                <td style="text-align: center;">${record.MaSanPham}</td>
-                                <td><img style="height: 80px;" src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${record.AnhMinhHoa}"></td>
-                                <td>${record.TenSanPham}</td>
-                                <td style="text-align: center;">${record.Gia}</td>
-                                <td style="text-align: center;">${record.NongDoCon}</td>
-                                <td style="text-align: center;">${record.TheTich}</td>
-                                <td style="text-align: center;">${trangThai}</td>
-                                <td style="text-align: center;">${record.TenLoaiSanPham}</td>
+                    if (response.content.length > 0) { 
+                response.content.forEach(function(record) {
+                    var trangThai = record.status ? "Kinh doanh" : "Ngừng kinh doanh";
+                    var buttonText = record.status ? "Khóa" : "Mở khóa";
+                    var buttonClass = record.status ? "block" : "unlock";
+                    var buttonData = record.status ? "block" : "unlock";
+                    var trContent = `
+                    <tr>
+                        <td style="text-align: center;">${record.id}</td>
+                        <td><img style="height: 80px;" src="${record.image}"></td>
+                        <td>${record.productName}</td>
+                        <td style="text-align: center;">${record.price}</td>
+                   
+                        <td style="text-align: center;">${record.brand.brandName}</td>
+                        <td style="text-align: center;">${record.category.categoryName}</td>
+                       
+                        <td>
+                            <button class="edit" onclick="toUpdate(${record.id})">Sửa</button>
+                            <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.id}, ${record.status})">${buttonText}</button>
+                        </td>
+                    </tr>`;
+                    tableContent += trContent;
+                });
+            } else {
+                tableContent = `<tr><td style="text-align: center;" colspan="10">Không có sản phẩm nào thỏa yêu cầu</td></tr>`;
+            }
 
-                                <td style="text-align: center;">${record.SoLuongConLai}</td>
-                                <td>
-                                    <button class="edit" onclick="toUpdate(${record.MaSanPham})">Sửa</button>
-                                    <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaSanPham}, ${record.TrangThai})">${buttonText}</button>
-                                </td>
-                            </tr>`;
-                            tableContent += trContent;
-                        });
-                    } else {
-                        tableContent = `<tr ><td style="text-align: center;" colspan="10">Không có sản phẩm nào thỏa yêu cầu</td></tr>`;
-                    }
+            tableBody.innerHTML = tableContent;
 
-
-
-
-                    tableBody.innerHTML = tableContent;
-
-                    createPagination(page, response.totalPages);
+            createPagination(page, response.totalPages);
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi khi gọi API: ', error);
@@ -186,16 +181,16 @@
                 cancelButtonText: 'Hủy'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    var formData = new FormData();
+            formData.append('status', newTrangThai);
+            formData.append('id', maSanPham);
                     // Gọi hàm updateTaiKhoan bằng Ajax
                     $.ajax({
-                        url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-                        type: 'POST',
-                        dataType: "json",
-                        data: {
-                            changeState: true,
-                            maSanPham: maSanPham,
-                            trangThai: newTrangThai,
-                        },
+                        url: 'http://localhost:8080/Product',
+                        type: 'PATCH', 
+                        processData: false,  // Không xử lý dữ liệu (vì chúng ta đang gửi FormData)
+                contentType: false,  // Không đặt tiêu đề Content-Type vì FormData tự xử lý
+                data: formData,  // Dữ liệu cần gửi đi
                         success: function(response) {
                             // Nếu cập nhật thành công, reload bảng
                             if (response.status === 200) {
@@ -410,7 +405,7 @@
 
         function getCategories() {
             $.ajax({
-                url: "../../../BackEnd/ManagerBE/LoaiSanPhamBE.php",
+                url: "http://localhost:8080/Category/noPaging",
                 method: "GET",
                 dataType: "json",
                 data: {
