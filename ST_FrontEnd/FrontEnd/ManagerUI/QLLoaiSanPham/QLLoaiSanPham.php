@@ -103,7 +103,7 @@
   function getAllLoaiSanPham(page, search) {
     // Lấy token JWT từ localStorage
     var token = localStorage.getItem('token');
-
+    console.log(2222);
     $.ajax({   
       url: "http://localhost:8080/Category",
       type: "GET",
@@ -123,33 +123,33 @@
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-        if (data && data.length > 0) {
-        data.forEach(function(record) {
-            var trContent = `
-            <form id="updateForm" method="POST" action="FormUpdateLoaiSanPham.php?MaLoaiSanPham=${record.MaLoaiSanPham}&TenLoaiSanPham=${record.TenLoaiSanPham}">
+        
+        // Tạo biến lưu trữ nội dung HTML mới
+        var htmlContent = '';
+        $.each(response.content, function(index, record) {
+          console.log(response.content); // Kiểm tra xem có dữ liệu trả về đúng không
+          var htmlContent = `
                 <tr>
-                    <td style="text-align:center">${record.MaLoaiSanPham}</td>
-                    <td style="text-align:center">${record.TenLoaiSanPham}</td>
+                    <td style="text-align:center">${record.id}</td>
+                    <td style="text-align:center">${record.categoryName}</td>
                     <td style="text-align:center">`;
 
             // Kiểm tra nếu là Loại sản phẩm có ID là 1, thì in ra chữ "Mặc định"
-            if (record.MaLoaiSanPham == 1) {
-                trContent += `Mặc định`;
+            if (record.Id == 1) {
+                htmlContent += `Mặc định`;
             } else {
                 // Nếu không phải Loại sản phẩm có ID là 1, thì in ra nút sửa và nút xoá
-                trContent += `
-                    <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Sửa</button>
-                    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Xoá</button>`;
+                htmlContent += `
+                    <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.Id}, '${record.CategoryName}')">Sửa</button>
+                    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.Id}, '${record.CategoryName}')">Xoá</button>`;
             }
 
-            trContent += `</td>
+            htmlContent += `</td>
                 </tr>`;
-
-            tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+console.log(1111);
+            tableContent += htmlContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
-      } else {
-  console.warn("Không có dữ liệu");
-}
+     
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
         tableBody.innerHTML = tableContent;
@@ -244,10 +244,10 @@
     }
   });
 
-  function deleteLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham) {
+  function deleteLoaiSanPham(Id, CategoryName) {
     // Sử dụng SweetAlert2 thay vì hộp thoại confirm
     Swal.fire({
-      title: `Bạn có muốn xóa ${TenLoaiSanPham} không?`,
+      title: `Bạn có muốn xóa ${CategoryName} không?`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Đồng ý',
@@ -260,12 +260,12 @@
           type: 'GET',
           dataType: "json",
           data: {
-            MaLoaiSanPham: MaLoaiSanPham
+            Id: Id
           },
           success: function(response) {
             console.log('Status:', response.status); // In mã trạng thái
             console.log('Message:', response.message); // In thông báo
-            console.log('MaLoaiSanPham:', MaLoaiSanPham);
+            console.log('Id:', Id);
 
             if (response.status === 200) {
               // Hiển thị thông báo thành công bằng SweetAlert2
@@ -283,12 +283,13 @@
     });
   }
 
-  function updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham) {
+  function updateLoaiSanPham(Id, CategoryName) {
+    
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
-
-    form.action = `FormUpdateLoaiSanPham.php?MaLoaiSanPham=${MaLoaiSanPham}&TenLoaiSanPham=${TenLoaiSanPham}`
-
+    
+    form.action = `FormUpdateLoaiSanPham.php?Id=${Id}&CategoryName=${CategoryName}`
+    console.log(33333);
     // Gửi form đi
     form.submit();
 
