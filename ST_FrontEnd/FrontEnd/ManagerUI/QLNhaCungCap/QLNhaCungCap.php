@@ -259,10 +259,14 @@ function getAllNhaCungCap(page, search) {
     // Nếu người dùng nhấn nút Xóa
     if (result.isConfirmed) {
       // Thực hiện gọi Ajax để xóa nhà cung cấp
+      var token = localStorage.getItem('token');
       $.ajax({
         url: 'http://localhost:8080/Brand',
-        type: 'POST',
+        type: 'DELETE',
         dataType: "json",
+        headers: {
+        'Authorization': 'Bearer ' + token
+      },
         data: {
           action: "delete",
           brandId: brandId
@@ -308,7 +312,7 @@ function getAllNhaCungCap(page, search) {
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
 
-    form.action = `FormUpdateNhaCungCap.php?brandId=${brandId}&brandName=${brandName}`
+    window.location.href = `FormUpdateNhaCungCap.php?brandId=${brandId}&brandName=${brandName}`
 
     // Gửi form đi
     form.submit();

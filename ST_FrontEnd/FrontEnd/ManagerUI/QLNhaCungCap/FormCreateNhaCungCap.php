@@ -29,7 +29,7 @@
                                             <input type="hidden" name="action" value="createSupplier">
                                             <div class="boxFeature">
                                                 <div>
-                                                    <h2 style="font-size: 2.3rem">Thêm nhà cung cấp</h2>
+                                                    <h2 style="font-size: 2.3rem">Thêm thương hiệu</h2>
 
                                                 </div>
                                                 <div>
@@ -57,15 +57,15 @@
                                                     <div>
                                                    
                                                         <div style="padding-left: 1rem">
-                                                            <p class="text">Nhà cung cấp</p>
-                                                            <input id="TenNCC" class="input" type="text" name="TenNCC" style="width: 40rem" />
+                                                            <p class="text">Thương hiệu</p>
+                                                            <input id="brandName" class="input" type="text" name="brandName" style="width: 40rem" />
                                                             <span style="
                                                             margin-left: 1rem;
                                                             font-weight: 700;
                                                             color: rgb(150, 150, 150);
                                                             ">*</span>
 
-                                                            <p class="text">Email</p>
+                                                            <!-- <p class="text">Email</p>
                                                             <input id="Email" class="input" type="text" name="Email" style="width: 40rem" />
                                                             <span style="
                                                             margin-left: 1rem;
@@ -79,7 +79,7 @@
                                                             margin-left: 1rem;
                                                             font-weight: 700;
                                                             color: rgb(150, 150, 150);
-                                                            ">*</span>
+                                                            ">*</span> -->
                                                         </div>
 
                                                     </div>
@@ -113,93 +113,93 @@
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-        let TenNCC = document.getElementById("TenNCC");
-        let Email = document.getElementById("Email");
-        let SoDienThoai = document.getElementById("SoDienThoai");
+        let brandName = document.getElementById("brandName");
+        // let Email = document.getElementById("Email");
+        // let SoDienThoai = document.getElementById("SoDienThoai");
 
-        if (!TenNCC.value.trim()) {
+        if (!brandName.value.trim()) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
-                text: 'Tên nhà cung cấp không được để trống',
+                text: 'Tên thương hiệu không được để trống',
             });
-            TenNCC.focus();
+            brandName.focus();
             event.preventDefault();
             return;
         }
-        if (!Email.value.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Email không được để trống',
-            });
-            Email.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!SoDienThoai.value.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Số điện thoại không được để trống',
-            });
-            SoDienThoai.focus();
-            event.preventDefault();
-            return;
-        }
+        // if (!Email.value.trim()) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Lỗi!',
+        //         text: 'Email không được để trống',
+        //     });
+        //     Email.focus();
+        //     event.preventDefault();
+        //     return;
+        // }
+        // if (!SoDienThoai.value.trim()) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Lỗi!',
+        //         text: 'Số điện thoại không được để trống',
+        //     });
+        //     SoDienThoai.focus();
+        //     event.preventDefault();
+        //     return;
+        // }
 
         // Kiểm tra định dạng Email
-        if (!isValidEmail(Email.value.trim())) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Email không hợp lệ',
-            });
-            Email.focus();
-            event.preventDefault();
-            return;
-        }
+        // if (!isValidEmail(Email.value.trim())) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Lỗi!',
+        //         text: 'Email không hợp lệ',
+        //     });
+        //     Email.focus();
+        //     event.preventDefault();
+        //     return;
+        // }
 
-        //Kiểm tra tên nhà cung cấp
-        if (isTenNhaCungCapExists(TenNCC.value.trim())) {
+        //Kiểm tra tên thương hiệu
+        if (isTenNhaCungCapExists(brandName.value.trim())) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
-                text: 'Tên nhà cung cấp đã tồn tại',
+                text: 'Tên thương hiệu đã tồn tại',
             });
-            TenNCC.focus();
+            brandName.focus();
             event.preventDefault();
             return;
         }
 
         //Kiểm tra xem email đã tồn tại hay chưa
-        if (isEmailExists(Email.value.trim())) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Email đã tồn tại',
-            });
-            Email.focus();
-            event.preventDefault();
-            return;
-        }
+        // if (isEmailExists(Email.value.trim())) {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Lỗi!',
+        //         text: 'Email đã tồn tại',
+        //     });
+        //     Email.focus();
+        //     event.preventDefault();
+        //     return;
+        // }
 
-        console.log("EMail: ", Email.value);
-        console.log("SoDienThoai: ", SoDienThoai.value);
+        // console.log("EMail: ", Email.value);
+        // console.log("SoDienThoai: ", SoDienThoai.value);
 
 
         //Tạo thông tin nhà cung cấp
         let isCreateNhaCungCapComplete = createNhaCungCap(
-            TenNCC.value,
-            Email.value,
-            SoDienThoai.value
+            brandName.value,
+            // Email.value,
+            // SoDienThoai.value
         );
 
         //Sau khi tạo xong chuyển về trang QLNhaCungCap
         Swal.fire({
             icon: 'success',
             title: 'Thành công!',
-            text: 'Thêm nhà cung cấp mới thành công !!',
+            text: 'Thêm thương hiệu mới thành công !!',
         }).then(() => {
             window.location.href = 'QLNhaCungCap.php';
         });
@@ -207,22 +207,26 @@
     });
 
 
-    function isValidEmail(Email) {
-    // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
-    // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
-        return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(Email);
-    }
+    // function isValidEmail(Email) {
+    // // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
+    // // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
+    //     return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(Email);
+    // }
 
     function isTenNhaCungCapExists(value) {
         let exists = false;
+        var token = localStorage.getItem('token');
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+            url: 'http://localhost:8080/Brand',
             type: 'GET',
             dataType: "json",
+            headers: {
+        'Authorization': 'Bearer ' + token
+      },
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
                 action: "isExists",
-                TenNCC: value
+                brandName: value
             },
             success: function(data) {
                 if (data.status === 200) {
@@ -239,41 +243,45 @@
     }
 
 
-    function isEmailExists(value) {
-        let exists = false;
-        $.ajax({
-            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                Email: value
-            },
-            success: function(data) {
+    // function isEmailExists(value) {
+    //     let exists = false;
+    //     $.ajax({
+    //         url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+    //         type: 'GET',
+    //         dataType: "json",
+    //         async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
+    //         data: {
+    //             Email: value
+    //         },
+    //         success: function(data) {
 
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
+    //             if (data.status === 200) {
+    //                 exists = data.isExists == 1;
+    //             } else {
+    //                 console.error('Error:', data.message);
+    //             }
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error('Error: ' + xhr.status + ' - ' + error);
+    //         }
+    //     });
+    //     return exists;
+    // }
 
-    function createNhaCungCap(TenNCC, Email, SoDienThoai) {
+    function createNhaCungCap(brandName) {
+        var token = localStorage.getItem('token');
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+            url: 'http://localhost:8080/Brand',
             type: 'POST',
             dataType: "json",
+            headers: {
+        'Authorization': 'Bearer ' + token
+      },
             data: {
                 action: "create",
-                TenNCC: TenNCC,
-                Email: Email,
-                SoDienThoai: SoDienThoai
+                brandName: brandName
+                // Email: Email,
+                // SoDienThoai: SoDienThoai
             },
             success: function(data) {
                 return data.status === 200;
