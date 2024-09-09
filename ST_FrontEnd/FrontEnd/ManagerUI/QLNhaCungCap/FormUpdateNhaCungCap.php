@@ -28,7 +28,7 @@
                                             <input type="hidden" name="action" value="updateSupplier">
                                             <div class="boxFeature">
                                                 <div>
-                                                    <h2 style="font-size: 2.3rem">Cập nhật thông tin nhà cung cấp</h2>
+                                                    <h2 style="font-size: 2.3rem">Cập nhật thông tin thương hiệu</h2>
                                                 </div>
                                                 <div>
                                                     <a style="font-family: Arial; font-size: 1.5rem; font-weight: 700; border: 1px solid rgb(140, 140, 140); background-color: white; color: rgb(80, 80, 80); padding: 1rem 2rem 1rem 2rem; border-radius: 0.6rem; cursor: pointer;" href="./QLNhaCungCap.php">Hủy</a>
@@ -40,47 +40,26 @@
                                                     <div>
                                                         <?php
 
-                                                        $MaNCC = "";
-                                                        $TenNCC =  "";
-                                                        $Email =  "";
-                                                        $SoDienThoai =  "";
+                                                        $brandId = "";
+                                                        $brandName =  "";
 
-                                                        if (isset($_GET['MaNCC'])) {
+                                                        if (isset($_GET['brandId'])) {
                                                             // Lấy các tham số được gửi từ AJAX
-                                                            $MaNCC = $_GET['MaNCC'];
-                                                            $TenNCC = $_GET['TenNCC'];
-                                                            $Email = $_GET['Email'];
-                                                            $SoDienThoai = $_GET['SoDienThoai'];
+                                                            $brandId = $_GET['brandId'];
+                                                            $brandName = $_GET['brandName'];
                                                         }
                                                         echo '
                                                             <div style="padding-left: 1rem">
 
                                                                 <div style="display: flex; gap: 2rem">
                                                                     <div>
-                                                                        <p class="text">Mã nhà cung cấp<span style="color: red; margin-left: 10px;">🔒</span></p>
-                                                                        <input style="user-select: none; pointer-events: none; caret-color: transparent;" id="MaNCC" class="input" name="MaNCC" readonly value="' . ($MaNCC) . '" />
+                                                                        <p class="text">Mã thương hiệu<span style="color: red; margin-left: 10px;">🔒</span></p>
+                                                                        <input style="user-select: none; pointer-events: none; caret-color: transparent;" id="brandId" class="input" name="brandId" readonly value="' . ($brandId) . '" />
                                                                     </div>
                                                                 </div>
 
-                                                                <p class="text">Nhà cung cấp</p>
-                                                                <input id="TenNCC" class="input" type="text" name="TenNCC" style="width: 40rem" value="' . ($TenNCC) . '" />
-
-                                                                <div style="display: flex; gap: 2rem">
-                                                                    <div>
-                                                                        <p class="text">Email</p>
-                                                                        <input id="Email" class="input" name="Email" value="' . ($Email) . '" />
-                                                                    </div>
-                                                                </div>
-
-                                                            
-                                                                <div style="display: flex; gap: 2rem">
-                                                                    <div>
-                                                                        <p class="text">Số điện thoại</p>
-                                                                        <input id="SoDienThoai" class="input" style="width: 30rem" name="SoDienThoai" value="' . ($SoDienThoai) . '" />
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>';
+                                                                <p class="text">Thương hiệu</p>
+                                                                <input id="brandName" class="input" type="text" name="brandName" style="width: 40rem" value="' . ($brandName) . '" />';
 
                                                         ?>
 
@@ -106,71 +85,48 @@
     document.getElementById("updateSupplier_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-        let MaNCC = document.getElementById("MaNCC");
-        let TenNCC = document.getElementById("TenNCC");
-        let SoDienThoai = document.getElementById("SoDienThoai");
-        let Email = document.getElementById("Email");
+        let brandId = document.getElementById("brandId");
+        let brandName = document.getElementById("brandName");
 
-        if (!TenNCC.value.trim()) {
+        if (!brandName.value.trim()) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
-                text: 'Tên nhà cung cấp không được để trống',
+                text: 'Tên thương hiệu không được để trống',
             });
-            TenNCC.focus();
+            brandName.focus();
             event.preventDefault();
             return;
-        }
-        if (!Email.value.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Email không được để trống',
-            });
-            SoDienThoai.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!SoDienThoai.value.trim()) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Số điện thoại không được để trống',
-            });
-            SoDienThoai.focus();
-            event.preventDefault();
-            return;
-        }
+        }    
+    }
 
 
-        //Kiểm tra tên nhà cung cấp
-        if (isTenNhaCungCapExists(TenNCC.value.trim())) {
-            if (!isTenNhaCungCapBelongToMaNCC(MaNCC.value ,TenNCC.value.trim())){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Lỗi!',
-                    text: 'Tên nhà cung cấp đã tồn tại',
-                });
-                TenNCC.focus();
-                event.preventDefault();
-                return;
-            }
-        }
+        //Kiểm tra tên thương hiệu
+        // if (isTenNhaCungCapExists(brandName.value.trim())) {
+        //     if (!isTenNhaCungCapBelongToMaNCC(brandId.value ,brandName.value.trim())){
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'Lỗi!',
+        //             text: 'Tên thương hiệu đã tồn tại',
+        //         });
+        //         brandName.focus();
+        //         event.preventDefault();
+        //         return;
+        //     }
+        // }
 
 
         //Bắt đầu cập nhật thông tin nhà cung cấp sau khi đã qua các bước xác nhận
         let isUpdateNhaCungCapComplete = updateNhaCungCap(
-            MaNCC.value,
-            TenNCC.value,
-            Email.value,
-            SoDienThoai.value)
+            brandId.value,
+            brandName.value)
 
         //Sau khi tạo xong chuyển về trang QLNhaCungCap
         if (isUpdateNhaCungCapComplete) {
             Swal.fire({
                 icon: 'success',
                 title: 'Thành công!',
-                text: 'Cập nhật nhà cung cấp thành công !!',
+                text: 'Cập nhật thương hiệu thành công !!',
             }).then(() => {
                 window.location.href = 'QLNhaCungCap.php';
             });
@@ -178,7 +134,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
-                text: 'Cập nhật nhà cung cấp thất bại !!',
+                text: 'Cập nhật thương hiệu thất bại !!',
             })
         }
     });
@@ -186,7 +142,7 @@
     function isTenNhaCungCapExists(value) {
         let exists = false;
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+            url: 'http://localhost:8080/Brand',
             type: 'GET',
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
@@ -208,55 +164,28 @@
         return exists;
     }
 
-    function isTenNhaCungCapBelongToMaNCC(maNCC, value) {
-        let exists = false;
-        $.ajax({
-            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                action: "isBelongTo",
-                TenNCC: value,
-                MaNCC: maNCC
-            },
-            success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
+    
 
-    function updateNhaCungCap(MaNCC, TenNCC, Email, SoDienThoai) {
-        let isComplete = false;
+    function updateNhaCungCap(brandId, brandName) {
+        var token = localStorage.getItem('token');
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-            type: 'POST',
+            url: 'http://localhost:8080/Brand',
+            type: 'PATCH',
             dataType: "json",
-            async: false,
+            headers: {
+        'Authorization': 'Bearer ' + token
+      },
             data: {
-                action: 'update',
-                MaNCC: MaNCC,
-                TenNCC: TenNCC,
-                Email: Email,
-                SoDienThoai: SoDienThoai
+                brandId: brandId,
+                brandName: brandName
             },
             success: function(data) {
-                console.log(data);
-                isComplete = data.status === 200;
+                return data.status === 200;
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
             }
         });
-        return isComplete;
     }
 </script>
 

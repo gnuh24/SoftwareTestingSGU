@@ -1,6 +1,7 @@
 <div class="Sidebar_sideBar__CC4MK">
      <a class="MenuItemSidebar_menuItem__56b1m" href="../QLTaiKhoan/QLTaiKhoan.php">
      <span class="MenuItemSidebar_title__LLBtx">Tài khoản</span> </a>
+
     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
         <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
     </a>
@@ -8,7 +9,7 @@
         <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
     </a>
     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
-        <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
+        <span class="MenuItemSidebar_title__LLBtx">Thương hiệu</span>
     </a>
     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
         <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>

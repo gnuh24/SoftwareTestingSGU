@@ -116,53 +116,53 @@
             // Duyệt qua từng phần tử trong mảng thongKe
             thongKe.forEach(function(item) {
                 // Tính tổng số lượng đơn hàng
-                totalDonHang += item.soLuongDon;
+                totalDonHang += item.quantity;
                 
                 // Kiểm tra trạng thái của đơn hàng và cập nhật các tổng tương ứng
-                switch(item.trangThai) {
+                switch(item.status) {
                     case "Huy":
-                        totalHuy += item.soLuongDon;
+                        totalHuy += item.quantity;
                         break;
                     case "ChoDuyet":
-                        totalChoDuyet += item.soLuongDon;
+                        totalChoDuyet += item.quantity;
                         break;
                     case "GiaoThanhCong":
-                        totalGiaoThanhCong += item.soLuongDon;
+                        totalGiaoThanhCong += item.quantity;
                         break;
                     case "DangGiao":
-                        totalDangGiao += item.soLuongDon;
+                        totalDangGiao += item.quantity;
                         break;
                         case "DaDuyet":
-                        totalDaDuyet += item.soLuongDon;
+                        totalDaDuyet += item.quantity;
                         break;
                 }
 
                  // Chuyển đổi ngày tháng từ dạng yyyy-MM-dd sang dd/MM/yyyy
-                var ngayFormatted = formatNgay(item.ngayLapDon);
+                var ngayFormatted = item.updateDate;
 
-                //tempDonHang += item.soLuongDon;
+                //tempDonHang += item.quantity;
 
 
                 if (labels.length === 0){
                     labels.push(ngayFormatted);
-                    tempDonHang += item.soLuongDon;
+                    tempDonHang += item.quantity;
 
                      // Thêm số lượng đơn hàng vào các mảng dữ liệu tương ứng
-                    switch(item.trangThai) {
+                    switch(item.status) {
                         case "Huy":
-                            tempHuy += item.soLuongDon;
+                            tempHuy += item.quantity;
                             break;
                         case "ChoDuyet":
-                            tempChoDuyet += item.soLuongDon;
+                            tempChoDuyet += item.quantity;
                             break;
                         case "GiaoThanhCong":
-                            tempGiaoThanhCong += item.soLuongDon;
+                            tempGiaoThanhCong += item.quantity;
                             break;
                         case "DangGiao":
-                            tempDangGiao += item.soLuongDon;
+                            tempDangGiao += item.quantity;
                             break;
                             case "DaDuyet":
-                            tempDaDuyet += item.soLuongDon;
+                            tempDaDuyet += item.quantity;
                             break;
                     }
 
@@ -189,23 +189,23 @@
                         tempDaDuyet = 0;
                     }
 
-                    tempDonHang += item.soLuongDon;
+                    tempDonHang += item.quantity;
                     // Thêm số lượng đơn hàng vào các mảng dữ liệu tương ứng
-                    switch(item.trangThai) {
+                    switch(item.status) {
                         case "Huy":
-                            tempHuy += item.soLuongDon;
+                            tempHuy += item.quantity;
                             break;
                         case "ChoDuyet":
-                            tempChoDuyet += item.soLuongDon;
+                            tempChoDuyet += item.quantity;
                             break;
                         case "GiaoThanhCong":
-                            tempGiaoThanhCong += item.soLuongDon;
+                            tempGiaoThanhCong += item.quantity;
                             break;
                         case "DangGiao":
-                            tempDangGiao += item.soLuongDon;
+                            tempDangGiao += item.quantity;
                             break;
                             case "DaDuyet":
-                            tempDaDuyet += item.soLuongDon;
+                            tempDaDuyet += item.quantity;
                             break;
                     }
 
@@ -349,23 +349,24 @@
             return parts[2] + '/' + parts[1] + '/' + parts[0];
         }
 
-
         
 
         //Call API Thống kê đơn hàng
         function thongKeDonHang(from, to) {
             $.ajax({
-                url: '../../../BackEnd/ManagerBE/ThongKeBE.php',
+                url: 'http://localhost:8080/Statistic/OrderStatus',
                 type: 'GET',
                 dataType: "json",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                },
                 data: {
-                    from: from,
-                    to: to,
-                    thongKeDonHang: true
+                    minDate:  formatNgay(from),
+                    maxDate:  formatNgay(to),
                 },
                 success: function(response) {
                     // Xử lý dữ liệu trả về từ API ở đây
-                    fetchTable(response.data);
+                    fetchTable(response);
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi khi gọi API: ', error);

@@ -24,6 +24,10 @@
   width: 100%;
 }
 
+.completed{
+
+}
+
 .detail__wrapper .order_status__wrapper > div {
   flex: 1;
 }
@@ -82,9 +86,7 @@
   /* border: 0.5px solid #bdbdbd; */
 }
 
-.transaction_items__wrapper {
-  /* margin-top: 40px; */
-}
+
 .transaction_items__wrapper .transaction_name {
   font-weight: 500;
   font-size: 16px;
@@ -114,6 +116,7 @@
   height: 80px;
   display: block;
 }
+
 /* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa */
 .orderManagement_title__wrapper {
   display: flex;
@@ -201,6 +204,11 @@ ul {
 
 .order_status__wrapper > div.completed li::before {
   background-image: url(../../public/img/ic_status_active.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.order_status.cancelled li::before {
+  background-image: url(../../public/img/cancel_icon.jpg);
   background-size: contain;
   background-repeat: no-repeat;
 }

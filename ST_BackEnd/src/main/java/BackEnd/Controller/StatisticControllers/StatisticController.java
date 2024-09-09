@@ -1,9 +1,9 @@
 package BackEnd.Controller.StatisticControllers;
 
-import BackEnd.Form.StatisticForms.BestSellerForm;
 import BackEnd.Form.StatisticForms.BestSellerSizeForm;
 import BackEnd.Form.StatisticForms.IncomeSummaryForm;
 import BackEnd.Form.StatisticForms.OrderStatusSummary;
+import BackEnd.Form.StatisticForms.ProductSalesSummary;
 import BackEnd.Service.StatisticServices.IStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,16 +23,16 @@ public class StatisticController {
     private IStatisticService statisticService;
 
     @GetMapping("/BestSeller")
-    public List<BestSellerForm> getBestSellers(@RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date minDate,
-                                               @RequestParam(required = false) @DateTimeFormat(pattern = "dd/MM/yyyy") Date maxDate,
-                                               @RequestParam(defaultValue = "10") Integer limit,
-                                               @RequestParam(required = false) Integer brandId,
-                                               @RequestParam(required = false) Integer shoeTypeId) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String minDateString = minDate != null ? sdf.format(minDate) : null;
-        String maxDateString = maxDate != null ? sdf.format(maxDate) : null;
+    public List<ProductSalesSummary> getBestSellers(@RequestParam(required = false)  String minDate,
+                                                    @RequestParam(required = false)  String maxDate,
+                                                    @RequestParam(defaultValue = "10") Integer limit,
+                                                    @RequestParam(required = false) Integer brandId,
+                                                    @RequestParam(required = false) Integer shoeTypeId) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String minDateString = minDate != null ? sdf.format(minDate) : null;
+//        String maxDateString = maxDate != null ? sdf.format(maxDate) : null;
 
-        return statisticService.getShoeSales(minDateString, maxDateString, limit, brandId, shoeTypeId);
+        return statisticService.getShoeSales(minDate, maxDate, limit, brandId, shoeTypeId);
     }
 
     @GetMapping("/BestSellerBySize")

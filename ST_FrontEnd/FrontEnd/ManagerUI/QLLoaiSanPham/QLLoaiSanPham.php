@@ -255,11 +255,16 @@ console.log(1111);
     }).then((result) => {
       if (result.isConfirmed) {
         // Gọi Ajax để xóa loại sản phẩm
+        var token = localStorage.getItem('token');
         $.ajax({
           url: 'http://localhost:8080/Category',
-          type: 'GET',
+          type: 'DELETE',
           dataType: "json",
+          headers: {
+        'Authorization': 'Bearer ' + token
+      },
           data: {
+            action: "delete",
             id: id
           },
           success: function(response) {
@@ -288,8 +293,8 @@ console.log(1111);
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
     
-    form.action = `FormUpdateLoaiSanPham.php?id=${id}&categoryName=${categoryName}`
-    console.log(33333);
+    window.location.href = `FormUpdateLoaiSanPham.php?id=${id}&categoryName=${categoryName}`;
+    
     // Gửi form đi
     form.submit();
 
