@@ -188,7 +188,7 @@
 
                     if (soLuongConLai > 0) {
                         htmlContent += `
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary"  onclick="addToCart(${product.id}, ${product.price}, ${product.quantity})">
                                 <span>Thêm vào giỏ hàng</span>
                             </button>`;
                     }
@@ -242,6 +242,64 @@
             currency: 'VND'
         });
     }
+
+    function addToCart(productId, unitPrice, quantity) {
+        console.log(productId);
+        console.log(unitPrice);
+
+        console.log( quantity);
+
+    // Lấy thông tin người dùng từ localStorage
+    const key = localStorage.getItem("key");
+    const userObj = JSON.parse(key);
+
+    // Lấy accountId và token từ userObj
+    const accountId = userObj.id;
+    const token = userObj.token; // Giả sử token đã được lưu trong userObj
+
+    // Tính tổng
+    const total = unitPrice * quantity; // Chuyển đổi sang số
+
+    // Tạo object chứa dữ liệu form
+    const formData = new FormData();
+    formData.append('accountId', accountId);
+    formData.append('productId', productId);
+    formData.append('unitPrice', unitPrice); // Ép kiểu unitPrice về số
+    formData.append('quantity', quantity);   // Ép kiểu quantity về số
+    formData.append('total', total);         // Ép kiểu total về số
+
+    // Gọi API POST với token trong headers
+    fetch('http://localhost:8080/CartItem', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Authorization': `Bearer ${token}` // Thêm token vào header Authorization
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+            Swal.fire({
+                title: 'Thành công!',
+                text: 'Sản phẩm đã được thêm vào giỏ hàng.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } 
+    )
+    .catch(error => {
+        console.error('Error:', error);
+        // Thông báo lỗi khi có exception
+        Swal.fire({
+            title: 'Lỗi!',
+            text: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+
+
+
 </script>
 
 </html>

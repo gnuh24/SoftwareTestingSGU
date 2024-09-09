@@ -258,7 +258,6 @@
             },
             data: {
                 pageNumber: page,
-                pageSize: 1,
                 from: minNgayTao,
                 to: maxNgayTao,
                 status: trangThai,
