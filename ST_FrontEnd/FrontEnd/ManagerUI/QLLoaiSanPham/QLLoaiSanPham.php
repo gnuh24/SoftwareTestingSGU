@@ -135,13 +135,13 @@
                     <td style="text-align:center">`;
 
             // Kiểm tra nếu là Loại sản phẩm có ID là 1, thì in ra chữ "Mặc định"
-            if (record.Id == 1) {
+            if (record.id == 1) {
                 htmlContent += `Mặc định`;
             } else {
                 // Nếu không phải Loại sản phẩm có ID là 1, thì in ra nút sửa và nút xoá
                 htmlContent += `
-                    <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.Id}, '${record.CategoryName}')">Sửa</button>
-                    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.Id}, '${record.CategoryName}')">Xoá</button>`;
+                    <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.id}, '${record.categoryName}')">Sửa</button>
+                    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.id}, '${record.categoryName}')">Xoá</button>`;
             }
 
             htmlContent += `</td>
@@ -244,10 +244,10 @@ console.log(1111);
     }
   });
 
-  function deleteLoaiSanPham(Id, CategoryName) {
+  function deleteLoaiSanPham(id, categoryName) {
     // Sử dụng SweetAlert2 thay vì hộp thoại confirm
     Swal.fire({
-      title: `Bạn có muốn xóa ${CategoryName} không?`,
+      title: `Bạn có muốn xóa ${categoryName} không?`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Đồng ý',
@@ -260,12 +260,12 @@ console.log(1111);
           type: 'GET',
           dataType: "json",
           data: {
-            Id: Id
+            id: id
           },
           success: function(response) {
             console.log('Status:', response.status); // In mã trạng thái
             console.log('Message:', response.message); // In thông báo
-            console.log('Id:', Id);
+            console.log('id:', id);
 
             if (response.status === 200) {
               // Hiển thị thông báo thành công bằng SweetAlert2
@@ -283,12 +283,12 @@ console.log(1111);
     });
   }
 
-  function updateLoaiSanPham(Id, CategoryName) {
+  function updateLoaiSanPham(id, categoryName) {
     
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
     
-    form.action = `FormUpdateLoaiSanPham.php?Id=${Id}&CategoryName=${CategoryName}`
+    form.action = `FormUpdateLoaiSanPham.php?id=${id}&categoryName=${categoryName}`
     console.log(33333);
     // Gửi form đi
     form.submit();
