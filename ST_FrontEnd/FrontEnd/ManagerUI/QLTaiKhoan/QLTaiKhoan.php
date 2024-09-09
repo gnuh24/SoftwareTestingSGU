@@ -106,7 +106,7 @@ function getAllTaiKhoan(page, search, quyen) {
         dataType: "json",
         headers: {
             // Thêm JWT Token vào Authorization header
-            'Authorization': 'Bearer ' + token 
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
         data: {
             page: page,
