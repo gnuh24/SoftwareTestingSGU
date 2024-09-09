@@ -28,7 +28,7 @@
                           padding-top: 1rem;
                           padding-bottom: 1rem;
                         ">
-                      <h2>Tài khoản</h2>
+                      <h2>Quản lý tài khoản</h2>
                                          <!-- <a href="FormCreateTaiKhoan.php" id="createAccountButton">Tạo Tài Khoản</a> -->
                                             </div>
                                             <div class="Admin_boxFeature__ECXnm">
@@ -36,10 +36,9 @@
                                                     <input class="Admin_input__LtEE-" placeholder="Tìm kiếm tài khoản">
                                                 </div>
                                                 <select id="selectQuyen" style="height: 3rem; padding: 0.3rem;">
-                                                    <option value="">Quyền Hạn : Tất Cả</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Manager">Manager</option>
-                                                    <option value="Member">Member</option>
+                                                    <option value="">Trạng thái: tất cả</option>
+                                                    <option value="true">Hoạt động</option>
+                                                    <option value="false">Khóa</option>
                                                 </select>
                                                 <button id="searchButton" style="">Tìm kiếm</button>
                                             </div>
@@ -109,9 +108,9 @@ function getAllTaiKhoan(page, search, quyen) {
             'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
         data: {
-            page: page,
+            pageNumber: page,
             search: search,
-            quyen: quyen
+            status: quyen
         },
         success: function (response) {
         
@@ -127,17 +126,24 @@ function getAllTaiKhoan(page, search, quyen) {
                     var trClass = (index % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
            
                     // Xác định trạng thái và văn bản của nút dựa trên trạng thái của tài khoản
-                    var buttonText = (record.status === 0) ? "Mở khóa" : "Khóa";
-                    var buttonClass = (record.status === 0) ? "unlock" : "block";
-                    var buttonData = (record.status === 0) ? "unlock" : "block";
+                    var buttonText = (record.status === false) ? "Mở khóa" : "Khóa";
+                    var buttonClass = (record.status === false) ? "unlock" : "block";
                     var trContent = `
                         <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php">
                             <tr style="height: 20%"; max-height: 20%;>
                                 <td class="${trClass}" style="width: 130px;">${record.id}</td>
                                 <td class="${trClass}">${record.email}</td>
                                 <td class="${trClass}">${record.createTime}</td>
-                                <td class="${trClass}">${record.status === 0 ? "Khóa" : "Hoạt động"}</td>
+                                <td class="${trClass}">${record.status === false ? "Khóa" : "Hoạt động"}</td>
                                 <td class="${trClass}">${record.role}</td>`;
+                        
+                                if (record.role === "User"){
+                                    trContent += `<td class="${trClass}">
+                                        <button class="${buttonClass}" onClick="handleLockUnlock(${record.id}, ${record.status})">${buttonText}</button>
+                                    </td>`;
+                                }
+                                
+
 
                     trContent += `</tr></form>`;
                     // Nếu chỉ có ít hơn 5 phần tử và đã duyệt đến phần tử cuối cùng, thêm các hàng trống vào
@@ -253,50 +259,44 @@ function getAllTaiKhoan(page, search, quyen) {
     });
 
     // Hàm xử lý sự kiện cho nút khóa / mở khóa
-    function handleLockUnlock(maTaiKhoan, trangThai, quyen) {
-        var newTrangThai = trangThai === 0 ? 1 : 0; // Đảo ngược trạng thái
-        // Hiển thị hộp thoại xác nhận bằng SweetAlert2
-        Swal.fire({
-            title: `Bạn có muốn ${newTrangThai === 0 ? 'khóa' : 'mở khóa'} tài khoản ${maTaiKhoan} không?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Đồng ý',
-            cancelButtonText: 'Hủy'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Gọi hàm updateTaiKhoan bằng Ajax
-                $.ajax({
-                    url: '../../BackEnd/AdminBE/TaiKhoanBE.php',
-                    type: 'POST',
-                    dataType: "json",
-                    data: {
-                        maTaiKhoan: maTaiKhoan,
-                        trangThai: newTrangThai,
-                        quyen: quyen
-                    },
-                    success: function (response) {
-                        // Nếu cập nhật thành công, reload bảng
-                        if (response.status === 200) {
-                            var alertContent = newTrangThai === 0 ? "khóa" : "mở khóa";
-                            Swal.fire('Thành công!', `Bạn đã ${alertContent} thành công !!`, 'success');
-                            fetchDataAndUpdateTable(currentPage, '', '');
-                        } else {
-                            console.error('Lỗi khi cập nhật tài khoản: ', response.message);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Lỗi khi gọi API: ', error);
-                    }
-                });
-            }
-        });
-    }
-    function update(maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai) {
-        // Lấy ra form bằng id của nó
-        var form = document.querySelector("#updateForm");
-        form.action = `FormUpdateTaiKhoan.php?maTaiKhoan=${maTaiKhoan}&quyen=${quyen}&hoTen=${hoTen}&gioiTinh=${gioiTinh}&email=${email}&ngaySinh=${ngaySinh}&diaChi=${diaChi}&soDienThoai=${soDienThoai}`;
-        // Gửi form đi
-        form.submit();
-    }
+    function handleLockUnlock(maTaiKhoan, trangThai) {
+        var newTrangThai = trangThai === false ? true : false;
+
+    Swal.fire({
+        title: `Bạn có muốn ${newTrangThai === false ? 'khóa' : 'mở khóa'} tài khoản ${maTaiKhoan} không?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Đồng ý',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var formData = new FormData();
+            formData.append('accountId', maTaiKhoan);
+            formData.append('status', newTrangThai ? true : false);
+            console.log(formData);
+            $.ajax({
+                url: 'http://localhost:8080/Account/ChangeStatus',
+                type: 'PATCH',
+                dataType: 'json',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                        var alertContent = newTrangThai ? "mở khóa" : "khóa";
+                        Swal.fire('Thành công!', `Bạn đã ${alertContent} thành công !!`, 'success');
+                        fetchDataAndUpdateTable(currentPage, "", null);
+                    
+                },
+                error: function (xhr, status, error) {
+                    console.error('Lỗi khi gọi API: ', error);
+                }
+            });
+        }
+    });
+}
+
 </script>
 </html>
