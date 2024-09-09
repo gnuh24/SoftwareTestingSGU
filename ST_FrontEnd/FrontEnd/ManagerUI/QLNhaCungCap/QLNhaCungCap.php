@@ -62,8 +62,8 @@
                           <tr>
                             <th class="Table_th__hCkcg">Mã thương hiệu</th>
                             <th class="Table_th__hCkcg">Thương hiệu</th>
-                            <th class="Table_th__hCkcg">Email</th>
-                            <th class="Table_th__hCkcg">Số điện thoại</th>
+                            <!-- <th class="Table_th__hCkcg">Email</th>
+                            <th class="Table_th__hCkcg">Số điện thoại</th> -->
                             <th class="Table_th__hCkcg">Xoá</th>
                           </tr>
                         </thead>
@@ -106,7 +106,8 @@
   // Hàm getAllNhaCungCap
 // Hàm getAllNhaCungCap
 function getAllNhaCungCap(page, search) {
-    $.ajax({
+  var token = localStorage.getItem('token');
+      $.ajax({
         url: 'http://localhost:8080/Brand',
         type: 'GET',
         dataType: "json",
@@ -124,30 +125,30 @@ function getAllNhaCungCap(page, search) {
             var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
             // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-            data.forEach(function (record) {
-                var trContent = `
-                <form id="updateForm" method="POST" action="FormUpdateNhaCungCap.php?MaNCC=${record.MaNCC}&TenNCC=${record.TenNCC}&Email=${record.Email}&SoDienThoai=${record.SoDienThoai}">
+            var htmlContent = '';
+            $.each(response.content, function(index, record) {
+              console.log(response.content); // Kiểm tra xem có dữ liệu trả về đúng không
+                var htmlContent = `
                     <tr>
-                        <td style="text-align:center">${record.MaNCC}</td>
-                        <td style="text-align:center">${record.TenNCC}</td>
-                        <td style="text-align:center">${record.Email}</td>
-                        <td style="text-align:center">${record.SoDienThoai}</td>
+                        <td style="text-align:center">${record.brandId}</td>
+                        <td style="text-align:center">${record.brandName}</td>
+                        
                         <td style="text-align:center">`;
 
                 // Kiểm tra nếu record.MaNCC == 1 thì hiển thị nút "Mặc định" thay vì "Sửa" và "Xoá"
-                if (record.MaNCC == 1) {
-                    trContent += `
+                if (record.brandId == 1) {
+                    htmlContent += `
                     <p>Mặc định</p>`;
                 } else {
-                    trContent += `
-                    <button style="cursor:pointer" class="edit" onclick="updateNhaCungCap(${record.MaNCC}, '${record.TenNCC}', '${record.Email}', '${record.SoDienThoai}')">Sửa</button>
-                    <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.MaNCC}, '${record.TenNCC}')">Xoá</button>`;
+                    htmlContent += `
+                    <button style="cursor:pointer" class="edit" onclick="updateNhaCungCap(${record.brandId}, '${record.brandName}')">Sửa</button>
+                    <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.brandId}, '${record.brandName}')">Xoá</button>`;
                 }
 
-                trContent += `</td>
+                htmlContent += `</td>
                     </tr>`;
 
-                tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+                tableContent += htmlContent; // Thêm nội dung của hàng vào chuỗi tableContent
             });
 
             // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
@@ -243,10 +244,10 @@ function getAllNhaCungCap(page, search) {
     }
   });
 
-  function deleteNhaCungCap(MaNCC, tenNCC) {
+  function deleteNhaCungCap(brandId, brandName) {
   // Sử dụng Swal thay vì hộp thoại confirm
   Swal.fire({
-    title: `Bạn có muốn xóa  ${tenNCC} không?`,
+    title: `Bạn có muốn xóa  ${brandName} không?`,
     text: "Hành động này sẽ không thể hoàn tác!",
     icon: 'warning',
     showCancelButton: true,
@@ -264,12 +265,12 @@ function getAllNhaCungCap(page, search) {
         dataType: "json",
         data: {
           action: "delete",
-          MaNCC: MaNCC
+          brandId: brandId
         },
         success: function(response) {
           console.log('Status:', response.status); // In mã trạng thái
           console.log('Message:', response.message); // In thông báo
-          console.log('MaNCC:', MaNCC);
+          console.log('brandId:', brandId);
 
           if (response.status === 200) {
             Swal.fire({
@@ -303,11 +304,11 @@ function getAllNhaCungCap(page, search) {
 
 
 
-  function updateNhaCungCap(MaNCC, TenNCC) {
+  function updateNhaCungCap(brandId, brandName) {
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
 
-    form.action = `FormUpdateNhaCungCap.php?MaNCC=${MaNCC}&TenNCC=${TenNCC}`
+    form.action = `FormUpdateNhaCungCap.php?brandId=${brandId}&brandName=${brandName}`
 
     // Gửi form đi
     form.submit();
