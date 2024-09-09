@@ -21,6 +21,10 @@ public class ProductDTOListAdmin {
 
     private Boolean status;
 
+    private Integer quantity;
+
+    private Integer price;
+
     private String image;
 
     @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")

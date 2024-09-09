@@ -78,10 +78,9 @@
                                                         <th style="width: 10%; text-align: center;">Minh họa</th>
                                                         <th style="width: 25%;">Tên Sản Phẩm</th>
                                                         <th style="width: 10%; text-align: center;">Giá Tiền</th>
-                                                        <th style="width: 5%; text-align: center;">Nồng Độ Cồn (%)</th>
-                                                        <th style="width: 10%; text-align: center;">Dung Tích (đơn vị: ml)</th>
                                                         <th style="width: 10%; text-align: center;">Trạng thái</th>
                                                         <th style="width: 10%;text-align: center;">Loại sản phẩm</th>
+                                                        <th style="width: 10%;text-align: center;">Thương hiệu</th>
 
                                                         <th style="width: 5%; text-align: center;">Số Lượng</th>
                                                         <th style="width: 10%; text-align: center;">Thao Tác</th>
@@ -118,9 +117,11 @@
                 url: "http://localhost:8080/Product/Admin",
                 method: "GET",
                 dataType: "json",
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
                 data: {
-                    getManager: true,
-                    page: page,
+                    pageNumber: page,
                     search: search,
                     minGia: minGia,
                     maxGia: maxGia,
@@ -141,13 +142,16 @@
                     var trContent = `
                     <tr>
                         <td style="text-align: center;">${record.id}</td>
-                        <td><img style="height: 80px;" src="${record.image}"></td>
+                        <td><img style="height: 80px;" src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${record.image}"></td>
                         <td>${record.productName}</td>
                         <td style="text-align: center;">${record.price}</td>
-                   
-                        <td style="text-align: center;">${record.brand.brandName}</td>
+                                                <td style="text-align: center;">${trangThai}</td>
+
                         <td style="text-align: center;">${record.category.categoryName}</td>
-                       
+
+                        <td style="text-align: center;">${record.brand.brandName}</td>
+                                               <td style="text-align: center;">${record.quantity}</td>
+
                         <td>
                             <button class="edit" onclick="toUpdate(${record.id})">Sửa</button>
                             <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.id}, ${record.status})">${buttonText}</button>
