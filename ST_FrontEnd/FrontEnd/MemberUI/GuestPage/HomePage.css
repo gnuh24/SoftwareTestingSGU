@@ -52,10 +52,7 @@
     flex-direction: row;
     justify-content: center;
   }
-  #Home-img {
-    width: 110px;
-    height: 80px;
-  }
+
   
   .input__wrapper {
     position: relative;

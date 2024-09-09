@@ -1,9 +1,10 @@
 <style>
     /* Base Styles */
     #Home-img {
-        width: 120px;
-        height: auto;
+        width: 110px;
+        height: 80px;
     }
+
 
     .input__wrapper {
         display: flex;
@@ -99,25 +100,25 @@
     }
 </style>
 
-<header class="container-fluid bg-danger" style="height: fit-content;background-color:rgb(146, 26, 26) !important;">
-    <div id="Home-over-Header" class="row align-items-center py-2" style="height: fit-content;">
+<header class="container-fluid bg-danger" style="background-color: rgb(146, 26, 26) !important;">
+    <div id="Home-over-Header" class="row align-items-center justify-content-center" style="height: fit-content;">
         <!-- Logo -->
-        <div class="col-6 col-md-2 text-center mb-2 mb-md-0">
-            <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="Logo" class="img-fluid" />
+        <div class="col-12 col-md-2 text-center mb-2 mb-md-0">
+            <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="Logo" class="img-fluid mx-auto" />
         </div>
 
         <!-- Search Form -->
-        <div class="col-12 col-md-6 mb-2 mb-md-0">
-            <form id="search" class="input__wrapper d-flex justify-content-center" method="post" action="SignedProduct.php">
-                <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="form-control me-2 search-input" placeholder="Tìm kiếm" required="" />
-                <button id="filter-button" class="btn btn-primary" type="submit">
+        <div class="col-12 col-md-6 mb-2 mb-md-0 d-flex justify-content-center">
+            <form id="search" class="input__wrapper d-flex justify-content-center" method="post" action="SignedProduct.php" style="width:100%">
+                <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="form-control me-2 search-input" placeholder="Tìm kiếm" style="width:90%" required="" />
+                <button id="filter-button" class="btn btn-primary" type="submit" style="width:10%">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
         </div>
 
-        <!-- Login -->
-        <div class="col-12 col-md-4 d-flex  justify-content-around align-items-center gap-2">
+        <!-- Icons Section -->
+        <div class="col-12 col-md-4 d-flex justify-content-around align-items-center gap-2">
             <div class="header-option" onclick="toCart()">
                 <i class="fa-solid fa-cart-shopping"></i>
             </div>
@@ -131,8 +132,10 @@
                 <i class="fa-solid fa-right-from-bracket"></i>
             </div>
         </div>
+
     </div>
 </header>
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

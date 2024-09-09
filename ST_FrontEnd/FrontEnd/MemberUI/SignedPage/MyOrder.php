@@ -1,24 +1,3 @@
-<?php
-require_once "../../../BackEnd/ManagerBE/DonHangBE.php";
-
-if (isset($_GET['maTaiKhoan'])) {
-    $maTaiKhoan = $_GET['maTaiKhoan'];
-    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-    $data = getAllDonHangByMaKH($maTaiKhoan);
-}
-
-function convertNumberToVND($number)
-{
-    // Sử dụng number_format để định dạng số với dấu chấm ngăn cách hàng nghìn và không có phần thập phân
-    $formattedNumber = number_format($number, 0, ',', '.');
-
-    // Thêm ký tự 'đ' ở cuối số
-    $vndString = $formattedNumber . 'đ';
-
-    return $vndString;
-}
-?>
-
 <html lang="en">
 
 <head>
@@ -30,6 +9,8 @@ function convertNumberToVND($number)
     <!-- <link rel="stylesheet" href="MyOrder.css" /> -->
     <title>Đơn hàng của tôi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -47,101 +28,163 @@ function convertNumberToVND($number)
 
     <!-- Phần hiển thị đơn hàng -->
     <div class="orderManagement_order_history">
-        <?php
-        function formatMoney($amount)
-        {
-            return number_format($amount, 0, ',', '.') . 'đ';
-        }
+        <p id="emptyCartMessage" class="empty_cart" style="text-align: center;">Bạn chưa có đơn hàng nào!</p>
+        <div id="orderHistory"></div>
 
-        // Kiểm tra số lượng đơn hàng
-        $numberOfProducts = count(array_unique(array_column($data->data, 'MaDonHang')));
-
-        if ($numberOfProducts <= 0) {
-            echo '<p class="emty_cart" style="text-align: center;">Bạn chưa có đơn hàng nào!</p>';
-        }
-
-        // Hiển thị thông tin đơn hàng
-        foreach ($data->data as $hoaDon) {
-        ?>
-            <div class='orderManagement_order_list'>
-                <table class='orderManagement_order_info'>
-                    <thead>
-                        <tr class='orderManagement_order_title'>
-                            <th class='anhMinhHoa'>Ảnh minh họa</th>
-                            <th class='tenSanPham'>Tên sản phẩm</th>
-                            <th class='donGia'>Đơn giá</th>
-                            <th class='soLuong'>Số lượng</th>
-                            <th class='thanhTien'>Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        require_once "../../../BackEnd/ManagerBE/ChiTietDonHangBE.php";
-
-                        $listCTDH = getChiTietDonHangByMaDonHang($hoaDon["MaDonHang"])->data;
-
-                        foreach ($listCTDH as $chiTiet) {
-                        ?>
-                            <tr class='orderManagement_order_detail'>
-                                <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='<?= $chiTiet['AnhMinhHoa'] ?>'></td>
-                                <td class='tenSanPham'><?= $chiTiet['TenSanPham'] ?></td>
-                                <td class='donGia'><?= formatMoney($chiTiet['DonGia']) ?></td>
-                                <td class='soLuong'><?= $chiTiet['SoLuong'] ?></td>
-                                <td class='thanhTien'><?= formatMoney($chiTiet['ThanhTien']) ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-                <div class='orderManagement_order_thanhTien'>
-
-
-                    <p style="width: 50%;">Trạng thái:
-                        <?php
-                        switch ($hoaDon['TrangThai']) {
-                            case 'ChoDuyet':
-                                echo "Chờ duyệt";
-                                break;
-                            case 'DaDuyet':
-                                echo "Đã được duyệt";
-                                break;
-                            case 'DangGiao':
-                                echo "Đang giao hàng";
-                                break;
-                            case 'GiaoThanhCong':
-                                echo "Giao thành công";
-                                break;
-                            case 'Huy':
-                                echo "Đã hủy";
-                                break;
-                            default:
-                                echo $hoaDon['TrangThai'];
-                        }
-                        ?>
-                    </p>
-                    <p>Tổng giá trị: <?= convertNumberToVND($hoaDon['TongGiaTri']) ?></p>
-                    <?php
-                    // Chuyển danh sách sản phẩm thành chuỗi JSON để truyền vào hàm cancel
-
-                    $listSanPham = json_encode($listCTDH);
-
-                    if ($hoaDon['TrangThai'] == 'GiaoThanhCong' || $hoaDon['TrangThai'] == 'Huy') {
-                        echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]})'> Chi tiết</button>";
-                    } else {
-                        echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]}, {$hoaDon["MaKH"]})'> Chi tiết</button>" .
-                            "<button class='cancel_order_button' onclick='cancel({$hoaDon["MaDonHang"]}, \"{$hoaDon['TrangThai']}\", " . $listSanPham . ")'>Hủy đơn hàng</button>";
-                    }
-                    ?>
-                </div>
-                <!-- <div class='orderManagement_order_actions'>
-                    
-                </div> -->
-            </div>
-        <?php } ?>
     </div>
 
 
     <?php require_once "../Footer/Footer.php" ?>
 
+    <script>
+        // Hàm load thông tin đơn hàng từ server bằng AJAX
+        function loadOrders() {
+            var customerId = localStorage.getItem("id");
+
+            $.ajax({
+                url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
+                type: 'GET',
+                data: {
+                    MaKH: customerId
+                },
+                success: function(response) {
+                    const orders = response;
+                    const numberOfProducts = orders.length;
+
+                    if (numberOfProducts <= 0) {
+                        $('#emptyCartMessage').show();
+                    } else {
+                        $('#emptyCartMessage').hide();
+                        displayOrders(orders);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Đã xảy ra lỗi khi tải đơn hàng.');
+                }
+            });
+        }
+
+        // Hàm hiển thị thông tin đơn hàng trong HTML
+        function displayOrders(orders) {
+            const orderHistory = document.getElementById('orderHistory');
+            orderHistory.innerHTML = ''; // Xóa dữ liệu cũ
+
+            orders.forEach(hoaDon => {
+                var orderHtml = `
+                <div class='orderManagement_order_list'>
+                    <table class='orderManagement_order_info'>
+                        <thead>
+                            <tr class='orderManagement_order_title'>
+                                <th class='anhMinhHoa'>Ảnh minh họa</th>
+                                <th class='tenSanPham'>Tên sản phẩm</th>
+                                <th class='donGia'>Đơn giá</th>
+                                <th class='soLuong'>Số lượng</th>
+                                <th class='thanhTien'>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+
+                // AJAX call to get chiTietDonHang
+                $.ajax({
+                    url: 'http://localhost:8080/api/getChiTietDonHang', // Đường dẫn API lấy chi tiết đơn hàng
+                    type: 'GET',
+                    data: {
+                        MaDonHang: hoaDon.MaDonHang
+                    },
+                    async: false, // Đảm bảo AJAX này hoàn tất trước khi tiếp tục
+                    success: function(chiTietDonHangResponse) {
+                        const listCTDH = chiTietDonHangResponse.data;
+
+                        listCTDH.forEach(chiTiet => {
+                            orderHtml += `
+                            <tr class='orderManagement_order_detail'>
+                                <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='${chiTiet.AnhMinhHoa}'></td>
+                                <td class='tenSanPham'>${chiTiet.TenSanPham}</td>
+                                <td class='donGia'>${formatMoney(chiTiet.DonGia)}</td>
+                                <td class='soLuong'>${chiTiet.SoLuong}</td>
+                                <td class='thanhTien'>${formatMoney(chiTiet.ThanhTien)}</td>
+                            </tr>`;
+                        });
+
+                        orderHtml += `
+                        </tbody>
+                    </table>
+                    <div class='orderManagement_order_thanhTien'>
+                        <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.TrangThai)}</p>
+                        <p>Tổng giá trị: ${formatMoney(hoaDon.TongGiaTri)}</p>
+                        <button class='order_detail_button' onclick='toOrderDetail(${hoaDon.MaDonHang})'> Chi tiết</button>`;
+
+                        if (hoaDon.TrangThai !== 'GiaoThanhCong' && hoaDon.TrangThai !== 'Huy') {
+                            const listSanPham = JSON.stringify(listCTDH);
+                            orderHtml += `<button class='cancel_order_button' onclick='cancelOrder(${hoaDon.MaDonHang}, "${hoaDon.TrangThai}", ${listSanPham})'>Hủy đơn hàng</button>`;
+                        }
+
+                        orderHtml += `</div></div>`;
+
+                        orderHistory.innerHTML += orderHtml;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Đã xảy ra lỗi khi tải chi tiết đơn hàng.');
+                    }
+                });
+            });
+        }
+
+        // Format tiền tệ (Giả định)
+        function formatMoney(value) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(value);
+        }
+
+        // Chuyển đổi trạng thái
+        function translateStatus(status) {
+            switch (status) {
+                case 'ChoDuyet':
+                    return 'Chờ duyệt';
+                case 'DaDuyet':
+                    return 'Đã duyệt';
+                case 'DangGiao':
+                    return 'Đang giao hàng';
+                case 'GiaoThanhCong':
+                    return 'Giao thành công';
+                case 'Huy':
+                    return 'Đã hủy';
+                default:
+                    return status;
+            }
+        }
+
+        // Hàm xử lý hủy đơn hàng
+        function cancelOrder(maDonHang, trangThai, listSanPham) {
+            if (trangThai === 'Huy') {
+                alert('Đơn hàng đã bị hủy trước đó.');
+                return;
+            }
+
+            $.ajax({
+                url: 'http://localhost:8080/api/cancelOrder', // API hủy đơn hàng
+                type: 'POST',
+                data: {
+                    MaDonHang: maDonHang,
+                    listSanPham: listSanPham
+                },
+                success: function(response) {
+                    alert('Đơn hàng đã được hủy thành công.');
+                    loadOrders(); // Tải lại danh sách đơn hàng sau khi hủy
+                },
+                error: function(xhr, status, error) {
+                    console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
+                }
+            });
+        }
+
+        // Gọi hàm loadOrders khi trang được load
+        $(document).ready(function() {
+            loadOrders();
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
