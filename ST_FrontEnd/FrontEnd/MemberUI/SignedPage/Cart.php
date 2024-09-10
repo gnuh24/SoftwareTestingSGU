@@ -114,7 +114,6 @@
                         'Authorization': `Bearer ${token}` // Thêm JWT token vào header
                     },
                     success: function(response) {
-                        console.log(1);
 
                         var cartHTML = ''; // Dùng để chứa HTML của các sản phẩm
                         var totalAmount = 0; // Tổng tiền của giỏ hàng

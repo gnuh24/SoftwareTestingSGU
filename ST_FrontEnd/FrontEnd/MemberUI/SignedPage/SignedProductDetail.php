@@ -177,7 +177,7 @@
                             <p class="title">Số lượng</p>
                             <div class="quantity d-flex align-items-center">
                                 <button class="btn btn-outline-secondary minusBtn"><i class="fa-solid fa-minus"></i></button>
-                                <input type="number" value="1" min="1" max="${soLuongConLai}" class="form-control mx-2" oninput="checkQuantity(this)">
+                                <input id="quantityAddToCart" type="number" value="1" min="1" max="${soLuongConLai}" class="form-control mx-2" oninput="checkQuantity(this)">
                                 <button class="btn btn-outline-secondary plusBtn"><i class="fa-solid fa-plus"></i></button>
                             </div>`;
                     }
@@ -185,9 +185,13 @@
                     htmlContent += `</div>
                             <div class="button__wrapper">`;
 
+
+
+
+
                     if (soLuongConLai > 0) {
                         htmlContent += `
-                            <button class="btn btn-secondary"  onclick="addToCart(${product.id}, ${product.price}, ${product.quantity})">
+                            <button class="btn btn-secondary"  onclick="addToCart(${product.id}, ${product.price})">
                                 <span>Thêm vào giỏ hàng</span>
                             </button>`;
                     }
@@ -242,11 +246,14 @@
         });
     }
 
-    function addToCart(productId, unitPrice, quantity) {
+    function addToCart(productId, unitPrice) {
 
         // Lấy thông tin người dùng từ localStorage
         const token = localStorage.getItem("token");
         const accountId = localStorage.getItem("id")
+        const quantity = document.getElementById("quantityAddToCart").value;
+
+        console.log("Số lượng: " + quantity)
 
         // Tính tổng
         const total = unitPrice * quantity; // Chuyển đổi sang số

@@ -113,12 +113,8 @@ INSERT INTO `Order` (`Id`, 				`OrderTime`, 				`TotalPrice`, 	`Note`, 								`
 INSERT INTO `OrderStatus` (`OrderId`, `Status`, `UpdateTime`) VALUES
 						('ORD00000001', 'ChoDuyet', '2024-07-05 09:31:00'),
 						('ORD00000001', 'DaDuyet', '2024-07-05 10:00:00'),
-						('ORD00000001', 'DangGiao', '2024-07-05 12:00:00'),
-						('ORD00000001', 'GiaoThanhCong', '2024-07-05 14:00:00'),
 
 						('ORD00000002', 'ChoDuyet', '2024-07-05 10:16:00'),
-						('ORD00000002', 'DaDuyet', '2024-07-05 10:30:00'),
-						('ORD00000002', 'DangGiao', '2024-07-05 13:00:00'),
 
 						('ORD00000003', 'ChoDuyet', '2024-07-05 11:01:00'),
 						('ORD00000003', 'DaDuyet', '2024-07-05 11:30:00'),
