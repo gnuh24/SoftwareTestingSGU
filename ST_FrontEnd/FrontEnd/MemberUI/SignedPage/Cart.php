@@ -43,7 +43,7 @@
                                 <p class="titlePriceTotal">Tổng giá trị:</p>
                                 <p class="priceTotal fw-bold">0đ</p>
                             </div>
-                            <button class="btn btn-danger w-100 my-3 hidden btnCheckout" style="background-color:rgb(146, 26, 26) !important;">Tiến hành đặt hàng</button>
+                            <button class="btn btn-danger w-100 my-3 hidden btnCheckout" style="background-color:rgb(146, 26, 26) !important;" onclick="toCreateOrder()">Tiến hành đặt hàng</button>
                             <a href="SignedProduct.php">
                                 <button class="btn btn-outline-danger w-100" style=" border:1px solid rgb(146, 26, 26) !important;color:rgb(146, 26, 26) ;">Tiếp tục mua hàng</button>
                             </a>
@@ -68,9 +68,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        var numberOfItemsInCart = $('.cartItem').length; // Đếm số lượng phần tử có class .cartItem
+        var maTaiKhoan = JSON.parse(localStorage.getItem("id"));
 
-        function toCreateOrder(maTaiKhoan) {
+        function toCreateOrder() {
+            var maTaiKhoan = JSON.parse(localStorage.getItem("id"));
+            var numberOfItemsInCart = $('.cartItem').length; // Đếm số lượng phần tử có class .cartItem
+            console.log(numberOfItemsInCart)
             if (numberOfItemsInCart === 0) {
                 Swal.fire({
                     title: 'Lỗi!',
@@ -121,32 +124,32 @@
                         response.forEach(function(item) {
                             cartHTML += `
                              <div class='cartItem' id='${item.productId}'>
-    <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}' /></a>
-    <div class='inforCart'>
-        <div class='quantity'>
-            <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
-            <div style="display:flex;">            
-            <button class='btnQuantity decrease'>-</button>
-            <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
-            <button class='btnQuantity increase'>+</button></div>
-        </div>
-        <div class='unitPrice' style="">
-            <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
-            <div class='txtunitPrice' id='unitPrice_${item.productId}'>${item.unitPrice}</div>
-        </div>
-    </div>
-    <div class='wrapTotalPriceOfCart'>
-        <div class='totalPriceOfCart' style="height:100%;">
-            <label for='totalPrice_${item.productId}' class='labelTotalPrice'>Thành tiền:</label>
-            <p class='valueTotalPrice' id='totalPrice_${item.productId}'>${formatMoney(item.total)}</p>
-        </div>
-        <button class='btnRemove'>
-            <i class='fa-solid fa-xmark'></i>
-        </button>
-    </div>
-</div>
+                                <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}' /></a>
+                                <div class='inforCart'>
+                                    <div class='quantity'>
+                                        <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
+                                        <div style="display:flex;">            
+                                        <button class='btnQuantity decrease'>-</button>
+                                        <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
+                                        <button class='btnQuantity increase'>+</button></div>
+                                    </div>
+                                    <div class='unitPrice' style="">
+                                        <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
+                                        <div class='txtunitPrice' id='unitPrice_${item.productId}'>${item.unitPrice}</div>
+                                    </div>
+                                </div>
+                                <div class='wrapTotalPriceOfCart'>
+                                    <div class='totalPriceOfCart' style="height:100%;">
+                                        <label for='totalPrice_${item.productId}' class='labelTotalPrice'>Thành tiền:</label>
+                                        <p class='valueTotalPrice' id='totalPrice_${item.productId}'>${formatMoney(item.total)}</p>
+                                    </div>
+                                    <button class='btnRemove'>
+                                        <i class='fa-solid fa-xmark'></i>
+                                    </button>
+                                </div>
+                            </div>
 
-`;
+                            `;
 
                             // Cộng dồn vào tổng tiền
                             totalAmount += item.total;

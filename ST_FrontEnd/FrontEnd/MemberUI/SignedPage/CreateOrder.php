@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="SignedHomePage.css">
     <link rel="stylesheet" href="CreateOrder.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Thanh toán</title>
 </head>
+
 <body>
     <?php require "../Header/SignedHeader.php"; ?>
 
@@ -27,89 +30,20 @@
                         <div class="payment_info">
                             <div id='checkout_form'>
                                 <div class='input__wrapper'>
-                                    <label for='username'>Họ tên:  <i class="fa-solid fa-lock"></i></label>
-                                    <input type='text' name='username' id='username' placeholder='Nhập họ tên' readonly/>
+                                    <label for='username'>Họ tên: <i class="fa-solid fa-lock"></i></label>
+                                    <input type='text' name='username' id='username' placeholder='Nhập họ tên' readonly />
                                 </div>
                                 <div class='input__wrapper'>
                                     <label for='phonenumber'>Số điện thoại: <i class="fa-solid fa-lock"></i></label>
-                                    <input type='number' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' readonly/>
+                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' readonly />
                                 </div>
                                 <div class='input__wrapper'>
                                     <label for='address'>Địa chỉ nhận hàng:</label>
                                     <input type='text' name='address' id='address' placeholder='Nhập địa chỉ' />
                                 </div>
                                 <div class='payment__wrapper'>
-                                    <label>Phương thức thanh toán:</label>
-                                    <?php require_once "../../../BackEnd/ManagerBE/PhuongThucThanhToan.php" ;
-                                        $result = getAllPhuongThucThanhToanNoPaging()->data;
-                                        foreach($result as $row){
-                                            echo "
-                                            <div class='radio__wrapper'>
-                                                <div>
-                                                    <input value=" . $row['MaPhuongThuc'] . " type='radio' name='payment' id='ghtk' />
-                                                    <label for='cash'>" . $row['TenPhuongThuc'] . "</label>
-                                                </div>
-                                            </div>";
-                                        }
-                                    ?>
-                                </div>
-                                <div class='payment__wrapper'>
-                                    <label>Dịch vụ vận chuyển:</label>
-                                    <?php require_once "../../../BackEnd/ManagerBE/DichVuVanChuyenBE.php" ;
-                                        $result = getAllDichVuVanChuyenNoPaging()->data;
-                                        foreach($result as $row){
-                                            echo "
-                                            <div class='radio__wrapper'>
-                                                <div>
-                                                    <input value=" . $row['MaDichVu'] . " type='radio' name='shipping' id='ghtk'/>
-                                                    <label for='cash'>" . $row['TenDichVu'] . "</label>
-                                                </div>
-                                            </div>";
-                                        }
-                                    ?>
-                                </div>   
-                                <div class='payment__wrapper'>
                                     <label>Các sản phẩm đặt mua</label>
-                                    <?php require_once "../../../BackEnd/ManagerBE/GioHangBe.php" ;
-                                        function formatMoney($amount) {
-                                            return number_format($amount, 0, ',', '.') . 'đ';
-                                        }
-                                        if (isset($_GET['maTaiKhoan'])) {
-                                            $totalPrice_Shipping = 0;
-                                            $maTaiKhoan = $_GET['maTaiKhoan'];
-                                            $result = getAllGioHangByMaTaiKhoan($maTaiKhoan)->data;
-                                            foreach($result as $cartProduct){
-                                                $totalPrice_Shipping +=  $cartProduct['ThanhTien'];
-                                                $formattedPrice = formatMoney($cartProduct['DonGia']);
-                                                $formattedTotalPrice = formatMoney($cartProduct['ThanhTien']);
-                                                echo "
-                                                <div class='radio__wrapper'>
-                                                    <div>
-                                                        <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
-                                                            <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
-                                                            <div class='inforCart'>
-                                                                <div class='nameAndPrice'>
-                                                                    <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
-                                                                    <p class='priceCart'>$formattedPrice</p>
-                                                                </div>
-                                                                <div class='quantity'>
-                                                                    <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='wrapTotalPriceOfCart'>
-                                                                <div class='totalPriceOfCart'>
-                                                                    <p class='lablelPrice'>Thành tiền</p>
-                                                                    <p class='valueTotalPrice'>$formattedTotalPrice</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>";
-                                            }
-                                        }else{
-                                            echo "<h1> Không in ra được =((( </h1>";
-                                        }
-                                    ?>
+                                    <div id="cartItems"></div>
                                 </div>
                                 <p class='hotline'>
                                     * Để được hỗ trợ trực tiếp và nhanh nhất vui lòng liên hệ THug88
@@ -125,8 +59,6 @@
                                 <p><span class="span1">Họ tên người nhận:</span><span class="span2" id="spanHoTen"></span></p>
                                 <p><span class="span1">Số điện thoại:</span><span class="span2" id="spanSoDienThoai"></span></p>
                                 <p><span class="span1">Địa chỉ giao hàng:</span><span class="span2" id="spanDiaChi"></span></p>
-                                <p><span class="span1">Phương thức thanh toán:</span><span class="span2" id="spanPhuongThucThanhToan"></span></p>
-                                <p><span class="span1">Dịch vụ vận chuyển:</span><span class="span2" id="spanDichVuVanChuyen"></span></p>
                             </div>
                             <div class="divider"></div>
                             <div class="info__wrapper total__info">
@@ -144,11 +76,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-       $(document).ready(function() {
-            fillUserDataToInputs();
-            fillOrderInfo();
+        $(document).ready(function() {
+            // fillUserDataToInputs();
+            // fillOrderInfo();
+            loadCart();
+            loadUserInfoFromLocalStorage();
         });
-        
+        var listproduct = [];
+        var totalpriceall = 0;
+
         function convertPriceToNumber(priceString) {
             var priceWithoutDot = priceString.replace(/\./g, '');
             var priceWithoutDong = priceWithoutDot.replace('đ', '');
@@ -156,25 +92,119 @@
             return priceNumber;
         }
 
+        function loadCart() {
+            var token = localStorage.getItem("token"); // Lấy token từ localStorage
+            var maTaiKhoan = localStorage.getItem("id"); // Lấy token từ localStorage
+            $.ajax({
+                url: 'http://localhost:8080/CartItem/' + maTaiKhoan, // URL của file PHP API
+                method: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Authorization': `Bearer ${token}` // Thêm JWT token vào header
+                },
+                success: function(response) {
+                    let cartHTML = '';
+                    let totalPrice = 0;
+
+                    // Duyệt qua các sản phẩm trong giỏ hàng và tạo HTML
+                    response.forEach(function(cartProduct) {
+                        totalPrice += cartProduct.total;
+                        var maSanPham = cartProduct.productId;
+                        var donGia = cartProduct.unitPrice;
+                        var soLuong = cartProduct.quantity;
+                        var total1 = cartProduct.total;
+
+                        var productItem = {
+                            'idProductId': maSanPham,
+                            'unitPrice': donGia,
+                            'quantity': soLuong,
+                            'total': total1
+                        };
+                        listproduct.push(productItem);
+                        cartHTML += `
+                        <div class='radio__wrapper'>
+                            <div>
+                                <div class='cartItem' id='${cartProduct.productId}'>
+                                    <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${cartProduct.image}' /></a>
+                                    <div class='inforCart'>
+                                        <div class='nameAndPrice'>
+                                            <p class='priceCart'>${formatCurrency(cartProduct.unitPrice)}</p>
+                                        </div>
+                                        <div class='quantity'>
+                                            <div class='txtQuantity'>${cartProduct.quantity}</div>
+                                        </div>
+                                    </div>
+                                    <div class='wrapTotalPriceOfCart'>
+                                        <div class='totalPriceOfCart'>
+                                            <p class='lablelPrice'>Thành tiền</p>
+                                            <p class='valueTotalPrice'>${formatCurrency(cartProduct.total)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+
+                    // Hiển thị giỏ hàng trên trang
+                    $('#cartItems').html(cartHTML);
+                    totalpriceall = totalPrice;
+                    $('#totalPrice').text(formatCurrency(totalPrice));
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Có lỗi xảy ra: ', error);
+                }
+            });
+        }
+
+        function formatCurrency(number) {
+            // Chuyển đổi số thành chuỗi và đảm bảo nó là số nguyên
+            number = parseInt(number);
+
+            // Sử dụng hàm toLocaleString() để định dạng số tiền
+            // và thêm đơn vị tiền tệ "đ" vào cuối chuỗi
+            return number.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+        }
+        document.getElementById('address').addEventListener('input', function() {
+            fillOrderInfo();
+        });
+
+        function loadUserInfoFromLocalStorage() {
+            const token = localStorage.getItem("token");
+            var userData = localStorage.getItem("id");
+            $.ajax({
+                url: "http://localhost:8080/Account/" + userData,
+                method: "GET",
+                dataType: "json",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {
+                    document.getElementById('spanHoTen').textContent = response.fullname;
+                    document.getElementById('spanSoDienThoai').textContent =
+                        response.phoneNumber;
+                    document.getElementById('username').value = response.fullname;
+                    document.getElementById('phonenumber').value = response.phoneNumber;
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function fillOrderInfo() {
+
+            var diaChi = document.getElementById('address').value;
+            document.getElementById('spanDiaChi').textContent = diaChi;
+        }
         document.getElementById('createOrder').addEventListener('click', function() {
-            const maTaiKhoan = '<?php echo $maTaiKhoan; ?>';
+            const maTaiKhoan = localStorage.getItem("id");;
             const hoTen = document.getElementById('username').value;
             const soDienThoai = document.getElementById('phonenumber').value;
             const diaChi = document.getElementById('address').value;
-            const selectedPayment = document.querySelector('input[name="payment"]:checked');
-            const maPhuongThuc = selectedPayment ? selectedPayment.value : '';
-            const selectedShipping = document.querySelector('input[name="shipping"]:checked');
-            const maDichVu = selectedShipping ? selectedShipping.value : '';
-
-            if (!maPhuongThuc || !maDichVu) {
-                Swal.fire({
-                    title: 'Vui lòng chọn phương thức thanh toán và dịch vụ vận chuyển.',
-                    icon: 'info',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-
             if (diaChi == "") {
                 Swal.fire({
                     title: 'Vui lòng không để trống địa chỉ giao hàng.',
@@ -184,26 +214,7 @@
                 return;
             }
 
-            const tongGiaTri = '<?php echo $totalPrice_Shipping; ?>';
-            const danhSachChiTietDonHang = [];
-            const cartItems = document.querySelectorAll('.cartItem');
-            cartItems.forEach(function(item) {
-                const maSanPham = item.id;
-                const tenSanPham = item.querySelector('.nameCart').textContent;
-                const donGia = convertPriceToNumber(item.querySelector('.priceCart').textContent);
-                const soLuong = item.querySelector('.txtQuantity').textContent;
-                const thanhTien = convertPriceToNumber(item.querySelector('.valueTotalPrice').textContent);
-
-                danhSachChiTietDonHang.push({
-                    maSanPham: maSanPham,
-                    tenSanPham: tenSanPham,
-                    donGia: donGia,
-                    soLuong: soLuong,
-                    thanhTien: thanhTien
-                });
-            });
-
-            if (hoTen && soDienThoai && diaChi && maPhuongThuc && maDichVu && tongGiaTri && danhSachChiTietDonHang.length > 0) {
+            if (hoTen && soDienThoai && diaChi) {
                 const diaChiGiaoHang = diaChi;
                 Swal.fire({
                     title: 'Đặt hàng',
@@ -215,10 +226,7 @@
                     confirmButtonText: 'Đồng ý'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
-                        createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
-
-                        // Redirect to SignedProduct.php after placing the order
+                        createDonHang();
                         Swal.fire({
                             title: 'Đặt hàng thành công!',
                             text: 'Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.',
@@ -236,97 +244,32 @@
             }
         });
 
-        document.getElementById('address').addEventListener('input', function() {
-            fillOrderInfo();
-        });
-
-        var paymentMethods = document.querySelectorAll('input[name="payment"]');
-        paymentMethods.forEach(function(method) {
-            method.addEventListener('change', function() {
-                fillOrderInfo();
-            });
-        });
-
-        var shippingMethods = document.querySelectorAll('input[name="shipping"]');
-        shippingMethods.forEach(function(method) {
-            method.addEventListener('change', function() {
-                fillOrderInfo();
-            });
-        });
-
-        document.getElementById('address').addEventListener('input', function() {
-            fillOrderInfo();
-        });
-
-        function fillUserDataToInputs() {
-            var userData = JSON.parse(localStorage.getItem('key'));
-            if (userData) {
-                document.getElementById('username').value = userData.HoTen;
-                document.getElementById('phonenumber').value = userData.SoDienThoai;
-                document.getElementById('address').value = userData.DiaChi;
-            }
-        }
-
-        function fillOrderInfo() {
-            var hoTen = document.getElementById('username').value;
-            var soDienThoai = document.getElementById('phonenumber').value;
+        function createDonHang() {
+            var token = localStorage.getItem("token");
+            var userData = localStorage.getItem("id");
+            var formData = new FormData();
+            formData.append('totalPrice', totalpriceall);
             var diaChi = document.getElementById('address').value;
-            var selectedPayment = document.querySelector('input[name="payment"]:checked');
-            var phuongThucThanhToan = selectedPayment ? selectedPayment.nextElementSibling.textContent : '';
-            var selectedShipping = document.querySelector('input[name="shipping"]:checked');
-            var dichVuVanChuyen = selectedShipping ? selectedShipping.nextElementSibling.textContent : '';
 
-            document.getElementById('spanHoTen').textContent = hoTen;
-            document.getElementById('spanSoDienThoai').textContent = soDienThoai;
-            document.getElementById('spanDiaChi').textContent = diaChi;
-            document.getElementById('spanPhuongThucThanhToan').textContent = phuongThucThanhToan;
-            document.getElementById('spanDichVuVanChuyen').textContent = dichVuVanChuyen;
+            formData.append('accountId', userData);
+            formData.append('note', diaChi);
 
-            var totalPrice = '<?php echo number_format($totalPrice_Shipping, 0, ',', '.'); ?>&nbsp;đ';
-            document.getElementById('totalPrice').innerHTML = totalPrice;
-        }
-
-        function createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang) {
-            $.ajax({
-                url: "../../../BackEnd/ManagerBE/DonHangBE.php",
-                method: "POST",
-                dataType: "json",
-                data: {
-                    action: 'add',
-                    maTaiKhoan: maTaiKhoan,
-                    tongGiaTri: tongGiaTri,
-                    maPhuongThuc: maPhuongThuc,
-                    maDichVu: maDichVu,
-                    diaChiGiaoHang: diaChiGiaoHang
-                },
-                success: function(response) {
-                    let maDonHang = response.data;
-                    danhSachChiTietDonHang.forEach(function(chiTiet) {
-                        createCTDH(maDonHang, chiTiet.maSanPham, chiTiet.donGia, chiTiet.soLuong, chiTiet.thanhTien);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
+            listproduct.forEach((item, index) => {
+                formData.append(`listOrderDetail[${index}].productId`, item.idProductId);
+                formData.append(`listOrderDetail[${index}].unitPrice`, item.unitPrice);
+                formData.append(`listOrderDetail[${index}].quantity`, item.quantity);
+                formData.append(`listOrderDetail[${index}].total`, item.total);
             });
-        }
-
-        function createCTDH(maDonHang, maSanPham, donGia, soLuong, thanhTien) {
             $.ajax({
-                url: "../../../BackEnd/ManagerBE/ChiTietDonHangBE.php",
+                url: "http://localhost:8080/Order/User",
                 method: "POST",
-                dataType: "json",
-                data: {
-                    action: 'add',
-                    maDonHang: maDonHang,
-                    maSanPham: maSanPham,
-                    donGia: donGia,
-                    soLuong: soLuong,
-                    thanhTien: thanhTien
+                data: formData,
+                processData: false, // Ngăn jQuery xử lý dữ liệu
+                contentType: false, // Ngăn jQuery thiết lập tiêu đề `Content-Type`
+                headers: {
+                    'Authorization': 'Bearer ' + token
                 },
-                success: function(response) {
-                    
-                },
+                success: function(response) {},
                 error: function(xhr, status, error) {
                     console.error("Error:", error);
                 }
@@ -334,4 +277,5 @@
         }
     </script>
 </body>
+
 </html>
