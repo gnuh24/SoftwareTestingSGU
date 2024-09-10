@@ -104,6 +104,46 @@
             window.location.href = `CreateOrder.php?maTaiKhoan=${maTaiKhoan}`;
         }
 
+        function bindCartItemEvents() {
+            // Tăng số lượng sản phẩm
+            $('.increase').on('click', function() {
+                var productId = $(this).data('id');
+                var quantityElem = $(`#quantity_${productId}`);
+                var currentQuantity = parseInt(quantityElem.text());
+                updateQuantity(productId, currentQuantity + 1); // Gọi hàm để cập nhật số lượng
+            });
+
+            // Giảm số lượng sản phẩm
+            $('.decrease').on('click', function() {
+                var productId = $(this).data('id');
+                var quantityElem = $(`#quantity_${productId}`);
+                var currentQuantity = parseInt(quantityElem.text());
+                if (currentQuantity > 1) { // Chỉ giảm số lượng nếu lớn hơn 1
+                    updateQuantity(productId, currentQuantity - 1); // Gọi hàm để cập nhật số lượng
+                }
+            });
+
+            // Xóa sản phẩm khỏi giỏ hàng
+            $('.btnRemove').on('click', function() {
+                var productId = $(this).closest('.cartItem').attr('id');
+                $.ajax({
+                    url: `http://localhost:8080/CartItem`,
+                    method: 'DELETE',
+                    data: {
+                        accountId: maTaiKhoan,
+                        productId: productId
+                    },
+                    success: function(response) {
+                        $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
+                        $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        }
+
         $(document).ready(function() {
             var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>'; // Lấy mã tài khoản từ PHP
             var token = localStorage.getItem("token"); // Lấy token từ localStorage
@@ -168,6 +208,7 @@
                             $('.btnCheckout').removeClass('hidden');
                         }
 
+
                         // Gọi lại các sự kiện như click "xóa sản phẩm" sau khi load xong giỏ hàng
                         bindCartItemEvents();
                     },
@@ -186,6 +227,7 @@
                 return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
             }
 
+<<<<<<< HEAD
             // Gắn sự kiện xóa sản phẩm sau khi sản phẩm được tải
             function bindCartItemEvents(accountId, productId) {
                 $('.btnRemove').on('click', function() {
@@ -210,7 +252,46 @@
                     });
                 });
             }
+=======
+
+>>>>>>> 498a14af4c4933a54ec83b32782ead30092cf2d9
         });
+
+        function updateQuantity(productId) {
+            var token = localStorage.getItem("token"); // Lấy token từ localStorage
+            // Lấy số lượng của sản phẩm dựa trên id
+            var productId = '123'; // id của sản phẩm
+            var quantityElem = document.getElementById(`quantity_${productId}`);
+            var quantity = quantityElem ? quantityElem.innerText : '';
+
+            // Lấy đơn giá của sản phẩm dựa trên id
+            var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
+            var unitPrice = unitPriceElem ? unitPriceElem.innerText : '';
+
+            // Lấy thành tiền của sản phẩm dựa trên id
+            var totalPriceElem = document.getElementById(`totalPrice_${productId}`);
+            var totalPrice = totalPriceElem ? totalPriceElem.innerText : '';
+
+            $.ajax({
+                url: `http://localhost:8080/CartItem/updateQuantity`,
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                data: {
+                    productId: productId,
+                    quantity: newQuantity,
+                    accountId: maTaiKhoan
+                },
+                success: function(response) {
+                    $(`#quantity_${productId}`).text(newQuantity); // Cập nhật số lượng hiển thị
+                    $(`#totalPrice_${productId}`).text(formatMoney(response.updatedTotal)); // Cập nhật tổng tiền của sản phẩm
+                    $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền của giỏ hàng
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
     </script>
 </body>
 
