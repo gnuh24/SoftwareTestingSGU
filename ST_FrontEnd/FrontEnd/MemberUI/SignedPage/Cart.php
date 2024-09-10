@@ -227,7 +227,6 @@
                 return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
             }
 
-<<<<<<< HEAD
             // Gắn sự kiện xóa sản phẩm sau khi sản phẩm được tải
             function bindCartItemEvents(accountId, productId) {
                 $('.btnRemove').on('click', function() {
@@ -252,9 +251,6 @@
                     });
                 });
             }
-=======
-
->>>>>>> 498a14af4c4933a54ec83b32782ead30092cf2d9
         });
 
         function updateQuantity(productId) {

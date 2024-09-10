@@ -378,7 +378,7 @@
         }
 
         function toUpdate(maSanPham) {
-            window.location.href = `FormUpdateSanPham.html?maSanPham=${maSanPham}`;
+            window.location.href = `FormUpdateSanPham.php?maSanPham=${maSanPham}`;
         }
 
         function getCategories() {
