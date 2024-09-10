@@ -38,7 +38,7 @@
                                     <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' readonly />
                                 </div>
                                 <div class='input__wrapper'>
-                                    <label for='address'>Địa chỉ nhận hàng:</label>
+                                    <label for='address'>Ghi chú:</label>
                                     <input type='text' name='address' id='address' placeholder='Nhập địa chỉ' />
                                 </div>
                                 <div class='payment__wrapper'>
@@ -58,7 +58,7 @@
                             <div class="info__wrapper order_info2">
                                 <p><span class="span1">Họ tên người nhận:</span><span class="span2" id="spanHoTen"></span></p>
                                 <p><span class="span1">Số điện thoại:</span><span class="span2" id="spanSoDienThoai"></span></p>
-                                <p><span class="span1">Địa chỉ giao hàng:</span><span class="span2" id="spanDiaChi"></span></p>
+                                <p><span class="span1">Ghi chú:</span><span class="span2" id="spanDiaChi"></span></p>
                             </div>
                             <div class="divider"></div>
                             <div class="info__wrapper total__info">
@@ -274,6 +274,26 @@
                     console.error("Error:", error);
                 }
             });
+            listproduct.forEach((item, index) => {
+                var formData1 = new FormData();
+                formData1.append('accountId', userData);
+                formData1.append('productId', item.idProductId);
+                $.ajax({
+                    url: "http://localhost:8080/CartItem",
+                    method: "DELETE",
+                    data: formData1,
+                    processData: false, // Ngăn jQuery xử lý dữ liệu
+                    contentType: false, // Ngăn jQuery thiết lập tiêu đề `Content-Type`
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(response) {},
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
         }
     </script>
 </body>
