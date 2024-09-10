@@ -37,7 +37,6 @@
 
 
     <?php require_once "../Footer/Footer.php" ?>
-
     <script>
         function loadOrders() {
             var customerId = localStorage.getItem("id");
@@ -104,13 +103,13 @@
 
                         listCTDH.forEach(chiTiet => {
                             orderHtml += `
-                    <tr class='orderManagement_order_detail'>
-                        <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${chiTiet.image}'></td>
-                        <td class='tenSanPham'>${chiTiet.productName}</td>
-                        <td class='donGia'>${formatMoney(chiTiet.unitPrice)}</td>
-                        <td class='soLuong'>${chiTiet.quantity}</td>
-                        <td class='thanhTien'>${formatMoney(chiTiet.total)}</td>
-                    </tr>`;
+                            <tr class='orderManagement_order_detail'>
+                                <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${chiTiet.image}'></td>
+                                <td class='tenSanPham'>${chiTiet.productName}</td>
+                                <td class='donGia'>${formatMoney(chiTiet.unitPrice)}</td>
+                                <td class='soLuong'>${chiTiet.quantity}</td>
+                                <td class='thanhTien'>${formatMoney(chiTiet.total)}</td>
+                            </tr>`;
                         });
                         orderHtml += `
                 </tbody>
@@ -120,9 +119,9 @@
                 <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
                <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
 
-                        if (hoaDon.TrangThai !== 'GiaoThanhCong' && hoaDon.TrangThai !== 'Huy') {
+                        if (hoaDon.status !== 'DangGiao' && hoaDon.status !== 'GiaoThanhCong' && hoaDon.status !== 'Huy') {
                             const listSanPham = JSON.stringify(listCTDH);
-                            orderHtml += `<button class='cancel_order_button' onclick='cancelOrder(${hoaDon.id}, "${hoaDon.status}", ${listSanPham})'>Hủy đơn hàng</button>`;
+                            orderHtml += `<button class='cancel_order_button' onclick="cancelOrder('${hoaDon.id}')">Hủy đơn hàng</button>`;
                         }
 
                         orderHtml += `</div></div>`;
@@ -163,41 +162,10 @@
         }
 
         // Hàm xử lý hủy đơn hàng
-        function cancelOrder(maDonHang, trangThai, listSanPham) {
-            if (trangThai === 'Huy') {
-                alert('Đơn hàng đã bị hủy trước đó.');
-                return;
-            }
-
-            $.ajax({
-                url: 'http://localhost:8080/api/cancelOrder', // API hủy đơn hàng
-                type: 'POST',
-                data: {
-                    MaDonHang: maDonHang,
-                    listSanPham: listSanPham
-                },
-                success: function(response) {
-                    alert('Đơn hàng đã được hủy thành công.');
-                    loadOrders(); // Tải lại danh sách đơn hàng sau khi hủy
-                },
-                error: function(xhr, status, error) {
-                    console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
-                }
-            });
-        }
-
-        // Gọi hàm loadOrders khi trang được load
-        $(document).ready(function() {
-            loadOrders();
-        });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function cancel(maDonHang, trangThai, listSanPham) {
-
-            // Hiển thị hộp thoại xác thực
-            Swal.fire({
+        function cancelOrder(maDonHang) {
+            console.log(maDonHang);
+        // Hiển thị hộp thoại xác thực
+        Swal.fire({
                 title: 'Xác nhận hủy đơn hàng?',
                 text: "Bạn có chắc muốn hủy đơn hàng này?",
                 icon: 'warning',
@@ -208,72 +176,51 @@
             }).then((result) => {
                 // Nếu người dùng xác nhận hủy đơn hàng
                 if (result.isConfirmed) {
-                    // Nếu trạng thái đơn hàng không phải là "Chờ duyệt"
-                    if (trangThai !== "ChoDuyet") {
-                        // Duyệt danh sách sản phẩm và gọi hàm tangSoLuongSanPham để hoàn trả số lượng
-                        listSanPham.forEach(function(sanPham) {
-                            var maSanPham = sanPham.MaSanPham;
-                            var soLuong = sanPham.SoLuong;
+                    $.ajax({
+                        url: 'http://localhost:8080/OrderStatus/User', // API hủy đơn hàng
+                        type: 'POST',
+                        data: {
+                            orderId: maDonHang,
+                            idStatus: "Huy"
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem("token")
 
-                            tangSoLuongSanPham(maSanPham, soLuong);
-                        });
-                    }
-
-                    // Gọi hàm createTrangThaiDonHang để cập nhật trạng thái đơn hàng
-                    createTrangThaiDonHang(maDonHang);
-
-                    // Hiển thị thông báo và reload trang
-                    Swal.fire(
-                        'Hủy đơn hàng thành công!',
-                        '',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload(); // Hoặc window.location.reload()
+                        },
+                        success: function(response) {
+                            
+                            // Hiển thị thông báo và reload trang
+                            Swal.fire(
+                                'Hủy đơn hàng thành công!',
+                                '',
+                                'success'
+                            ).then((result) => {
+                                console.log("Result: " + response);
+                                if (result.isConfirmed) {
+                                    location.reload(); // Hoặc window.location.reload()
+                                }
+                            });                        },
+                        error: function(xhr, status, error) {
+                            console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
                         }
                     });
+
+                    
                 }
             });
-        }
-
-
-        function createTrangThaiDonHang(maDonHang) {
-            $.ajax({
-                url: "../../../BackEnd/ManagerBE/TrangThaiDonHangBE.php",
-                method: "POST",
-                dataType: "json",
-                data: {
-                    MaDonHang: maDonHang,
-                    TrangThai: "Huy"
-                },
-                success: function(response) {},
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
-        }
-
-        function tangSoLuongSanPham(maSanPham, soLuongTang) {
-            $.ajax({
-                url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    action: 'up',
-                    maSanPham: maSanPham,
-                    soLuongTang: soLuongTang // Đảm bảo đặt tên trường đúng
-                },
-                success: function(response) {},
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
+           
         }
 
         function toOrderDetail(maDonHang) {
             window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}`;
         }
+
+        // Gọi hàm loadOrders khi trang được load
+        $(document).ready(function() {
+            loadOrders();
+        });
     </script>
+
 </body>
 
 </html>
