@@ -79,7 +79,7 @@
                                         </div>
                                         <div class='col-md-6'>
                                             <label for='inputEmail4' class='form-label'>Email *</label>
-                                            <input type='email' class='form-control' id='inputEmail4' name='email' value='${response.email}' >
+                                            <input type='email' class='form-control' id='inputEmail4' name='email' value='${response.email}' readonly >
                                         </div>
                                         <div class='col-md-6'>
                                             <label class='form-label'>Địa chỉ *</label>
