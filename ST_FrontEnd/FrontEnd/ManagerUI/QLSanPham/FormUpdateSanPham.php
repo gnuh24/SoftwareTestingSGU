@@ -121,20 +121,22 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-        // Bắt sự kiện change trên input file
-        document.getElementById('anhMinhHoa').addEventListener('change', function(event) {
-            const file = event.target.files[0];  // Lấy file đầu tiên được chọn
-            if (file) {
-                const imageUrl = URL.createObjectURL(file);  // Tạo URL tạm thời từ file
-                document.getElementById('xuatAnh').src = imageUrl;  // Gán URL tạm thời cho thẻ img
-            }
-        });
-   
-    getCategories();
-    getBrand();
-    fetchProductDetails(<?php echo $_GET['maSanPham'] ?>);
+    document.addEventListener("DOMContentLoaded", function() {
+        getCategories();
+        getBrand();
+        fetchProductDetails(<?php echo $_GET['maSanPham'] ?>);
+    })
 
     anhMinhHoa = document.getElementById("anhMinhHoa");
+
+    // Bắt sự kiện change trên input file
+    document.getElementById('anhMinhHoa').addEventListener('change', function(event) {
+        const file = event.target.files[0];  // Lấy file đầu tiên được chọn
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);  // Tạo URL tạm thời từ file
+            document.getElementById('xuatAnh').src = imageUrl;  // Gán URL tạm thời cho thẻ img
+        }
+    });
 
 
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
@@ -306,7 +308,7 @@
 
 
     
-        function showErrorAlert(title, message) {
+    function showErrorAlert(title, message) {
         Swal.fire({
             title: title,
             text: message,

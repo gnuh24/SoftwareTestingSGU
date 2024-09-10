@@ -225,7 +225,7 @@
                 dataType: "json",
                 data: (function() {
                     var requestData = {
-                        page: page,
+                        pageNumber: page,
                         minPrice: minGia,
                         maxPrice: maxGia,
                         pageSize: 12,
@@ -320,10 +320,11 @@
                 // Thêm sự kiện click cho từng nút phân trang
                 paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
                     button.addEventListener('click', function() {
-                        // Gọi hàm filterProducts khi người dùng click vào nút phân trang
-                        filterProducts(index + 1); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+                        currentPage = index + 1;
+                        filterProducts(currentPage);
                     });
-                });
+                    });
+
 
                 // Đánh dấu trang hiện tại
                 paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active');

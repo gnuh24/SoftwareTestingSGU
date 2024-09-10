@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div class="order_info__wrapper">
-                        <div class="order_info">
+                        <div class="order_info" style="padding: 20px">
                             <p class="title" style="text-align: center;">Thông tin đơn hàng</p>
                             <div class="divider"></div>
                             <div class="info__wrapper order_info2">

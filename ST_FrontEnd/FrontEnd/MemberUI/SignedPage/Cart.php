@@ -194,8 +194,11 @@
                         url: `http://localhost:8080/CartItem`,
                         method: 'DELETE',
                         data: {
-                            accountId: accountId,
+                            accountId: localStorage.getItem('id') ,
                             productId: productId
+                        },
+                        headers: {
+                            "Authorization": "Bearer " + localStorage.getItem('token') // Gửi token trong header
                         },
                         success: function(response) {
                             $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
