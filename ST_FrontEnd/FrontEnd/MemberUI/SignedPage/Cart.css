@@ -9,18 +9,7 @@
     font-family: Roboto;
     list-style: none;
   }
-  .containerPage {
-    width: 100%;
-    max-width: 1300px;
-    margin-left: auto;
-    margin-right: auto;
-    /* padding-left: 20px;
-    padding-right: 20px; */
-  }
-  .page_cart {
-    display: grid;
-    grid-template-columns: 1fr 400px;
-  }
+
   
   .wrapListCart {
     /* padding-top: 30px; */

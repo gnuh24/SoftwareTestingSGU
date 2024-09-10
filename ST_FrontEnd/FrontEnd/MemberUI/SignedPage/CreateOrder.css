@@ -135,7 +135,6 @@
   
   .checkout__wrapper .order_info__wrapper {
     position: relative;
-    margin-bottom: -7vw;
     background: #efebe4;
   }
   
@@ -148,14 +147,7 @@
     background-color: #efebe4;
     z-index: -1;
   }
-  
-  .checkout__wrapper .order_info__wrapper > .order_info {
-    /* max-width: 480px; */
-    top: 80px;
-    position: sticky;
-    padding: 20px 40px 9.8vw;
-    text-align: center;
-  }
+
   
   .checkout__wrapper .order_info__wrapper .title {
     font-weight: 500;

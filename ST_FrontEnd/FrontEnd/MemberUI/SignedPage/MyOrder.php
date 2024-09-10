@@ -90,7 +90,6 @@
                 </thead>
                 <tbody>`;
                 var token = localStorage.getItem("token");
-                console.log(hoaDon.id)
                 // AJAX call to get chiTietDonHang
                 $.ajax({
                     url: `http://localhost:8080/Order/MyOrder/${hoaDon.id}`, // Đường dẫn API lấy chi tiết đơn hàng
@@ -119,7 +118,7 @@
             <div class='orderManagement_order_thanhTien'>
                 <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.status)}</p>
                 <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
-                <button class='order_detail_button' onclick='toOrderDetail(${hoaDon.id})'> Chi tiết</button>`;
+               <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
 
                         if (hoaDon.TrangThai !== 'GiaoThanhCong' && hoaDon.TrangThai !== 'Huy') {
                             const listSanPham = JSON.stringify(listCTDH);
@@ -272,7 +271,6 @@
         }
 
         function toOrderDetail(maDonHang) {
-            console.log(maDonHang)
             window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}`;
         }
     </script>

@@ -1,15 +1,5 @@
-<?php
-    require_once "../../../BackEnd/ManagerBE/TrangThaiDonHangBE.php";
-
-    if (isset($_GET['maDonHang'])) {
-        $maDonHang = $_GET['maDonHang'];
-        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-        $result = getTrangThaiDonHangByMaDonHang($maDonHang)->data;
-
-    }
-?>
-
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,10 +8,13 @@
     <link rel="stylesheet" href="../GuestPage/login.css" />
     <link rel="stylesheet" href="MyOrderInDetail.css" />
     <link rel="stylesheet" href="CreateOrder.css" />
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>Chi tiết đơn hàng</title>
 </head>
+
 <body>
     <?php require_once "../Header/SignedHeader.php" ?>
 
@@ -38,7 +31,7 @@
         <div id="chiTietTrangThaiContent">
             <div id="circle-container1" class="circle-container">
                 <div id="ele1" class="chiTietTrangThaiElement">
-                    <i id="icon1" class="fa-solid fa-cart-shopping icon"></i>  
+                    <i id="icon1" class="fa-solid fa-cart-shopping icon"></i>
                     <p class="trangThai">Chờ duyệt</p>
                     <p id="thoiGian1" class="thoiGian"></p>
                 </div>
@@ -58,24 +51,24 @@
 
             <div id="circle-container3" class="circle-container">
                 <div id="ele3" class="chiTietTrangThaiElement">
-                    <i id="icon3" class="fa-solid fa-truck-fast icon"></i>  
+                    <i id="icon3" class="fa-solid fa-truck-fast icon"></i>
                     <p class="trangThai">Đang giao</p>
                     <p id="thoiGian3" class="thoiGian"></p>
                 </div>
             </div>
 
             <div id="line3" class="line">_____________________</div>
-            
+
             <div id="circle-container4" class="circle-container">
                 <div id="ele4" class="chiTietTrangThaiElement">
-                    <i id="icon4" class="fa-solid fa-gift icon"></i>   
+                    <i id="icon4" class="fa-solid fa-gift icon"></i>
                     <p class="trangThai">Giao thành công</p>
                     <p id="thoiGian4" class="thoiGian"></p>
                 </div>
             </div>
 
             <div id="line4" class="line">_____________________</div>
-            
+
             <div id="circle-container5" class="circle-container">
                 <div id="ele5" class="chiTietTrangThaiElement">
                     <i id="icon5" class="fa-solid fa-ban icon"></i>
@@ -87,137 +80,51 @@
     </section>
 
     <section>
-            <div class="layout__wrapper">
-                <div class="checkout__wrapper containerPage" style="margin-top: 30px;">
-                    <div class="payment_info__wrapper">
-                        <div class="payment_info">
-                            <div id='checkout_form'>
-                                <div class='payment__wrapper'>
-                                    <label>Các sản phẩm đặt mua</label>
-                                    <?php require_once "../../../BackEnd/ManagerBE/ChiTietDonHangBe.php" ;
+        <div class="layout__wrapper">
+            <div class="checkout__wrapper containerPage" style="margin-top: 30px;">
+                <div class="payment_info__wrapper">
+                    <div class="payment_info">
+                        <div id='checkout_form'>
+                            <div class='payment__wrapper'>
+                                <label>Các sản phẩm đặt mua</label>
+                                <div id="product-list"></div>
 
-                                    function formatMoney($amount) {
-                                        return number_format($amount, 0, ',', '.') . 'đ';
-                                    }
-
-                                    if (isset($_GET['maDonHang'])) {
-                                        $totalPrice_Shipping = 0;
-                                        $maDonHang = $_GET['maDonHang'];
-                                        $result2 = getChiTietDonHangByMaDonHang($maDonHang)->data;
-                                            foreach($result2 as $cartProduct){
-                                                $totalPrice_Shipping +=  $cartProduct['ThanhTien'];
-                                                $formattedPrice = formatMoney($cartProduct['DonGia']);
-                                                $formattedTotalPrice = formatMoney($cartProduct['ThanhTien']);
-                                                echo "
-                                                <div class='radio__wrapper'>
-                                                    <div>
-                                                        <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
-                                                            <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
-                                                            <div class='inforCart'>
-                                                                <div class='nameAndPrice'>
-                                                                    <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
-                                                                    <p class='priceCart'>$formattedPrice</p>
-                                                                </div>
-                                                                <div class='quantity'>
-                                                                    <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class='wrapTotalPriceOfCart'>
-                                                                <div class='totalPriceOfCart'>
-                                                                    <p class='lablelPrice'>Thành tiền</p>
-                                                                    <p class='valueTotalPrice'>$formattedTotalPrice</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>";
-                                                
-                                            }
-                                        }else{
-                                            echo "<h1> Không in ra được =((( </h1>";
-                                        }
-                                        
-                                    ?>
-                                </div>
-                             
-                        
-
-                                <p class='hotline'>
-                                    * Để được hỗ trợ trực tiếp và nhanh nhất vui lòng liên hệ THug88
-                                </p>
                             </div>
-                        </div>
-                    </div>
-                    <div class="order_info__wrapper">
-                        <div class="order_info">
-                            <p class="title" style="text-align: center;">Thông tin đơn hàng</p>
-
-                            <?php 
-
-                            require_once "../../../BackEnd/ManagerBE/DonHangBE.php";
 
 
-                            $donHang = getDonHangByMaDonHang($_GET['maDonHang'])->data;
 
-                            echo '<div class="divider"></div>
-                            <div class="info__wrapper order_info2">
-                                <p><span class="span1">Họ tên người nhận:</span><span class="span2" id="spanHoTen">' . $donHang['HoTen'] . '</span></p>
-                                <p><span class="span1">Số điện thoại:</span><span class="span2" id="spanSoDienThoai">' . $donHang['SoDienThoai'] . '</span></p>
-                                <p><span class="span1">Địa chỉ giao hàng:</span><span class="span2" id="spanDiaChi">' . $donHang['DiaChiGiaoHang'] . '</span></p>
-                                <p><span class="span1">Phương thức thanh tóan:</span><span class="span2" id="spanPhuongThucThanhToan">' . $donHang['TenPhuongThuc'] . '</span></p>
-                                <p><span class="span1">Dịch vụ vận chuyển:</span><span class="span2" id="spanDichVuVanChuyen">' . $donHang['TenDichVu'] . '</span></p>
-                            </div>
-                            <div class="divider"></div>
-                            <div class="info__wrapper total__info">
-                                <p>Tổng cộng</p>
-                                <p id="totalPrice">' . formatMoney($donHang['TongGiaTri']) . '</p>
-                            </div>';
-                      
-
-                            ?>
-                            
+                            <p class='hotline'>
+                                * Để được hỗ trợ trực tiếp và nhanh nhất vui lòng liên hệ THug88
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+                <div class="order_info__wrapper">
+                    <div class="order_info">
+                        <p class="title" style="text-align: center;">Thông tin đơn hàng</p>
+                        <div class="divider"></div>
 
-  
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+
 
     <?php require_once "../Footer/Footer.php" ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
-            // Lấy dữ liệu trạng thái đơn hàng từ PHP và chuyển đổi thành mảng JavaScript
-            var trangThaiDonHang = <?php echo json_encode($result); ?>;
-
-            // Lặp qua mỗi trạng thái trong mảng
-            trangThaiDonHang.forEach(function(trangThai) {
-
-                // Lấy thông tin trạng thái và thời gian
-                var trangThaiValue = trangThai.TrangThai;
-                var thoiGianValue = trangThai.NgayCapNhat;
-                console.log(trangThaiValue);
-                setColorAndTime(trangThaiValue, thoiGianValue);
-
-                // if (trangThaiValue == "Huy"){
-                //     setColorAndTime(trangThaiValue, thoiGianValue);
-
-                //     // Cập nhật màu sắc và thời gian cho container tương ứng
-                //     return;
-                // }
-
-
-                
-            });
-        });
-
-      // Hàm cập nhật màu sắc và thời gian cho container được chỉ định
+        // Hàm cập nhật màu sắc và thời gian cho container được chỉ định
         function setColorAndTime(trangThaiValue, thoiGianValue) {
             console.log(`Đã vào được trong ${trangThaiValue} và ${thoiGianValue}`);
-            
+
             // Chọn các phần tử sử dụng jQuery
             const $line1 = $('#line1');
             const $line2 = $('#line2');
@@ -300,6 +207,12 @@
             }
         }
 
+        function formatMoney(value) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(value);
+        }
 
         function chuyenDoiNgayThang(input) {
             // Tạo một đối tượng Date từ chuỗi đầu vào
@@ -323,6 +236,99 @@
             // Trả về chuỗi đã định dạng
             return gio + ':' + phut + ':' + giay + ' ' + ngay + '/' + thang + '/' + nam;
         }
+
+        function loadOrderData(maOrder) {
+            const token = localStorage.getItem("token");
+            $.ajax({
+                url: `http://localhost:8080/Order/MyOrder/${maOrder}`,
+                method: 'GET',
+                dataType: 'json',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {
+                    let totalPrice_Shipping = 0;
+                    let productListHtml = '';
+                    let html = '';
+                    // Xử lý từng sản phẩm trong kết quả trả về
+                    response.orderDetails.forEach(function(cartProduct) {
+                        totalPrice_Shipping += cartProduct.total;
+                        const formattedPrice = formatMoney(cartProduct.unitPrice);
+                        const formattedTotalPrice = formatMoney(cartProduct.total);
+
+                        // Thêm sản phẩm vào danh sách HTML
+                        productListHtml += `
+                        <div class='radio__wrapper'>
+                            <div>
+                                <div class='cartItem' id='${cartProduct.productId}'>
+                                    <a href='#' class='img'><img class='img' src='https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${cartProduct.image}' /></a>
+                                    <div class='inforCart'>
+                                        <div class='nameAndPrice'>
+                                            <a href='#' class='nameCart'>${cartProduct.productName}</a>
+                                            <p class='priceCart'>${formattedPrice}</p>
+                                        </div>
+                                        <div class='quantity'>
+                                            <div class='txtQuantity'>${cartProduct.quantity}</div>
+                                        </div>
+                                    </div>
+                                    <div class='wrapTotalPriceOfCart'>
+                                        <div class='totalPriceOfCart'>
+                                            <p class='lablelPrice'>Thành tiền</p>
+                                            <p class='valueTotalPrice'>${formattedTotalPrice}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    html = `
+ <div class="container mt-4">
+    <div class="info__wrapper order_info2">
+        <p><span class="span1">Mã đơn hàng:</span><span class="span2" id="id">${response.id}</span></p>
+        <p><span class="span1">Thời gian đặt hàng:</span><span class="span2" id="orderTime">${response.orderTime}</span></p>
+        <p><span class="span1">Ghi chú:</span><span class="span2" id="note">${response.note}</span></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="total__info">
+        <p>Tổng cộng</p>
+        <p id="totalPrice">${response.totalPrice}</p>
+    </div>
+</div>`
+                    // Chèn danh sách sản phẩm vào phần tử HTML
+                    $('#product-list').html(productListHtml);
+                    $('.divider').html(html)
+                    // Hiển thị tổng giá trị đơn hàng
+                    $('#totalPrice').text(formatMoney(totalPrice_Shipping));
+                    var trangThaiDonHang = response.orderStatuses;
+
+                    // Lặp qua mỗi trạng thái trong mảng
+                    trangThaiDonHang.forEach(function(trangThai) {
+
+                        // Lấy thông tin trạng thái và thời gian
+                        var trangThaiValue = trangThai.status;
+                        var thoiGianValue = trangThai.updateTime;
+                        setColorAndTime(trangThaiValue, thoiGianValue);
+                    });
+                },
+                error: function() {
+                    $('#product-list').html("<h1> Lỗi khi tải dữ liệu từ server </h1>");
+                }
+            });
+        }
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const maDonHang = urlParams.get('maDonHang');
+
+            if (maDonHang) {
+                loadOrderData(maDonHang);
+            } else {
+                console.error("Không tìm thấy mã đơn hàng trong URL");
+            }
+        });
     </script>
 </body>
+
 </html>
