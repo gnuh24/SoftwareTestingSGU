@@ -168,6 +168,10 @@ public class WebSecutiryConfiguration {
                         .requestMatchers(HttpMethod.GET, "/Statistic/BestSellerBySize").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.GET, "/Statistic/IncomeSummary").hasAnyAuthority("Admin")
 
+
+                    .requestMatchers(HttpMethod.GET, "/VnPay/pay").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/VnPay/returnPay").permitAll()
+
                     // Xác thực tất cả các request
                         .anyRequest()
                         .authenticated()

@@ -5,24 +5,30 @@ import BackEnd.Service.VnpayService.VNPAYService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-@Controller
+@RestController
+@RequestMapping("/VnPay")
+@CrossOrigin(origins = "*")
+
 public class VNPAYController {
+
     @Autowired
     private VNPAYService vnpayService;
+
     @GetMapping("/pay")
     public ResponseEntity<String> getPay(@RequestParam Long price, @RequestParam Integer id)throws UnsupportedEncodingException {
         // Gọi service để lấy URL thanh toán từ VNPay
         String url= vnpayService.getPay(price,id);
+
         // Trả về URL để người dùng có thể truy cập vào trang thanh toán VNPay
        return  ResponseEntity.ok(url);
     }
+
     // Tham số: Map chứa các tham số được trả về từ VNPay (vd: vnp_ResponseCode, contractId, ...)
     @GetMapping("/returnPay")
     public ResponseEntity<String> paymentCallback(@RequestParam Map<String, String> queryParams) throws IOException {

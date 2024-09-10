@@ -6,11 +6,11 @@
         </svg>
     </button>
 </div>
-<script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    // Sự kiện click của nút đăng xuất
+<script>
     document.getElementById("logoutButton").addEventListener("click", () => {
-        // Gọi hàm logout() khi click vào nút đăng xuất
         Swal.fire({
             title: 'Xác nhận đăng xuất',
             text: 'Bạn có chắc chắn muốn đăng xuất?',
@@ -22,13 +22,64 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                localStorage.removeItem("id");
-                localStorage.removeItem("token");
-                localStorage.removeItem("refreshToken");
+                // Lấy refreshToken từ localStorage
+                const refreshToken = localStorage.getItem("refreshToken");
 
-                window.location.href =  "../../MemberUI/Login/LoginUI.php";
+                if (refreshToken) {
+                    // Gọi API logout qua Ajax
+                    logout(refreshToken).then(() => {
+                        // Xóa các item trong localStorage sau khi API thành công
+                        localStorage.removeItem("id");
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("refreshToken");
+
+                        // Chuyển hướng về trang đăng nhập
+                        window.location.href = "../../MemberUI/Login/LoginUI.php";
+                    }).catch(error => {
+                        // Xử lý lỗi (nếu có)
+                        console.error('Lỗi khi gọi API logout:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Không thể đăng xuất. Vui lòng thử lại sau!',
+                        });
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Không tìm thấy refreshToken',
+                    });
+                }
             }
         });
     });
 
+    // Hàm gọi API logout sử dụng Ajax với FormData
+    function logout(refreshToken) {
+        return new Promise((resolve, reject) => {
+            // Tạo đối tượng FormData và thêm refreshToken vào
+            const formData = new FormData();
+            formData.append("refreshToken", refreshToken);
+
+            $.ajax({
+                url: 'http://localhost:8080/Auth/Logout',
+                type: 'POST',
+                data: formData,
+                processData: false,  // Không xử lý dữ liệu (FormData cần giữ nguyên)
+                contentType: false,  // Đặt là false để sử dụng multipart/form-data mặc định
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                },
+                success: function(response) {
+                    // Nếu thành công, resolve promise
+                    resolve(response);
+                },
+                error: function(xhr, status, error) {
+                    // Nếu có lỗi, reject promise
+                    reject(error);
+                }
+            });
+        });
+    }
 </script>

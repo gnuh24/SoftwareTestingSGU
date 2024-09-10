@@ -95,17 +95,17 @@ INSERT INTO `TokenType` 		(`Id`, 	`TokenTypeName`) VALUES
 
 
 -- Insert sample data into the `Order` table
-INSERT INTO `Order` (`Id`, 				`OrderTime`, 				`TotalPrice`, 	`Note`, 								`AccountId`) VALUES
-					('ORD00000001', 	'2024-01-05 09:30:00',	 	3650000, 		'Please deliver in the morning.', 				3),
-					('ORD00000002', 	'2024-01-05 10:15:00', 		1350000, 		'Gift for a friend.', 							2),
-					('ORD00000003', 	'2024-01-05 11:00:00', 		2500000, 		'Include a gift note.', 						3),
-					('ORD00000004', 	'2024-01-06 08:45:00', 		800000, 		'Deliver to office.', 							3),
-					('ORD00000005', 	'2024-01-06 09:50:00', 		950000, 		'Urgent delivery.', 							3),
-					('ORD00000006', 	'2024-01-06 10:30:00', 		1200000, 		'No special instructions.', 					2),
-					('ORD00000007', 	'2024-01-06 11:15:00', 		2200000, 		'Call before delivery.', 						2),
-					('ORD00000008', 	'2024-01-07 09:00:00', 		1600000, 		'Gift wrap the items.', 						3),
-					('ORD00000009', 	'2024-01-07 10:20:00', 		1800000, 		'Leave at the door if not at home.', 			3),
-					('ORD00000010', 	'2024-01-07 11:45:00', 		1450000, 		'Need by weekend.', 							3);
+INSERT INTO `Order` (`Id`, 				`OrderTime`, 				`TotalPrice`, 	`Note`, 								`AccountId`, 	`Paid`, 	`PaymentOption`) VALUES
+					('ORD00000001', 	'2024-01-05 09:30:00',	 	3650000, 		'Please deliver in the morning.', 				3,		false,			"COD"),
+					('ORD00000002', 	'2024-01-05 10:15:00', 		1350000, 		'Gift for a friend.', 							2,		false,			"COD"),
+					('ORD00000003', 	'2024-01-05 11:00:00', 		2500000, 		'Include a gift note.', 						3,		false,			"COD"),
+					('ORD00000004', 	'2024-01-06 08:45:00', 		800000, 		'Deliver to office.', 							3,		false,			"COD"),
+					('ORD00000005', 	'2024-01-06 09:50:00', 		950000, 		'Urgent delivery.', 							3,		false,			"COD"),
+					('ORD00000006', 	'2024-01-06 10:30:00', 		1200000, 		'No special instructions.', 					2,		false,			"COD"),
+					('ORD00000007', 	'2024-01-06 11:15:00', 		2200000, 		'Call before delivery.', 						2,		false,			"COD"),
+					('ORD00000008', 	'2024-01-07 09:00:00', 		1600000, 		'Gift wrap the items.', 						3,		false,			"COD"),
+					('ORD00000009', 	'2024-01-07 10:20:00', 		1800000, 		'Leave at the door if not at home.', 			3,		false,			"COD"),
+					('ORD00000010', 	'2024-01-07 11:45:00', 		1450000, 		'Need by weekend.', 							3,		false,			"COD");
 
 
 

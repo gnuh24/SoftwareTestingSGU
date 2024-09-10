@@ -21,6 +21,12 @@ public class OrderCreateFormForUser {
 
     private String note;
 
+//    @NotNull(message = "Bạn không được để trống phương thức thanh toán")
+//    private Order.PaymentOption paymentOption;
+//
+//    @NotNull(message = "Paid cannot be null")
+//    private Boolean paid;
+
     private List<OrderDetailCreateForm> listOrderDetail;
 
 }

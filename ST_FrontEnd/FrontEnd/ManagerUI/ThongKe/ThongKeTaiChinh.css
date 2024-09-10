@@ -27,6 +27,11 @@
     border-right: 2px solid black;
 }
 
+#sanPhamBanChayTable td{
+    border-bottom: 2px solid black;
+    border-right: 2px solid black;
+}
+
 #sanPhamBanChayTable, #sanPhamBanChayTable > thead, #sanPhamBanChayTable > tbody{
     width: 100%;
 }

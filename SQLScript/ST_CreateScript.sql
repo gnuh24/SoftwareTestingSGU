@@ -114,6 +114,8 @@ CREATE TABLE IF NOT EXISTS `Order` (
     `OrderTime`         DATETIME           NOT NULL,
     `TotalPrice`        INT UNSIGNED       NOT NULL,
     `Note`              TEXT,
+    `Paid`				BOOLEAN				NOT NULL,
+    `PaymentOption`		ENUM("COD", "Online")	NOT NULL,				
     `AccountId`         INT UNSIGNED,
     FOREIGN KEY (`AccountId`) REFERENCES `Account` (`Id`)
 );

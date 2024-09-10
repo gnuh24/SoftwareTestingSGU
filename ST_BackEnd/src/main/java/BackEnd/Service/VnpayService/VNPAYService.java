@@ -17,15 +17,18 @@ public class VNPAYService {
     public String getPay(Long price,Integer id) throws UnsupportedEncodingException {
         //price là giá
         //id là idCart
+
         // Các thông số cố định cho VNPay
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
         long amount = price*100;
         String bankCode = "NCB";
+
         // Tạo mã giao dịch ngẫu nhiên
         String vnp_TxnRef = VNPAYConfig.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
+
         // Lấy mã TMN (merchant terminal code)
         String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
         // Khởi tạo map để lưu các tham số gửi đến VNPay
