@@ -98,37 +98,65 @@
             gap: 10px;
         }
     }
+
+    #Home-over-Header {
+        height: 100px;
+        /* Set a consistent height for the header */
+    }
+
+    #Home-img {
+        max-height: 80px;
+        /* Ensure the logo doesn't exceed a certain size */
+    }
+
+    .input__wrapper input,
+    .input__wrapper button {
+        height: 100%;
+        /* Ensure the search form fields take the full height */
+    }
+
+    .header-option {
+        cursor: pointer;
+        font-size: 24px;
+        /* Adjust icon size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20%;
+        height: 40px;
+    }
 </style>
 
 <header class="container-fluid bg-danger" style="background-color: rgb(146, 26, 26) !important;">
-    <div id="Home-over-Header" class="row align-items-center justify-content-center" style="height: fit-content;">
+    <div id="Home-over-Header" class="row align-items-center justify-content-between" style="height: fit-content;">
+
         <!-- Logo -->
-        <div class="col-12 col-md-2 text-center mb-2 mb-md-0">
-            <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="Logo" class="img-fluid mx-auto" />
+        <div class="col-12 col-md-2 text-center mb-2 mb-md-0 d-flex align-items-center justify-content-center">
+            <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="Logo" class="img-fluid" />
         </div>
 
         <!-- Search Form -->
-        <div class="col-12 col-md-6 mb-2 mb-md-0 d-flex justify-content-center">
-            <form id="search" class="input__wrapper d-flex justify-content-center" method="post" action="SignedProduct.php" style="width:100%">
-                <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="form-control me-2 search-input" placeholder="Tìm kiếm" style="width:90%" required="" />
-                <button id="filter-button" class="btn btn-primary" type="submit" style="width:10%">
+        <div class="col-12 col-md-6 mb-2 mb-md-0 d-flex justify-content-center align-items-center">
+            <form id="search" class="input__wrapper d-flex w-100" method="post" action="SignedProduct.php">
+                <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="form-control me-2 search-input" placeholder="Tìm kiếm" style="width: 90%;" required="" />
+                <button id="filter-button" class="btn btn-primary" type="submit" style="width: 10%;padding:5px 0;">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
         </div>
 
         <!-- Icons Section -->
-        <div class="col-12 col-md-4 d-flex justify-content-around align-items-center gap-2">
-            <div class="header-option" onclick="toCart()">
+        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center gap-4" style="height: fit-content;">
+            <div class="header-option" onclick="toCart()" style="height: fit-content;">
                 <i class="fa-solid fa-cart-shopping"></i>
             </div>
-            <div class="header-option" onclick="toMyOrder()">
+            <div class="header-option" onclick="toMyOrder()" style="height: fit-content;">
                 <i class="fa-solid fa-truck-fast"></i>
             </div>
-            <div class="header-option" onclick="toProfile()">
+            <div class="header-option" onclick="toProfile()" style="height: fit-content;">
                 <i class="fa-solid fa-user"></i>
             </div>
-            <div class="header-option" onclick="logout()">
+            <div class="header-option" onclick="logout()" style="height: fit-content;">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </div>
         </div>

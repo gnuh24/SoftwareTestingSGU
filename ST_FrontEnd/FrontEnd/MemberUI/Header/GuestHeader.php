@@ -117,13 +117,13 @@
         </div>
 
         <div id="Home-login" class="col-6 col-md-2 text-end text-center">
-            <button class="btn btn-light text-danger">Login</button>
+            <button class="btn btn-light text-danger" style="color:rgb(146, 26, 26) !important;">Login</button>
         </div>
 
     </div>
 </header>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src=" https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
     // Lắng nghe sự kiện click vào id "Home-login"

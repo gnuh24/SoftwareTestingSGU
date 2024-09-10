@@ -24,6 +24,8 @@
     </div>
     <?php require_once "../Footer/Footer.php" ?>
     <script>
+        var email = '';
+
         function formatDateToYYYYMMDD(dateString) {
             var parts = dateString.split('/'); // Tách chuỗi theo dấu '/'
             var day = parts[0]; // Ngày
@@ -45,6 +47,7 @@
                     'Authorization': 'Bearer ' + token
                 },
                 success: function(response) {
+                    email = response.email;
                     var infoPage = document.getElementById("contentprofile");
                     infoPage.innerHTML = `
                         <div class='col-xxl-8 mb-5 mb-xxl-0'>
@@ -76,33 +79,15 @@
                                         </div>
                                         <div class='col-md-6'>
                                             <label for='inputEmail4' class='form-label'>Email *</label>
-                                            <input type='email' class='form-control' id='inputEmail4' name='email' value='${response.email}' readonly>
+                                            <input type='email' class='form-control' id='inputEmail4' name='email' value='${response.email}' >
                                         </div>
                                         <div class='col-md-6'>
                                             <label class='form-label'>Địa chỉ *</label>
                                             <input type='text' class='form-control' name='diachi' value='${response.address}'>
                                         </div>
 
-                                        <!-- Nút đổi mật khẩu -->
-                                        <div class='col-md-12'>
-                                            <button type="button" class="btn btn-outline-secondary" id="changePasswordButton" onclick="togglePasswordFields()">Đổi mật khẩu</button>
-                                        </div>
-
-                                        <!-- Các trường mật khẩu, mặc định ẩn -->
-                                        <div id="passwordFields" style="display: none;">
-                                            <div class='col-md-6'>
-                                                <label for='currentPassword' class='form-label'>Mật khẩu cũ</label>
-                                                <input type='password' class='form-control' id='currentPassword' name='currentPassword'>
-                                            </div>
-                                            <div class='col-md-6'>
-                                                <label for='newPassword' class='form-label'>Mật khẩu mới</label>
-                                                <input type='password' class='form-control' id='newPassword' name='newPassword'>
-                                            </div>
-                                            <div class='col-md-6'>
-                                                <label for='confirmPassword' class='form-label'>Xác nhận mật khẩu mới</label>
-                                                <input type='password' class='form-control' id='confirmPassword' name='confirmPassword'>
-                                            </div>
-                                        </div>
+                                     
+                                    
 
                                         <button class='btn btn-primary' type='submit' style='background-color: rgb(146, 26, 26);'>Thay đổi thông tin</button>
                                     </div>
@@ -119,14 +104,6 @@
 
         window.onload = loadUserInfoFromLocalStorage;
 
-        function togglePasswordFields() {
-            const passwordFields = document.getElementById('passwordFields');
-            if (passwordFields.style.display === 'none') {
-                passwordFields.style.display = 'block';
-            } else {
-                passwordFields.style.display = 'none';
-            }
-        }
 
         function validateForm() {
             var form = document.forms["profileForm"];
@@ -160,75 +137,19 @@
             formData.append('gender', gender);
             formData.append('address', address);
             const token = localStorage.getItem("token");
-
-            // Kiểm tra nếu có đổi mật khẩu
-            var currentPassword = form['currentPassword'].value.trim();
-            var newPassword = form['newPassword'].value.trim();
-            var confirmPassword = form['confirmPassword'].value.trim();
-
-            if (currentPassword || newPassword || confirmPassword) {
-                if (!currentPassword || !newPassword || !confirmPassword) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Lỗi',
-                        text: 'Vui lòng điền đầy đủ thông tin mật khẩu!'
-                    });
-                    return false;
-                }
-
-                if (newPassword !== confirmPassword) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Lỗi',
-                        text: 'Mật khẩu mới và xác nhận mật khẩu không khớp!'
-                    });
-                    return false;
-                }
-                var formData1 = new FormData();
-                // Thêm các thông tin mật khẩu vào formData
-                formData1.append('oldPassword', currentPassword);
-                formData1.append('token', token);
-                formData1.append('newPassword', newPassword);
-                $.ajax({
-                    url: 'http://localhost:8080/Account/NewPassword',
-                    type: 'PATCH',
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    data: formData,
-                    success: function(response) {
-                        console.log(1)
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            text: 'Có lỗi xảy ra khi cập nhật thông tin!'
-                        });
-                    }
-                });
-            }
-
-            // Gửi yêu cầu AJAX
+            var formData1 = new FormData();
+            var tokenChange = '';
             // $.ajax({
-            //     url: 'http://localhost:8080/Account/UpdateInformation',
-            //     type: 'PATCH',
-            //     data: formData,
-            //     contentType: false,
-            //     processData: false,
+            //     url: 'http://localhost:8080/Account/GetKeyForUpdateEmail',
+            //     type: 'GET',
+            //     data: {
+            //         newEmail: email
+            //     },
             //     headers: {
             //         'Authorization': 'Bearer ' + token
             //     },
             //     success: function(response) {
-            //         Swal.fire({
-            //             icon: 'success',
-            //             title: 'Thành công',
-            //             text: 'Cập nhật thông tin thành công!'
-            //         }).then(() => {
-            //             location.reload();
-            //         });
+            //         console.log(response)
             //     },
             //     error: function(xhr, status, error) {
             //         Swal.fire({
@@ -238,6 +159,32 @@
             //         });
             //     }
             // });
+            $.ajax({
+                url: 'http://localhost:8080/Account/UpdateInformation',
+                type: 'PATCH',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Cập nhật thông tin thành công!'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Có lỗi xảy ra khi cập nhật thông tin!'
+                    });
+                }
+            });
 
             return false; // Ngăn chặn form gửi theo cách truyền thống
         }

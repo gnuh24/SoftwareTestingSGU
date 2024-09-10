@@ -194,37 +194,6 @@
     margin-bottom: 20px;
   }
   
-  #filterButton {
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 5%;
-    width: auto;
-    height: 40px;
-    padding: 10px;
-    background-color: #c2f0f0;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  #filterContainer {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px 33px;
-  }
-
-  /* Style cho nút "Tìm kiếm" */
-  #filter-button {
-    background-color: white; /* Màu nền */
-    color: rgb(146, 26, 26); /* Màu chữ */
-    padding: 10px 20px; /* Kích thước padding */
-    border: none; /* Không viền */
-    cursor: pointer; /* Con trỏ tương tác */
-    border-radius: 5px; /* Bo góc */
-    margin-right: 10px; /* Khoảng cách phải */
-  }
 
   /* Style cho nút "Reset" */
   #reset-button {
@@ -262,7 +231,7 @@
     margin-top: 10px;
   }
   
-  .filter .submit button {
+   .submit button {
     font-size: 15px;
     background-color: #4caf50;
     color: #fff;

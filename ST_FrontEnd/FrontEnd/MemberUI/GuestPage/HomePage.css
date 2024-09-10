@@ -263,7 +263,9 @@
    border-radius: 8px;
    text-align: center;
  }
-
+ .buy-btn-container:hover{
+  color: black !important;
+ }
  .product-card-content img {
    width: 100%;
    height: auto;
