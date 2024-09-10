@@ -157,7 +157,7 @@
                                         <h4 class="name-product">${product.productName}</h4>
                                         <p class="price-tea">${formatCurrency(product.price)}</p>
                                         <div class="buy-btn-container">
-                                            <a href="GuestProductDetail.php?maSanPham=${product.id}" class="btn ">Mua ngay</a>
+                                        Mua ngay
                                         </div>
                                     </div>
                                 </a>
