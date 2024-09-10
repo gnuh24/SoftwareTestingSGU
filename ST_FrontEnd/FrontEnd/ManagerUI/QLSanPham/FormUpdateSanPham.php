@@ -2,9 +2,7 @@
 
     require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
 
-    $maSanPham = $_GET["maSanPham"];
-
-    $sanPham = getSanPhamByMaSanPham($maSanPham)->data;
+    
 
 
 ?>
@@ -131,11 +129,11 @@
                 document.getElementById('xuatAnh').src = imageUrl;  // Gán URL tạm thời cho thẻ img
             }
         });
-
-
+   
     getCategories();
     getBrand();
     fetchProductDetails(<?php echo $_GET['maSanPham'] ?>);
+
     anhMinhHoa = document.getElementById("anhMinhHoa");
 
 
