@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `Token`(
     `Id`                INT UNSIGNED       PRIMARY KEY      AUTO_INCREMENT,
     `Token`             CHAR(36)           NOT NULL         UNIQUE,
     `CreateTime`	    DATETIME		   NOT NULL,
-    `ExpirationTime`    DATETIME           NOT NULL,
+    `Expiration`    	DATETIME           NOT NULL,
     `TokenTypeId`       INT UNSIGNED       NOT NULL,
     `AccountId`         INT UNSIGNED       NOT NULL,
     FOREIGN KEY (`TokenTypeId`) REFERENCES `TokenType`(`Id`),
