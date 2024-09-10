@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../../AdminUI/UserUpdate.css" />
-    <link rel="stylesheet" href="../../AdminUI/oneForAll.css" />
+    <link rel="stylesheet" href="../QLTaiKhoan/UserUpdate.css" />
+    <link rel="stylesheet" href="../QLTaiKhoan/oneForAll.css" />
 
     <title>Tạo sản phẩm</title>
 </head>
@@ -24,6 +24,7 @@
                     <div>
                         <div>
                             <div class="Manager_wrapper__vOYy">
+
                                 <div style="padding-left: 3%; width: 100%; padding-right: 2rem">
                                     <div class="wrapper">
                                         <div style="display: flex; padding-top: 1rem; align-items: center; gap: 1rem; padding-bottom: 1rem;"></div>
@@ -74,6 +75,7 @@
                                                             <input id="moTa" class="input" name="moTa"  style="width: 40rem" />
                                                             <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                         </div>
+
                                                         <div style="    display: flex;
                                                                             flex-direction: column;
                                                                             justify-content: center;
@@ -219,49 +221,25 @@
         //Kiểm tra tên loại sản phẩm
       
 
-        var base64Image = "";
-        console.log(anhMinhHoa.files);
-        if (anhMinhHoa.files.length > 0) {
-            var file = anhMinhHoa.files[0];
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                base64Image = e.target.result;
-                console.log("Base64 - Trong: ", base64Image);
-
-                //Sau khi qua được tất cả ta bắt đầu tạo Sản phẩm
-                createSanPham(tenSanPham.value,
-                                loaiSanPham.value,
-                                thuongHieu.value,
-                                xuatXu.value,
-                                theTich.value,
-                                nongDoCon.value,
-                                gia.value,
-                                file,moTa.value);
-
-            };
-
-            reader.readAsDataURL(file);
 
 
-           
-        } else{
-                //Sau khi qua được tất cả ta bắt đầu tạo Sản phẩm
                 createSanPham(tenSanPham.value,
                                         loaiSanPham.value,
-                                        thuongHieu.value,
                                         xuatXu.value,
+                                        thuongHieu.value,
+
                                         theTich.value,
                                         nongDoCon.value,
                                         gia.value,
-                                        base64Image,moTa.value);
-        }
+                                        anhMinhHoa.files[0],
+                                        moTa.value);
+        
 
 
        
 
         //Sau khi tạo xong chuyển về trang QLSanPham
-        showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
+        // showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
     });
 
 
@@ -339,73 +317,47 @@
     }
 
 
-    function checkTenSanPham(value) {
-        let exists = false;
+ 
+
+
+    function createSanPham(tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa, moTa) {
+        var formData = new FormData();
+        formData.append("productName", tenSanPham);
+        formData.append("categoryId", maLoaiSanPham);
+        formData.append("origin", xuatXu);
+        formData.append("brandId", thuongHieu);
+        formData.append("capacity", theTich);
+        formData.append("abv", nongDoCon);
+        formData.append("price", gia);
+        formData.append("image", anhMinhHoa); 
+        formData.append("description", moTa);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        } 
+
         $.ajax({
-            url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                checkExists: true,
-                tenSanPham: value
+            url: 'http://localhost:8080/Product', // Kiểm tra URL chính xác
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('token')  // Gửi token trong header
             },
             success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
+                console.log(data); // Log dữ liệu trả về để kiểm tra
+                if (data) {
+                    console.log("Sản phẩm được tạo thành công!");
                 } else {
-                    console.error('Error:', data.message);
+                    console.log("Đã xảy ra lỗi khi tạo sản phẩm!");
                 }
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
+                console.log(xhr.responseText); // Kiểm tra phản hồi lỗi từ máy chủ
             }
         });
-        return exists;
     }
-
-
-    function createSanPham(tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa,moTa) {
-    var formData = new FormData();
-    formData.append("productName", tenSanPham);
-    formData.append("categoryId", maLoaiSanPham);
-    formData.append("origin", xuatXu);
-    formData.append("brandId", 1);
-    formData.append("capacity", theTich);
-    formData.append("abv", nongDoCon);
-    formData.append("price", gia);
-    formData.append("image", anhMinhHoa); 
-    formData.append("description", moTa);
-    for (var pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    } 
-
-    var token = localStorage.getItem('token'); // Hoặc sessionStorage.getItem('token')
-
-
-    $.ajax({
-        url: 'http://localhost:8080/Product', // Kiểm tra URL chính xác
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-            "Authorization": "Bearer " + token // Gửi token trong header
-        },
-        success: function(data) {
-            console.log(data); // Log dữ liệu trả về để kiểm tra
-            if (data) {
-                console.log("Sản phẩm được tạo thành công!");
-            } else {
-                console.log("Đã xảy ra lỗi khi tạo sản phẩm!");
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error: ' + xhr.status + ' - ' + error);
-            console.log(xhr.responseText); // Kiểm tra phản hồi lỗi từ máy chủ
-        }
-    });
-}
 
 
  

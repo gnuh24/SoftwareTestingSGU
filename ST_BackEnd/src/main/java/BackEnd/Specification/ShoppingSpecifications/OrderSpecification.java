@@ -92,7 +92,7 @@ public class OrderSpecification implements Specification<Order> {
                 }
             }
 
-            if (form.getStatus() != null) {
+            if (form.getStatus() != null && !form.getStatus().equals("")) {
                 OrderSpecification statusSpec = new OrderSpecification("status", form.getStatus());
                 if (where != null) {
                     where = where.and(statusSpec);

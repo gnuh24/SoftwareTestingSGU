@@ -16,8 +16,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../../AdminUI/UserUpdate.css" />
-    <link rel="stylesheet" href="../../AdminUI/oneForAll.css" />
+    <link rel="stylesheet" href="../QLTaiKhoan/UserUpdate.css" />
+    <link rel="stylesheet" href="../QLTaiKhoan/oneForAll.css" />
 
     <title>Cập nhật sản phẩm số <?php echo $_GET['maSanPham'] ?></title>
 </head>
@@ -42,7 +42,7 @@
                                         <form id="submit-form" method="post">
                                             <div class="boxFeature">
                                                 <div>
-                                                    <h2 style="font-size: 2.3rem">Tạo sản phẩm mới</h2>
+                                                    <h2 style="font-size: 2.3rem">Update sản phẩm mới</h2>
                                                 </div>
                                                 <div>
                                                     <a style="font-family: Arial; font-size: 1.5rem; font-weight: 700; border: 1px solid rgb(140, 140, 140); background-color: white; color: rgb(80, 80, 80); padding: 1rem 2rem 1rem 2rem; border-radius: 0.6rem; cursor: pointer;" href="QLSanPham.php">Hủy</a>
@@ -51,47 +51,62 @@
                                             </div>
                                             <div class="boxTable">
                                                 <div style="display: flex; padding: 0rem 1rem 0rem 1rem; justify-content: space-around;">
-                                                        <div style="padding-left: 1rem; margin-left: 25px;">
+                                                    <div style="padding-left: 1rem; margin-left: 25px;">
+
+                                                        <p class="text">Tên sản phẩm</p>
+                                                        <input id="tenSanPham" class="input" type="text" name="tenSanPham" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+
+                                                       
+                                                        <p class="text">Xuất xứ</p>
+                                                        <input id="xuatXu" class="input" name="xuatXu" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+
+                                                        <p class="text">Loại sản phẩm</p>
+                                                        <select name="loaiSanPham" id="loaiSanPham" class="input" style="width: 40rem">
+                                                            <!-- Options sẽ được thêm từ JavaScript -->
+                                                        </select>
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+
+                                                        <p class="text">Thương hiệu</p>
+                                                        <select id="thuongHieu" class="input" name="thuongHieu" style="width: 40rem">
+                                                            <!-- Options sẽ được thêm từ JavaScript -->
+                                                        </select>
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                         
-                                                            <p class="text">Tên sản phẩm</p>
-                                                            <input id="tenSanPham" class="input"  type="text" name="tenSanPham" style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Thể tích (ml)</p>
+                                                        <input id="theTich" class="input" type="text" name="theTich" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                            <p class="text">Loại sản phẩm</p>
-                                                            <select name="loaiSanPham" id="loaiSanPham" class="input"  style="width: 40rem" ></select>
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Nồng độ cồn (%)</p>
+                                                        <input id="nongDoCon" type="text" class="input" name="nongDoCon" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
+                                                        <p class="text">Giá (VND)</p>
+                                                        <input id="gia" class="input" name="gia" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                            <p class="text">Xuất xứ</p>
-                                                            <input id="xuatXu" class="input" name="xuatXu" style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Trạng thái</p>
+                                                        <input id="status" class="input" name="status" style="width: 40rem" readonly />
+                                                        
+                                                        <p class="text">Thời gian tạo</p>
+                                                        <input id="createTime" class="input" name="createTime" style="width: 40rem" readonly />
 
-                                                            <p class="text">Thương hiệu</p>
-                                                            <select id="thuongHieu" class="input"  name="thuongHieu" style="width: 40rem"></select>
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Số lượng</p>
+                                                        <input id="quantity" class="input" name="quantity" style="width: 40rem" readonly />
 
-                                                            <p class="text">Thể tích</p>
-                                                            <input id="theTich" class="input"  type="text" name="theTich" style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Mô tả sản phẩm</p>
+                                                        <textarea id="moTa" class="input" name="moTa" style="width: 40rem; height: 8rem;"></textarea>
+                                                    </div>
 
-                                                            <p class="text">Nồng độ cồn</p>
-                                                            <input id="nongDoCon" type="text"  class="input" name="nongDoCon"  style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
-
-                                                    
-                                                            <p class="text">Giá</p>
-                                                            <input id="gia" class="input"  name="gia"  style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
-                                                        </div>
-                                                        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                                                            <p class="text">Ảnh minh họa</p>
-                                                            <img id="xuatAnh" style="width: 350px; height: 400px;"alt="">
-                                                            <input id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*" >
-                                                        </div>
-
-                                            
+                                                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                                        <p class="text">Ảnh minh họa</p>
+                                                        <img id="xuatAnh" style="width: 350px; height: 400px;" alt="">
+                                                        <input id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*">
+                                                    </div>
                                                 </div>
                                             </div>
+
                                         </form>
                                     </div>
                                 </div>
@@ -108,34 +123,20 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+        // Bắt sự kiện change trên input file
+        document.getElementById('anhMinhHoa').addEventListener('change', function(event) {
+            const file = event.target.files[0];  // Lấy file đầu tiên được chọn
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);  // Tạo URL tạm thời từ file
+                document.getElementById('xuatAnh').src = imageUrl;  // Gán URL tạm thời cho thẻ img
+            }
+        });
 
 
     getCategories();
     getBrand();
+    fetchProductDetails(<?php echo $_GET['maSanPham'] ?>);
     anhMinhHoa = document.getElementById("anhMinhHoa");
-    anhMinhHoa.addEventListener("change", function() {
-
-         // Lấy tệp hình ảnh được chọn
-        var selectedFile = anhMinhHoa.files[0];
-
-
-        // Tạo một đối tượng FileReader
-        var reader = new FileReader();
-
-        // Đọc tệp hình ảnh và chuyển đổi thành dạng Base64 khi hoàn thành
-        reader.onload = function(event) {
-            // Lấy chuỗi Base64 từ tệp hình ảnh
-            var base64String = event.target.result;
-
-            // Thiết lập đường dẫn ảnh trong src của phần tử img
-            document.getElementById("xuatAnh").src = base64String;
-
-        };
-
-        // Bắt đầu đọc tệp hình ảnh dưới dạng Data URL (Base64)
-        reader.readAsDataURL(selectedFile);
-    });
-    
 
 
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
@@ -215,140 +216,99 @@
             return;
         }
 
-        //Kiểm tra tên loại sản phẩm
-        if (checkTenSanPham(tenSanPham.value.trim())) {
-            if (!checkTenSanPhamBelongTo(tenSanPham.value.trim())){
-                showErrorAlert('Lỗi!', 'Tên sản phẩm đã tồn tại !! Vui lòng chọn tên khác');
-                tenSanPham.focus();
-                event.preventDefault();
-                return;
-            }   
-        }
-
-
-        let xuatAnh = document.getElementById("xuatAnh");
-
-        var base64Image = xuatAnh.src;
-
-        if (anhMinhHoa.files.length > 0) {
-            var file = anhMinhHoa.files[0];
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                base64Image = e.target.result;
-
-                //Sau khi qua được tất cả ta bắt đầu tạo Sản phẩm
-                updateSanPham(  <?php echo $maSanPham ?>,
-                                tenSanPham.value,
-                                loaiSanPham.value,
-                                thuongHieu.value,
-                                xuatXu.value,
-                                theTich.value,
-                                nongDoCon.value,
-                                gia.value,
-                                base64Image);
-
-            };
-
-            reader.readAsDataURL(file);
-
-
-           
-        } else{
-
-                //Sau khi qua được tất cả ta bắt đầu tạo Sản phẩm
-                updateSanPham(          <?php echo $maSanPham ?>,
-                                        tenSanPham.value,
-                                        loaiSanPham.value,
-                                        thuongHieu.value,
-                                        xuatXu.value,
-                                        theTich.value,
-                                        nongDoCon.value,
-                                        gia.value,
-                                        base64Image);
-        }
 
 
        
+        updateSanPham(                  <?php echo $maSanPham ?>,
+                                        tenSanPham.value,
+                                        anhMinhHoa.files[0],
+                                        gia.value,
+
+                                        xuatXu.value,
+                                        theTich.value,
+                                        nongDoCon.value,
+
+                                        thuongHieu.value,
+                                        loaiSanPham.value,
+                                        );
+        
 
         //Sau khi tạo xong chuyển về trang QLSanPham
-        showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
+        // showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
     });
 
     function fetchProductDetails(productId) {
-    $.ajax({
-        url: `http://localhost:8080/Admin/${productId}`,
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            // Điền dữ liệu vào form
-            $('#tenSanPham').val(data.productName);
-            $('#xuatXu').val(data.origin);
-            $('#thuongHieu').val(data.brand.name); 
-            $('#theTich').val(data.capacity);
-            $('#nongDoCon').val(data.abv);
-            $('#gia').val(data.price);
-            $('#xuatAnh').attr('src', data.image);
+        $.ajax({
+            url: `http://localhost:8080/Product/Admin/${productId}`,
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('token')  // Gửi token trong header
+            },
+            success: function(data) {
+                // Điền dữ liệu vào form
+                $('#tenSanPham').val(data.productName);
+                $('#xuatXu').val(data.origin);
+                $('#thuongHieu').val(data.brand.id);  // Sử dụng ID của thương hiệu
+                $('#loaiSanPham').val(data.category.id);  // Sử dụng ID của loại sản phẩm
+                $('#theTich').val(data.capacity);
+                $('#nongDoCon').val(data.abv);
+                $('#gia').val(data.price);
+                $('#status').val(data.status ? 'Đang bán' : 'Ngừng bán');  // Trạng thái
+                $('#createTime').val(data.createTime);  // Thời gian tạo
+                $('#quantity').val(data.quantity);  // Số lượng
+                $('#moTa').val(data.description);  // Mô tả
 
-          
-        },
-        error: function(xhr, status, error) {
-            console.error('Error:', error);
-        }
-    });
-}
-
-function getCategories() {
-            $.ajax({
-                url: "http://localhost:8080/Category/noPaging",
-                method: "GET",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response)
-                    if (response && response.length > 0) {
-                        // Xóa tất cả các option hiện có trong dropdown
-                        $('#loaiSanPham').empty();
-                        // Thêm option "Tất cả"
-                        $('#loaiSanPham').append('<option value="">Chọn loại sản phẩm</option>');
-                        // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
-                        $.each(response, function(index, category) {
-                            $('#loaiSanPham').append(`<option value="${category.id}">${category.categoryName}</option>`);
-                        });
-                    } else {
-                        console.log("Không có loại sản phẩm nào được trả về từ API.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
-        }
-
-        function getBrand() {
-            $.ajax({
-                url: "http://localhost:8080/Brand/noPaging",
-                method: "GET",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response)
-                    if (response && response.length > 0) {
-                        $('#thuongHieu').empty();
-                        $('#thuongHieu').append('<option value="">Chọn thương hiệu sản phẩm</option>');
-                        $.each(response, function(index, brand) {
-                            $('#thuongHieu').append(`<option value="${brand.brandId}">${brand.brandName}</option>`);
-                        });
-                    } else {
-                        console.log("Không có thương hiệu sản phẩm nào được trả về từ API.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
-        }
+                // Cập nhật hình ảnh
+                $('#xuatAnh').attr('src', 'http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/' + data.image);  
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
 
 
-    function showErrorAlert(title, message) {
+
+    function getCategories() {
+        $.ajax({
+            url: 'http://localhost:8080/Category/noPaging',  // API lấy danh sách loại sản phẩm
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let categorySelect = $('#loaiSanPham');
+                categorySelect.empty(); // Xóa các options cũ
+                data.forEach(function(category) {
+                    categorySelect.append(new Option(category.categoryName, category.id));
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading categories:', error);
+            }
+        });
+    }
+
+    function getBrand() {
+        $.ajax({
+            url: 'http://localhost:8080/Brand/noPaging',  // API lấy danh sách thương hiệu
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let brandSelect = $('#thuongHieu');
+                brandSelect.empty(); // Xóa các options cũ
+                data.forEach(function(brand) {
+                    brandSelect.append(new Option(brand.brandName, brand.brandId));
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading brands:', error);
+            }
+        });
+    }
+
+
+    
+        function showErrorAlert(title, message) {
         Swal.fire({
             title: title,
             text: message,
@@ -371,101 +331,43 @@ function getCategories() {
     }
 
 
-    function checkTenSanPham(value) {
-        let exists = false;
-        $.ajax({
-            url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                checkExists: true,
-                tenSanPham: value
-            },
-            success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
+   
 
-    function checkTenSanPhamBelongTo(value) {
-        let exists = false;
-        $.ajax({
-            url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                checkBelong: true,
-                maSanPham: <?php  echo $_GET['maSanPham'] ?>,
-                tenSanPham: value
-            },
-            success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
+    function updateSanPham(id, tenSanPham, anhMinhHoa, gia, xuatXu, theTich, nongDoCon, thuongHieu, maLoaiSanPham, moTa) {
+        var formData = new FormData();
+        formData.append("id", id); // ID là bắt buộc cho việc cập nhật
+        formData.append("productName", tenSanPham);
+        formData.append("categoryId", Number(maLoaiSanPham)); // Ép kiểu số nguyên cho categoryId
+        formData.append("origin", xuatXu);
+        formData.append("brandId", Number(thuongHieu)); // Ép kiểu số nguyên cho brandId
+        formData.append("capacity", theTich);
+        formData.append("abv", nongDoCon);
+        formData.append("price", gia);
+        formData.append("description", moTa);
 
-
-
-    function updateSanPham(id, tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa, moTa, trangThai) {
-    var formData = new FormData();
-    formData.append("id", id); // ID là bắt buộc cho việc cập nhật
-    formData.append("productName", tenSanPham);
-    formData.append("categoryId", maLoaiSanPham);
-    formData.append("origin", xuatXu);
-    formData.append("brandId", thuongHieu);
-    formData.append("capacity", theTich);
-    formData.append("abv", nongDoCon);
-    formData.append("price", gia);
-    formData.append("description", "moTa");
-    
-    // Kiểm tra xem có file ảnh không và thêm vào FormData
-    if (anhMinhHoa instanceof File) {
-        formData.append("image", anhMinhHoa);
-    }
-
-    formData.append("status", true);
-    for (var pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    } 
-    var token = localStorage.getItem('token');
-
-    $.ajax({
-        url: 'http://localhost:8080/Product', // Thay URL bằng đúng API của bạn
-        type: 'PATCH', // Sử dụng PATCH cho việc cập nhật
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-            "Authorization": "Bearer " + token // Gửi token trong header
-        },
-        success: function(data) {
-            if (data.status === 200) {
-                console.log("Sản phẩm được cập nhật thành công!");
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error: ' + xhr.status + ' - ' + error);
+        // Thêm file ảnh nếu có
+        if (anhMinhHoa) {
+            formData.append("image", anhMinhHoa); // Gửi file ảnh kèm theo formData
         }
-    });
-}
+
+        $.ajax({
+            url: 'http://localhost:8080/Product', // Thay URL bằng đúng API của bạn
+            type: 'PATCH', // Sử dụng PATCH cho việc cập nhật
+            data: formData,
+            processData: false, // Không xử lý dữ liệu vì chúng ta đang gửi formData
+            contentType: false, // Không đặt kiểu content-type, để jQuery tự động xử lý
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem('token') // Gửi token trong header
+            },
+            success: function(data) {
+                console.log("Sản phẩm được cập nhật thành công!");
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + xhr.status + ' - ' + error);
+            }
+        });
+    }
+
 
 
  

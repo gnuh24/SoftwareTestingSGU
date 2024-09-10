@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BrandDTOForProduct {
 
+    private Integer id;
+
     private String brandName;
 
 }
