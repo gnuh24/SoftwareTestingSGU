@@ -118,7 +118,6 @@
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const maSanPham = urlParams.get('maSanPham');
-
         if (maSanPham) {
             $.ajax({
                 url: `http://localhost:8080/Product/CommonUser/` + maSanPham,
@@ -243,25 +242,25 @@
         });
     }
 
-    function addToCart(productId, unitPrice, quantity) {=
+    function addToCart(productId, unitPrice, quantity) {
 
-            // Lấy thông tin người dùng từ localStorage
-            const token = localStorage.getItem("token");
-            const accountId = localStorage.getItem("id")
+        // Lấy thông tin người dùng từ localStorage
+        const token = localStorage.getItem("token");
+        const accountId = localStorage.getItem("id")
 
-            // Tính tổng
-            const total = unitPrice * quantity; // Chuyển đổi sang số
+        // Tính tổng
+        const total = unitPrice * quantity; // Chuyển đổi sang số
 
-            // Tạo object chứa dữ liệu form
-            const formData = new FormData();
-            formData.append('accountId', accountId);
-            formData.append('productId', productId);
-            formData.append('unitPrice', unitPrice); // Ép kiểu unitPrice về số
-            formData.append('quantity', quantity);   // Ép kiểu quantity về số
-            formData.append('total', total);         // Ép kiểu total về số
+        // Tạo object chứa dữ liệu form
+        const formData = new FormData();
+        formData.append('accountId', accountId);
+        formData.append('productId', productId);
+        formData.append('unitPrice', unitPrice); // Ép kiểu unitPrice về số
+        formData.append('quantity', quantity); // Ép kiểu quantity về số
+        formData.append('total', total); // Ép kiểu total về số
 
-            // Gọi API POST với token trong headers
-            fetch('http://localhost:8080/CartItem', {
+        // Gọi API POST với token trong headers
+        fetch('http://localhost:8080/CartItem', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -270,14 +269,13 @@
             })
             .then(response => response.json())
             .then(data => {
-                    Swal.fire({
-                        title: 'Thành công!',
-                        text: 'Sản phẩm đã được thêm vào giỏ hàng.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                } 
-            )
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Sản phẩm đã được thêm vào giỏ hàng.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            })
             .catch(error => {
                 console.error('Error:', error);
                 // Thông báo lỗi khi có exception
@@ -288,10 +286,7 @@
                     confirmButtonText: 'OK'
                 });
             });
-        }
-
-
-
+    };
 </script>
 
 </html>

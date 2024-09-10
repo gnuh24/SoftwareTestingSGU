@@ -92,7 +92,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Thêm thư viện SweetAlert2 -->
 
 <script>
-
   // Hàm để xóa hết các dòng trong bảng
   function clearTable() {
     var tableBody = document.querySelector('.Table_table__BWPy tbody');
@@ -103,8 +102,7 @@
   function getAllLoaiSanPham(page, search) {
     // Lấy token JWT từ localStorage
     var token = localStorage.getItem('token');
-    console.log(2222);
-    $.ajax({   
+    $.ajax({
       url: "http://localhost:8080/Category",
       type: "GET",
       dataType: "json",
@@ -118,38 +116,35 @@
       },
       success: function(response) {
         var data = response.data;
-        console.log(response);
         var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-        
+
         // Tạo biến lưu trữ nội dung HTML mới
         var htmlContent = '';
         $.each(response.content, function(index, record) {
-          console.log(response.content); // Kiểm tra xem có dữ liệu trả về đúng không
           var htmlContent = `
                 <tr>
                     <td style="text-align:center">${record.id}</td>
                     <td style="text-align:center">${record.categoryName}</td>
                     <td style="text-align:center">`;
 
-            // Kiểm tra nếu là Loại sản phẩm có ID là 1, thì in ra chữ "Mặc định"
-            if (record.id == 1) {
-                htmlContent += `Mặc định`;
-            } else {
-                // Nếu không phải Loại sản phẩm có ID là 1, thì in ra nút sửa và nút xoá
-                htmlContent += `
+          // Kiểm tra nếu là Loại sản phẩm có ID là 1, thì in ra chữ "Mặc định"
+          if (record.id == 1) {
+            htmlContent += `Mặc định`;
+          } else {
+            // Nếu không phải Loại sản phẩm có ID là 1, thì in ra nút sửa và nút xoá
+            htmlContent += `
                     <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.id}, '${record.categoryName}')">Sửa</button>
                     <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.id}, '${record.categoryName}')">Xoá</button>`;
-            }
+          }
 
-            htmlContent += `</td>
+          htmlContent += `</td>
                 </tr>`;
-console.log(1111);
-            tableContent += htmlContent; // Thêm nội dung của hàng vào chuỗi tableContent
+          tableContent += htmlContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
-     
+
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
         tableBody.innerHTML = tableContent;
@@ -187,37 +182,37 @@ console.log(1111);
   var currentPage = 1;
   fetchDataAndUpdateTable(currentPage, '');
 
-  
+
   // Hàm tạo nút phân trang
   function createPagination(currentPage, totalPages) {
-        var paginationContainer = document.querySelector('.pagination');
-        var searchValue = document.querySelector('.Admin_input__LtEE-').value;
+    var paginationContainer = document.querySelector('.pagination');
+    var searchValue = document.querySelector('.Admin_input__LtEE-').value;
 
-        // Xóa nút phân trang cũ (nếu có)
-        paginationContainer.innerHTML = '';
+    // Xóa nút phân trang cũ (nếu có)
+    paginationContainer.innerHTML = '';
 
-        if (totalPages > 1) {
-            // Tạo nút cho từng trang và thêm vào chuỗi HTML
-            var paginationHTML = '';
-            for (var i = 1; i <= totalPages; i++) {
-                paginationHTML += '<button class="pageButton">' + i + '</button>';
-            }
+    if (totalPages > 1) {
+      // Tạo nút cho từng trang và thêm vào chuỗi HTML
+      var paginationHTML = '';
+      for (var i = 1; i <= totalPages; i++) {
+        paginationHTML += '<button class="pageButton">' + i + '</button>';
+      }
 
-            // Thiết lập nút phân trang vào paginationContainer
-            paginationContainer.innerHTML = paginationHTML;
+      // Thiết lập nút phân trang vào paginationContainer
+      paginationContainer.innerHTML = paginationHTML;
 
-            // Thêm sự kiện click cho từng nút phân trang
-            paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
-                button.addEventListener('click', function() {
-                    // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-                    fetchDataAndUpdateTable(index + 1, searchValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
-                });
-            });
+      // Thêm sự kiện click cho từng nút phân trang
+      paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
+        button.addEventListener('click', function() {
+          // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
+          fetchDataAndUpdateTable(index + 1, searchValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+        });
+      });
 
-            // Đánh dấu trang hiện tại
-            paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
-        }
+      // Đánh dấu trang hiện tại
+      paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
     }
+  }
 
 
 
@@ -257,28 +252,16 @@ console.log(1111);
         // Gọi Ajax để xóa loại sản phẩm
         var token = localStorage.getItem('token');
         $.ajax({
-          url: 'http://localhost:8080/Category',
+          url: 'http://localhost:8080/Category/' +
+            id,
           type: 'DELETE',
-          dataType: "json",
           headers: {
-        'Authorization': 'Bearer ' + token
-      },
-          data: {
-            action: "delete",
-            id: id
+            'Authorization': 'Bearer ' + token
           },
           success: function(response) {
-            console.log('Status:', response.status); // In mã trạng thái
-            console.log('Message:', response.message); // In thông báo
-            console.log('id:', id);
-
-            if (response.status === 200) {
-              // Hiển thị thông báo thành công bằng SweetAlert2
-              Swal.fire('Thành công!', 'Xóa loại sản phẩm thành công !!', 'success');
-              fetchDataAndUpdateTable(currentPage, ''); // Cập nhật bảng sau khi xóa
-            } else {
-              console.error('Lỗi khi xóa loại sản phẩm: ', response.message);
-            }
+            // Hiển thị thông báo thành công bằng SweetAlert2
+            Swal.fire('Thành công!', 'Xóa loại sản phẩm thành công !!', 'success');
+            fetchDataAndUpdateTable(currentPage, ''); // Cập nhật bảng sau khi xóa
           },
           error: function(xhr, status, error) {
             console.error('Lỗi khi gọi API: ', xhr, status, error);
@@ -289,12 +272,12 @@ console.log(1111);
   }
 
   function updateLoaiSanPham(id, categoryName) {
-    
+
     // Lấy ra form bằng id của nó
     var form = document.querySelector("#updateForm");
-    
+
     window.location.href = `FormUpdateLoaiSanPham.php?id=${id}&categoryName=${categoryName}`;
-    
+
     // Gửi form đi
     form.submit();
 

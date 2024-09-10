@@ -97,93 +97,55 @@
             brandName.focus();
             event.preventDefault();
             return;
-        }    
-    }
-
-
-        //Kiểm tra tên thương hiệu
-        // if (isTenNhaCungCapExists(brandName.value.trim())) {
-        //     if (!isTenNhaCungCapBelongToMaNCC(brandId.value ,brandName.value.trim())){
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'Lỗi!',
-        //             text: 'Tên thương hiệu đã tồn tại',
-        //         });
-        //         brandName.focus();
-        //         event.preventDefault();
-        //         return;
-        //     }
-        // }
-
-
-        //Bắt đầu cập nhật thông tin nhà cung cấp sau khi đã qua các bước xác nhận
-        let isUpdateNhaCungCapComplete = updateNhaCungCap(
-            brandId.value,
-            brandName.value)
-
-        //Sau khi tạo xong chuyển về trang QLNhaCungCap
-        if (isUpdateNhaCungCapComplete) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Thành công!',
-                text: 'Cập nhật thương hiệu thành công !!',
-            }).then(() => {
-                window.location.href = 'QLNhaCungCap.php';
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Cập nhật thương hiệu thất bại !!',
-            })
         }
-    });
-
-    function isTenNhaCungCapExists(value) {
-        let exists = false;
-        $.ajax({
-            url: 'http://localhost:8080/Brand',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                action: "isExists",
-                TenNCC: value,
-            },
-            success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
-
-    
+        updateNhaCungCap(brandId.value, brandName.value)
+    })
 
     function updateNhaCungCap(brandId, brandName) {
         var token = localStorage.getItem('token');
+
+        // Kiểm tra nếu token không tồn tại
+        if (!token) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Không tìm thấy token xác thực. Vui lòng đăng nhập lại!',
+            });
+            return;
+        }
+
+        var dataform = new FormData();
+        dataform.append("brandId", brandId);
+        dataform.append("brandName", brandName);
+
         $.ajax({
             url: 'http://localhost:8080/Brand',
             type: 'PATCH',
             dataType: "json",
             headers: {
-        'Authorization': 'Bearer ' + token
-      },
-            data: {
-                brandId: brandId,
-                brandName: brandName
+                'Authorization': 'Bearer ' + token
             },
+            data: dataform,
+            contentType: false,
+            processData: false,
             success: function(data) {
-                return data.status === 200;
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Thay đổi thương hiệu mới thành công !!',
+                }).then(() => {
+                    window.location.href = 'QLNhaCungCap.php';
+                });
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
+
+                // Hiển thị thông báo lỗi
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Đã xảy ra lỗi khi cập nhật thương hiệu. Mã lỗi: ' + xhr.status,
+                });
             }
         });
     }

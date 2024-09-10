@@ -76,18 +76,18 @@
 
             orders.forEach(hoaDon => {
                 var orderHtml = `
-        <div class='orderManagement_order_list'>
-            <table class='orderManagement_order_info'>
-                <thead>
-                    <tr class='orderManagement_order_title'>
-                        <th class='anhMinhHoa'>Ảnh minh họa</th>
-                        <th class='tenSanPham'>Tên sản phẩm</th>
-                        <th class='donGia'>Đơn giá</th>
-                        <th class='soLuong'>Số lượng</th>
-                        <th class='thanhTien'>Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+                    <div class='orderManagement_order_list'>
+                        <table class='orderManagement_order_info'>
+                            <thead>
+                                <tr class='orderManagement_order_title'>
+                                    <th class='anhMinhHoa'>Ảnh minh họa</th>
+                                    <th class='tenSanPham'>Tên sản phẩm</th>
+                                    <th class='donGia'>Đơn giá</th>
+                                    <th class='soLuong'>Số lượng</th>
+                                    <th class='thanhTien'>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
                 var token = localStorage.getItem("token");
                 // AJAX call to get chiTietDonHang
                 $.ajax({
@@ -112,16 +112,17 @@
                             </tr>`;
                         });
                         orderHtml += `
-                </tbody>
-            </table>
-            <div class='orderManagement_order_thanhTien'>
-                <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.status)}</p>
-                <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
-               <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
+                            </tbody>
+                        </table>
+                        <div class='orderManagement_order_thanhTien'>
+                            <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.status)}</p>
+                            <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
+                        <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
 
                         if (hoaDon.status !== 'DangGiao' && hoaDon.status !== 'GiaoThanhCong' && hoaDon.status !== 'Huy') {
                             const listSanPham = JSON.stringify(listCTDH);
                             orderHtml += `<button class='cancel_order_button' onclick="cancelOrder('${hoaDon.id}')">Hủy đơn hàng</button>`;
+
                         }
 
                         orderHtml += `</div></div>`;
@@ -161,11 +162,25 @@
             }
         }
 
+<<<<<<< HEAD
         // Hàm xử lý hủy đơn hàng
         function cancelOrder(maDonHang) {
             console.log(maDonHang);
         // Hiển thị hộp thoại xác thực
         Swal.fire({
+=======
+        // Gọi hàm loadOrders khi trang được load
+        $(document).ready(function() {
+            loadOrders();
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function cancel(maDonHang, trangThai, listSanPham) {
+
+            Swal.fire({
+>>>>>>> ac5b4cfa0b5d3b063a61799fd158591d1ffcbccf
                 title: 'Xác nhận hủy đơn hàng?',
                 text: "Bạn có chắc muốn hủy đơn hàng này?",
                 icon: 'warning',
@@ -208,7 +223,44 @@
                     
                 }
             });
+<<<<<<< HEAD
            
+=======
+        }
+
+
+        function createTrangThaiDonHang(maDonHang) {
+            $.ajax({
+                url: "http://localhost:8080/OrderStatus/User",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    MaDonHang: maDonHang,
+                    TrangThai: "Huy"
+                },
+                success: function(response) {},
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
+        function tangSoLuongSanPham(maSanPham, soLuongTang) {
+            $.ajax({
+                url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    action: 'up',
+                    maSanPham: maSanPham,
+                    soLuongTang: soLuongTang // Đảm bảo đặt tên trường đúng
+                },
+                success: function(response) {},
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+>>>>>>> ac5b4cfa0b5d3b063a61799fd158591d1ffcbccf
         }
 
         function toOrderDetail(maDonHang) {

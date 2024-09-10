@@ -121,14 +121,33 @@
 
                         response.forEach(function(item) {
                             cartHTML += `
-                                <div class="cartItem" id="${item.productId}">
-                                    <p>Sản phẩm ID: ${item.productId}</p>
-                                    <img src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}" alt="Image of product" style="width: 100px; height: auto;" />
-                                    <p>Đơn giá: <span class="priceCart">${formatMoney(item.unitPrice)}</span></p>
-                                    <p>Số lượng: <span class="txtQuantity">${item.quantity}</span></p>
-                                    <p>Thành tiền: <span class="valueTotalPrice">${formatMoney(item.total)}</span></p>
-                                    <button class="btnRemove">Xóa</button>
-                                </div>`;
+                             <div class='cartItem' id='${item.productId}'>
+    <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}' /></a>
+    <div class='inforCart'>
+        <div class='quantity'>
+            <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
+            <div style="display:flex;">            
+            <button class='btnQuantity decrease'>-</button>
+            <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
+            <button class='btnQuantity increase'>+</button></div>
+        </div>
+        <div class='unitPrice' style="">
+            <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
+            <div class='txtunitPrice' id='unitPrice_${item.productId}'>${item.unitPrice}</div>
+        </div>
+    </div>
+    <div class='wrapTotalPriceOfCart'>
+        <div class='totalPriceOfCart' style="height:100%;">
+            <label for='totalPrice_${item.productId}' class='labelTotalPrice'>Thành tiền:</label>
+            <p class='valueTotalPrice' id='totalPrice_${item.productId}'>${formatMoney(item.total)}</p>
+        </div>
+        <button class='btnRemove'>
+            <i class='fa-solid fa-xmark'></i>
+        </button>
+    </div>
+</div>
+
+`;
 
                             // Cộng dồn vào tổng tiền
                             totalAmount += item.total;

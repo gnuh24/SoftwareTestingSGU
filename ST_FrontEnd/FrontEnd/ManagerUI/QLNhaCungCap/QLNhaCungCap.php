@@ -96,7 +96,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-
   // Hàm để xóa hết các dòng trong bảng
   function clearTable() {
     var tableBody = document.querySelector('.Table_table__BWPy tbody');
@@ -104,61 +103,60 @@
   }
 
   // Hàm getAllNhaCungCap
-// Hàm getAllNhaCungCap
-function getAllNhaCungCap(page, search) {
-  var token = localStorage.getItem('token');
-      $.ajax({
-        url: 'http://localhost:8080/Brand',
-        type: 'GET',
-        dataType: "json",
-        headers: {
+  // Hàm getAllNhaCungCap
+  function getAllNhaCungCap(page, search) {
+    var token = localStorage.getItem('token');
+    $.ajax({
+      url: 'http://localhost:8080/Brand',
+      type: 'GET',
+      dataType: "json",
+      headers: {
         // Thêm JWT vào header
         'Authorization': 'Bearer ' + token
       },
-        data: {
-            page: page,
-            search: search
-        },
-        success: function (response) {
-            var data = response.data;
-            var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
-            var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
+      data: {
+        pageNumber: page,
+        search: search
+      },
+      success: function(response) {
+        var data = response.data;
+        var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
+        var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
-            // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-            var htmlContent = '';
-            $.each(response.content, function(index, record) {
-              console.log(response.content); // Kiểm tra xem có dữ liệu trả về đúng không
-                var htmlContent = `
+        // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+        var htmlContent = '';
+        $.each(response.content, function(index, record) {
+          var htmlContent = `
                     <tr>
                         <td style="text-align:center">${record.brandId}</td>
                         <td style="text-align:center">${record.brandName}</td>
                         
                         <td style="text-align:center">`;
 
-                // Kiểm tra nếu record.MaNCC == 1 thì hiển thị nút "Mặc định" thay vì "Sửa" và "Xoá"
-                if (record.brandId == 1) {
-                    htmlContent += `
+          // Kiểm tra nếu record.MaNCC == 1 thì hiển thị nút "Mặc định" thay vì "Sửa" và "Xoá"
+          if (record.brandId == 1) {
+            htmlContent += `
                     <p>Mặc định</p>`;
-                } else {
-                    htmlContent += `
+          } else {
+            htmlContent += `
                     <button style="cursor:pointer" class="edit" onclick="updateNhaCungCap(${record.brandId}, '${record.brandName}')">Sửa</button>
                     <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.brandId}, '${record.brandName}')">Xoá</button>`;
-                }
+          }
 
-                htmlContent += `</td>
+          htmlContent += `</td>
                     </tr>`;
 
-                tableContent += htmlContent; // Thêm nội dung của hàng vào chuỗi tableContent
-            });
+          tableContent += htmlContent; // Thêm nội dung của hàng vào chuỗi tableContent
+        });
 
-            // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
-            tableBody.innerHTML = tableContent;
+        // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
+        tableBody.innerHTML = tableContent;
 
-            //Tạo phân trang
-            createPagination(page, response.totalPages);
-        },
+        //Tạo phân trang
+        createPagination(page, response.totalPages);
+      },
 
-        error: function(xhr, status, error) {
+      error: function(xhr, status, error) {
         // Nếu lỗi là do token hết hạn, chuyển hướng đến trang đăng nhập
         if (xhr.status === 401) {
           alert('Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.');
@@ -168,7 +166,7 @@ function getAllNhaCungCap(page, search) {
         }
       }
     });
-}
+  }
 
 
 
@@ -190,34 +188,34 @@ function getAllNhaCungCap(page, search) {
 
   // Hàm tạo nút phân trang
   function createPagination(currentPage, totalPages) {
-        var paginationContainer = document.querySelector('.pagination');
-        var searchValue = document.querySelector('.Admin_input__LtEE-').value;
+    var paginationContainer = document.querySelector('.pagination');
+    var searchValue = document.querySelector('.Admin_input__LtEE-').value;
 
-        // Xóa nút phân trang cũ (nếu có)
-        paginationContainer.innerHTML = '';
+    // Xóa nút phân trang cũ (nếu có)
+    paginationContainer.innerHTML = '';
 
-        if (totalPages > 1) {
-            // Tạo nút cho từng trang và thêm vào chuỗi HTML
-            var paginationHTML = '';
-            for (var i = 1; i <= totalPages; i++) {
-                paginationHTML += '<button class="pageButton">' + i + '</button>';
-            }
+    if (totalPages > 1) {
+      // Tạo nút cho từng trang và thêm vào chuỗi HTML
+      var paginationHTML = '';
+      for (var i = 1; i <= totalPages; i++) {
+        paginationHTML += '<button class="pageButton">' + i + '</button>';
+      }
 
-            // Thiết lập nút phân trang vào paginationContainer
-            paginationContainer.innerHTML = paginationHTML;
+      // Thiết lập nút phân trang vào paginationContainer
+      paginationContainer.innerHTML = paginationHTML;
 
-            // Thêm sự kiện click cho từng nút phân trang
-            paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
-                button.addEventListener('click', function() {
-                    // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-                    fetchDataAndUpdateTable(index + 1, searchValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
-                });
-            });
+      // Thêm sự kiện click cho từng nút phân trang
+      paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
+        button.addEventListener('click', function() {
+          // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
+          fetchDataAndUpdateTable(index + 1, searchValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+        });
+      });
 
-            // Đánh dấu trang hiện tại
-            paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
-        }
+      // Đánh dấu trang hiện tại
+      paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
     }
+  }
 
 
 
@@ -245,38 +243,28 @@ function getAllNhaCungCap(page, search) {
   });
 
   function deleteNhaCungCap(brandId, brandName) {
-  // Sử dụng Swal thay vì hộp thoại confirm
-  Swal.fire({
-    title: `Bạn có muốn xóa  ${brandName} không?`,
-    text: "Hành động này sẽ không thể hoàn tác!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Xóa',
-    cancelButtonText: 'Hủy'
-  }).then((result) => {
-    // Nếu người dùng nhấn nút Xóa
-    if (result.isConfirmed) {
-      // Thực hiện gọi Ajax để xóa nhà cung cấp
-      var token = localStorage.getItem('token');
-      $.ajax({
-        url: 'http://localhost:8080/Brand',
-        type: 'DELETE',
-        dataType: "json",
-        headers: {
-        'Authorization': 'Bearer ' + token
-      },
-        data: {
-          action: "delete",
-          brandId: brandId
-        },
-        success: function(response) {
-          console.log('Status:', response.status); // In mã trạng thái
-          console.log('Message:', response.message); // In thông báo
-          console.log('brandId:', brandId);
-
-          if (response.status === 200) {
+    // Sử dụng Swal thay vì hộp thoại confirm
+    Swal.fire({
+      title: `Bạn có muốn xóa  ${brandName} không?`,
+      text: "Hành động này sẽ không thể hoàn tác!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy'
+    }).then((result) => {
+      // Nếu người dùng nhấn nút Xóa
+      if (result.isConfirmed) {
+        // Thực hiện gọi Ajax để xóa nhà cung cấp
+        var token = localStorage.getItem('token');
+        $.ajax({
+          url: 'http://localhost:8080/Brand/' + brandId,
+          type: 'DELETE',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          success: function(response) {
             Swal.fire({
               icon: 'success',
               title: 'Thành công!',
@@ -284,27 +272,19 @@ function getAllNhaCungCap(page, search) {
             }).then(function() {
               fetchDataAndUpdateTable(currentPage, '');
             });
-          } else {
+          },
+          error: function(xhr, status, error) {
             Swal.fire({
               icon: 'error',
               title: 'Lỗi!',
-              text: 'Đã xảy ra lỗi khi xóa thương hiệu',
+              text: 'Đã xảy ra lỗi khi gọi API',
             });
-            console.error('Lỗi khi xóa thương hiệu: ', response.message);
+            console.error('Lỗi khi gọi API: ', xhr, status, error);
           }
-        },
-        error: function(xhr, status, error) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi!',
-            text: 'Đã xảy ra lỗi khi gọi API',
-          });
-          console.error('Lỗi khi gọi API: ', xhr, status, error);
-        }
-      });
-    }
-  });
-}
+        });
+      }
+    });
+  }
 
 
 
