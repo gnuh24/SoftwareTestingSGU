@@ -1,362 +1,421 @@
 /* _Dai */
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    text-decoration: none;
-    font-family: Roboto;
-    list-style: none;
-  }
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  text-decoration: none;
+  font-family: Roboto;
+  list-style: none;
+}
 
-  
-  .wrapListCart {
-    /* padding-top: 30px; */
-    padding-bottom: 50px;
-  }
-  
-  .wrapListCart .quantityCart {
-    /* font-style: normal;
+.page_cart {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+}
+
+.wrapListCart {
+  /* padding-top: 30px; */
+  padding-bottom: 50px;
+}
+
+.wrapListCart .quantityCart {
+  /* font-style: normal;
     font-weight: normal; */
-    font-size: 16px;
-    line-height: 150%;
-    letter-spacing: -0.012em;
-    color: #4f4f4f;
-    margin-top: 16px;
-  }
-  
-  .wrapListCart .listCart {
-    display: grid;
-    margin-top: 30px;
-  }
-  
-  .cartItem {
-    display: grid;
-    grid-template-columns: 100px 1fr 180px;
-    grid-column-gap: 40px;
-    position: relative;
-    margin-right: 45px;
-    padding-top: 30px;
-  }
-  
-  .emty_cart {
-    margin: 150px 0 200px;
-    display: flex;
-    justify-content: center;
-  }
-  /* ----------------table------------------------------ */
-  .Table_data_quyen_1 {
-    text-align: center;
-    font-family: Arial;
-    background-color: rgb(255, 255, 255);
-    padding: 14px 0px;
-  }
-  .Table_data_quyen_2 {
-    text-align: center;
-    font-family: Arial;
-    background-color: rgb(225, 227, 229);
-    padding: 14px 0;
-  }
-  .cartItem:not(:last-child) {
-    padding-bottom: 25px;
-    border-bottom: 1px solid #333333;
-  }
-  
-  .cartItem .img {
-    width: 100%;
-    height: 100px;
-    position: relative;
-  }
-  
-  .cartItem .inforCart {
-    display: grid;
-    grid-template-columns: 1fr 115px;
-    height: 100%;
-    grid-column-gap: 20px;
-  }
-  
-  .nameCart {
-    font-size: 16px;
-    line-height: 150%;
-    letter-spacing: -0.012em;
-    text-transform: uppercase;
-    color: #333333;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-  }
-  
-  .cartItem .inforCart .nameAndPrice {
-    display: flex;
-    flex-direction: column;
-  }
-  .priceCart {
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 140%;
-    letter-spacing: -0.012em;
-    text-transform: uppercase;
-    color: #4f4f4f;
-    margin-top: 8px;
-  }
-  
-  .cartItem .inforCart .quantity {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .valueTotalPrice {
-    font-family: "Gothic A1";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 140%;
-    text-align: center;
-    letter-spacing: -0.012em;
-    text-transform: uppercase;
-    color: #7b181a;
-    margin-top: 2px;
-  }
-  
-  .cartItem .inforCart .quantity .btnQuantity {
-    cursor: pointer;
-    border: 0.3px solid #bdbdbd;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #828282;
-    font-size: 20px;
-  }
-  
-  .txtQuantity {
-    width: 36px;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 0.3px solid #bdbdbd;
-    color: #828282;
-  }
-  
-  .cartItem .wrapTotalPriceOfCart {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 17px;
-  }
-  
-  .cartItem .wrapTotalPriceOfCart .totalPriceOfCart {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .cartItem .btnRemove {
-    border: none;
-    outline: none;
-    cursor: pointer;
-    background: transparent;
-    width: 54px;
-    height: 54px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /*        */
-  
-  .wrapInfoOrder {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    padding: 50px 40px 30px;
-  }
-  
-  .wrapInfoOrder .bg_infoOrder {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: #efebe4;
-    z-index: 1;
-  }
-  
-  .wrapInfoOrder .infoOrder {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    margin-bottom: 100px;
-    width: 100%;
-  }
-  
-  .wrapInfoOrder .infoOrder .titleOrder {
-    font-weight: 500;
-    font-size: 22px;
-    color: #333333;
-    width: 100%;
-    padding-bottom: 20px;
-    /* position: relative; */
-  }
-  .wrapPriceTotal p{
-    font-size: 25px;
-  }
-  
-  .wrapInfoOrder .infoOrder .wrapPriceTotal {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    gap: 10px;
-  }
-  .btnCheckout.hidden {
-    display: none;
-  }
-  .btnCheckout {
-    width: 100%;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 152%;
-    text-align: center;
-    letter-spacing: -0.012em;
-    color: #f9f7f5;
-    height: 48px;
-    background: #7b181a;
-    cursor: pointer;
-    margin-top: 24px;
-  }
-  
-  .wrapInfoOrder .infoOrder .btnCheckout_buy {
-    width: 100%;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 152%;
-    text-align: center;
-    letter-spacing: -0.012em;
-    color: #7b181a;
-    height: 48px;
-    cursor: pointer;
-    margin-top: 24px;
-  }
-  
-  /* CSS cho form popup */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-  
-  .modal-content {
-    background-color: #ffffff;
-    margin: auto;
-    padding: 50px;
-    border-radius: 10px; /* Bo tròn góc */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng */
-    width: 60%; /* Điều chỉnh chiều rộng của form popup */
-    max-width: 500px; /* Giới hạn chiều rộng tối đa */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 30px;
-    font-weight: bold;
-  }
-  
-  .label-group label,
-  .label-group input {
-    display: block; /* Hiển thị label và input trên các dòng riêng biệt */
-  }
-  
-  .close:hover,
-  .close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }
-  
-  .form-group-1 {
-    /* margin-bottom: 25px; */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .label-group {
-    /* display: flex; */
-    align-items: center;
-    margin-bottom: 10px; /* Tăng khoảng cách giữa các label-group */
-  }
-  
-  label {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  .label-group input[type="text"],
-  .label-group input[type="tel"] {
-    flex: 1; /* Input mở rộng ra để lấp đầy phần còn lại của label-group */
-  }
-  
-  #info_customer input[type="text"],
-  #info_customer input[type="tel"] {
-    width: 100%;
-    margin-top: 0;
-    margin-right: 10px;
-    padding: 10px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-  }
-  
-  #info_customer input[type="text"]:focus,
-  #info_customer input[type="tel"]:focus,
-  #info_customer input[type="radio"]:focus {
-    outline: none;
-    border-color: #4caf50; /* Màu viền khi focus */
-  }
-  .check_error_name,
-  .check_error_phone,
-  .check_error_address,
-  .check_error_payment,
-  .check_error_express {
-    color: red;
-  }
-  #popupForm .submit {
-    background-color: #7b181a;
-    color: white;
-    padding: 12px 60px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  #popupForm .edit_info {
-    background-color: #4d60ff;
-    color: white;
-    padding: 12px 60px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: -0.012em;
+  color: #4f4f4f;
+  margin-top: 16px;
+}
+
+.wrapListCart .listCart {
+  display: grid;
+  margin-top: 30px;
+}
+
+.cartItem {
+  display: grid;
+  grid-template-columns: 100px 1fr 180px;
+  grid-column-gap: 40px;
+  position: relative;
+  margin-right: 45px;
+  padding-top: 30px;
+}
+
+.emty_cart {
+  margin: 150px 0 200px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ----------------table------------------------------ */
+.Table_data_quyen_1 {
+  text-align: center;
+  font-family: Arial;
+  background-color: rgb(255, 255, 255);
+  padding: 14px 0px;
+}
+
+.Table_data_quyen_2 {
+  text-align: center;
+  font-family: Arial;
+  background-color: rgb(225, 227, 229);
+  padding: 14px 0;
+}
+
+.cartItem:not(:last-child) {
+  padding-bottom: 25px;
+  border-bottom: 1px solid #333333;
+}
+
+.cartItem .img {
+  width: 100%;
+  height: 100px;
+  position: relative;
+}
+
+.cartItem .inforCart {
+  display: grid;
+  grid-template-columns: 1fr 115px;
+  height: 100%;
+  grid-column-gap: 20px;
+}
+
+.nameCart {
+  font-size: 16px;
+  line-height: 150%;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: #333333;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.cartItem .inforCart .nameAndPrice {
+  display: flex;
+  flex-direction: column;
+}
+
+.priceCart {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 140%;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: #4f4f4f;
+  margin-top: 8px;
+}
+
+.cartItem .inforCart .quantity {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.valueTotalPrice {
+  font-family: "Gothic A1";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 140%;
+  text-align: center;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  color: #7b181a;
+  margin-top: 2px;
+}
+
+.cartItem .inforCart .quantity .btnQuantity {
+  cursor: pointer;
+  border: 0.3px solid #bdbdbd;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #828282;
+  font-size: 20px;
+}
+
+.txtQuantity {
+  width: 36px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.3px solid #bdbdbd;
+  color: #828282;
+}
+
+.cartItem .wrapTotalPriceOfCart {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 17px;
+}
+
+.cartItem .wrapTotalPriceOfCart .totalPriceOfCart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cartItem .btnRemove {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: transparent;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*        */
+
+.wrapInfoOrder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 50px 40px 30px;
+}
+
+.wrapInfoOrder .bg_infoOrder {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #efebe4;
+  z-index: 1;
+}
+
+.wrapInfoOrder .infoOrder {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin-bottom: 100px;
+  width: 100%;
+}
+
+.wrapInfoOrder .infoOrder .titleOrder {
+  font-weight: 500;
+  font-size: 22px;
+  color: #333333;
+  width: 100%;
+  padding-bottom: 20px;
+  /* position: relative; */
+}
+
+.wrapPriceTotal p {
+  font-size: 25px;
+}
+
+.wrapInfoOrder .infoOrder .wrapPriceTotal {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.btnCheckout.hidden {
+  display: none;
+}
+
+.btnCheckout {
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 152%;
+  text-align: center;
+  letter-spacing: -0.012em;
+  color: #f9f7f5;
+  height: 48px;
+  background: #7b181a;
+  cursor: pointer;
+  margin-top: 24px;
+}
+
+.wrapInfoOrder .infoOrder .btnCheckout_buy {
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 152%;
+  text-align: center;
+  letter-spacing: -0.012em;
+  color: #7b181a;
+  height: 48px;
+  cursor: pointer;
+  margin-top: 24px;
+}
+
+/* CSS cho form popup */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #ffffff;
+  margin: auto;
+  padding: 50px;
+  border-radius: 10px;
+  /* Bo tròn góc */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Đổ bóng */
+  width: 60%;
+  /* Điều chỉnh chiều rộng của form popup */
+  max-width: 500px;
+  /* Giới hạn chiều rộng tối đa */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.label-group label,
+.label-group input {
+  display: block;
+  /* Hiển thị label và input trên các dòng riêng biệt */
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.form-group-1 {
+  /* margin-bottom: 25px; */
+  display: flex;
+  flex-direction: column;
+}
+
+.label-group {
+  /* display: flex; */
+  align-items: center;
+  margin-bottom: 10px;
+  /* Tăng khoảng cách giữa các label-group */
+}
+
+label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.label-group input[type="text"],
+.label-group input[type="tel"] {
+  flex: 1;
+  /* Input mở rộng ra để lấp đầy phần còn lại của label-group */
+}
+
+#info_customer input[type="text"],
+#info_customer input[type="tel"] {
+  width: 100%;
+  margin-top: 0;
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+#info_customer input[type="text"]:focus,
+#info_customer input[type="tel"]:focus,
+#info_customer input[type="radio"]:focus {
+  outline: none;
+  border-color: #4caf50;
+  /* Màu viền khi focus */
+}
+
+.check_error_name,
+.check_error_phone,
+.check_error_address,
+.check_error_payment,
+.check_error_express {
+  color: red;
+}
+
+#popupForm .submit {
+  background-color: #7b181a;
+  color: white;
+  padding: 12px 60px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+#popupForm .edit_info {
+  background-color: #4d60ff;
+  color: white;
+  padding: 12px 60px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+.unitPrice {
+  display: flex;
+  justify-content: flex-start;
+  /* Căn giữa theo chiều ngang */
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
+}
+
+.txtunitPrice {
+  font-size: 16px;
+  /* Tùy chỉnh kích thước chữ */
+  /* Tùy chỉnh độ đậm chữ nếu cần */
+}.quantity,
+.unitPrice,
+.totalPriceOfCart {
+  display: flex;
+  flex-direction: column;
+  /* Sắp xếp nhãn nằm phía trên */
+  align-items: center;
+  /* Căn chỉnh nhãn và dữ liệu theo bên trái */
+  gap: 10px;
+}
+
+.labelQuantity,
+.labelUnitPrice,
+.labelTotalPrice {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  /* Tạo khoảng cách giữa nhãn và dữ liệu */
+}
+
+.txtQuantity,
+.txtunitPrice,
+.valueTotalPrice {
+  font-size: 16px;
+  font-weight: normal;
+}

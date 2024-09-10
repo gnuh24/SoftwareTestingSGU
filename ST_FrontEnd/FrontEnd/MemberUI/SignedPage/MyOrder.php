@@ -77,18 +77,18 @@
 
             orders.forEach(hoaDon => {
                 var orderHtml = `
-        <div class='orderManagement_order_list'>
-            <table class='orderManagement_order_info'>
-                <thead>
-                    <tr class='orderManagement_order_title'>
-                        <th class='anhMinhHoa'>Ảnh minh họa</th>
-                        <th class='tenSanPham'>Tên sản phẩm</th>
-                        <th class='donGia'>Đơn giá</th>
-                        <th class='soLuong'>Số lượng</th>
-                        <th class='thanhTien'>Thành tiền</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+                    <div class='orderManagement_order_list'>
+                        <table class='orderManagement_order_info'>
+                            <thead>
+                                <tr class='orderManagement_order_title'>
+                                    <th class='anhMinhHoa'>Ảnh minh họa</th>
+                                    <th class='tenSanPham'>Tên sản phẩm</th>
+                                    <th class='donGia'>Đơn giá</th>
+                                    <th class='soLuong'>Số lượng</th>
+                                    <th class='thanhTien'>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
                 var token = localStorage.getItem("token");
                 // AJAX call to get chiTietDonHang
                 $.ajax({
@@ -113,16 +113,16 @@
                     </tr>`;
                         });
                         orderHtml += `
-                </tbody>
-            </table>
-            <div class='orderManagement_order_thanhTien'>
-                <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.status)}</p>
-                <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
-               <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
+                            </tbody>
+                        </table>
+                        <div class='orderManagement_order_thanhTien'>
+                            <p style="width: 50%;">Trạng thái: ${translateStatus(hoaDon.status)}</p>
+                            <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
+                        <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
 
                         if (hoaDon.TrangThai !== 'GiaoThanhCong' && hoaDon.TrangThai !== 'Huy') {
                             const listSanPham = JSON.stringify(listCTDH);
-                            orderHtml += `<button class='cancel_order_button' onclick='cancelOrder(${hoaDon.id}, "${hoaDon.status}", ${listSanPham})'>Hủy đơn hàng</button>`;
+                            orderHtml += `<button class='cancel_order_button' onclick='cancel("${hoaDon.id}", "${hoaDon.status}", ${listSanPham})'>Hủy đơn hàng</button>`;
                         }
 
                         orderHtml += `</div></div>`;
@@ -162,30 +162,6 @@
             }
         }
 
-        // Hàm xử lý hủy đơn hàng
-        function cancelOrder(maDonHang, trangThai, listSanPham) {
-            if (trangThai === 'Huy') {
-                alert('Đơn hàng đã bị hủy trước đó.');
-                return;
-            }
-
-            $.ajax({
-                url: 'http://localhost:8080/api/cancelOrder', // API hủy đơn hàng
-                type: 'POST',
-                data: {
-                    MaDonHang: maDonHang,
-                    listSanPham: listSanPham
-                },
-                success: function(response) {
-                    alert('Đơn hàng đã được hủy thành công.');
-                    loadOrders(); // Tải lại danh sách đơn hàng sau khi hủy
-                },
-                error: function(xhr, status, error) {
-                    console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
-                }
-            });
-        }
-
         // Gọi hàm loadOrders khi trang được load
         $(document).ready(function() {
             loadOrders();
@@ -196,7 +172,6 @@
     <script>
         function cancel(maDonHang, trangThai, listSanPham) {
 
-            // Hiển thị hộp thoại xác thực
             Swal.fire({
                 title: 'Xác nhận hủy đơn hàng?',
                 text: "Bạn có chắc muốn hủy đơn hàng này?",
@@ -239,7 +214,7 @@
 
         function createTrangThaiDonHang(maDonHang) {
             $.ajax({
-                url: "../../../BackEnd/ManagerBE/TrangThaiDonHangBE.php",
+                url: "http://localhost:8080/OrderStatus/User",
                 method: "POST",
                 dataType: "json",
                 data: {
