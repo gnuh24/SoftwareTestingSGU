@@ -88,7 +88,7 @@ public class ProductSpecification implements Specification<Product> {
         if (form != null){
 
             //Filter cho Combobox Status (Trạng thái)
-            if (form.getStatus() != null){
+            if (form.getStatus() != null && !form.getStatus().equals("")){
                 ProductSpecification status = new ProductSpecification("status", form.getStatus());
                 if (where != null){
                     where = where.and(status);

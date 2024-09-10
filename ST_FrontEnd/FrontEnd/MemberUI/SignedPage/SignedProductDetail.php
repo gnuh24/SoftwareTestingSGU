@@ -253,7 +253,6 @@
         const accountId = localStorage.getItem("id")
         const quantity = document.getElementById("quantityAddToCart").value;
 
-        console.log("Số lượng: " + quantity)
 
         // Tính tổng
         const total = unitPrice * quantity; // Chuyển đổi sang số

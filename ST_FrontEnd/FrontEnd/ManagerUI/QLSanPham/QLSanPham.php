@@ -44,26 +44,30 @@
                                         <input type="text" placeholder="Tìm kiếm theo tên sản phẩm" id="searchSanPham" name="searchSanPham">
                                         <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
 
-                                        <label for="price-filter">Giá:</label>
+                                        <!-- <label for="price-filter">Giá:</label>
                                         <select id="price-filter">
                                             <option value="">Tất cả</option>
                                             <option value="low">Dưới 1 triệu</option>
                                             <option value="medium">Từ 1 đến 3 triệu</option>
                                             <option value="high">Trên 3 triệu</option>
-                                        </select>
+                                        </select> -->
 
                                         <label for="state-filter">Trạng thái:</label>
                                         <select id="state-filter">
                                             <option value="">Tất cả</option>
-                                            <option value="1">Kinh doanh</option>
-                                            <option value="0">Ngừng kinh doanh</option>
+                                            <option value="true">Kinh doanh</option>
+                                            <option value="false">Ngừng kinh doanh</option>
 
                                         </select>
 
                                         <label for="category-filter">Loại sản phẩm:</label>
                                         <select id="category-filter">
                                             <!-- Hiển thị menu LoaiSanPham -->
+                                            </select>
 
+
+                                        <label for="brand-filter">Thương hiệu:</label>
+                                        <select id="brand-filter">
                                         </select>
 
                                         <button id="reset-button"><i class="fa-solid fa-rotate-right"></i></button>
@@ -111,7 +115,24 @@
 
 
 
-        function getAllSanPham(page, search, minGia, maxGia, trangThai, maLoaiSanPham) {
+        // function getAllSanPham(page, search, minGia, maxGia, trangThai, maLoaiSanPham) {
+        function getAllSanPham(page, search,  trangThai, maLoaiSanPham, brandId) {
+            let data = {
+                pageNumber: page,
+                search: search,
+                status: trangThai
+            };
+
+            // Only include categoryId if maLoaiSanPham is not 0
+            if (maLoaiSanPham !== 0) {
+                data.categoryId = maLoaiSanPham;
+            }
+
+            if (brandId !== 0){
+                data.brandId = brandId;
+            }
+
+
             // Gọi API để lấy dữ liệu sản phẩm
             $.ajax({
                 url: "http://localhost:8080/Product/Admin",
@@ -120,14 +141,7 @@
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
-                data: {
-                    pageNumber: page,
-                    search: search,
-                    minGia: minGia,
-                    maxGia: maxGia,
-                    trangThai: trangThai,
-                    maLoaiSanPham: maLoaiSanPham
-                },
+                data: data,
                 success: function(response) {
                   
                     var tableBody = document.getElementById("tableBody");
@@ -175,10 +189,10 @@
 
         // Hàm xử lý sự kiện cho nút khóa / mở khóa
         function handleLockUnlock(maSanPham, trangThai) {
-            var newTrangThai = trangThai === 0 ? 1 : 0; // Đảo ngược trạng thái
+            var newTrangThai = trangThai === false ? true : false; // Đảo ngược trạng thái
             // Hiển thị hộp thoại xác nhận bằng SweetAlert2
             Swal.fire({
-                title: `Bạn có muốn ${newTrangThai === 0 ? 'khóa' : 'mở khóa'} sản phẩm ${maSanPham} không?`,
+                title: `Bạn có muốn ${newTrangThai ===  false ? 'khóa' : 'mở khóa'} sản phẩm ${maSanPham} không?`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Đồng ý',
@@ -186,24 +200,23 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     var formData = new FormData();
-            formData.append('status', newTrangThai);
-            formData.append('id', maSanPham);
+                    formData.append('status', newTrangThai);
+                    formData.append('id', maSanPham);
                     // Gọi hàm updateTaiKhoan bằng Ajax
                     $.ajax({
                         url: 'http://localhost:8080/Product',
                         type: 'PATCH', 
                         processData: false,  // Không xử lý dữ liệu (vì chúng ta đang gửi FormData)
-                contentType: false,  // Không đặt tiêu đề Content-Type vì FormData tự xử lý
-                data: formData,  // Dữ liệu cần gửi đi
+                        contentType: false,  // Không đặt tiêu đề Content-Type vì FormData tự xử lý
+                        data: formData,  // Dữ liệu cần gửi đi
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        },
                         success: function(response) {
                             // Nếu cập nhật thành công, reload bảng
-                            if (response.status === 200) {
                                 var alertContent = newTrangThai === 0 ? "khóa" : "mở khóa";
                                 Swal.fire('Thành công!', `Bạn đã ${alertContent} thành công !!`, 'success');
                                 filterProducts(currentPage);
-                            } else {
-                                console.error('Lỗi khi cập nhật tài khoản: ', response.message);
-                            }
                         },
                         error: function(xhr, status, error) {
                             console.error('Lỗi khi gọi API: ', error);
@@ -217,6 +230,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             filterProducts(currentPage);
             getCategories();
+            getBrand()
         });
 
 
@@ -224,21 +238,15 @@
         document.getElementById("reset-button").addEventListener("click", function() {
             // Reset tất cả các thanh lọc về giá trị mặc định
             document.getElementById("searchSanPham").value = "";
-            document.getElementById("price-filter").value = "";
             document.getElementById("state-filter").value = "";
             document.getElementById("category-filter").value = "";
+            document.getElementById("brand-filter").value = "";
+
             currentPage = 1;
 
             // Gọi lại hàm getAllSanPham với các giá trị mặc định
-            getAllSanPham(currentPage, "", 0, 10000000000, "", 0);
-        });
+            getAllSanPham(currentPage, "", "", 0, 0);
 
-        // Lắng nghe sự kiện keypress trên ô nhập liệu "price-filter"
-        document.getElementById("price-filter").addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                // Thực hiện hành động tương tự như khi click vào nút "Lọc"
-                document.getElementById("filter-button").click();
-            }
         });
 
         function formatCurrency(number) {
@@ -253,15 +261,6 @@
             });
         }
 
-
-
-        // Lắng nghe sự kiện change cho thanh lọc giá
-        document.getElementById("price-filter").addEventListener("change", function() {
-            currentPage = 1;
-
-            // Gọi lại hàm lọc sản phẩm khi giá trị thay đổi
-            filterProducts(currentPage);
-        });
 
 
         // Lắng nghe sự kiện change cho thanh lọc loại sản phẩm
@@ -279,35 +278,20 @@
             filterProducts(currentPage);
         });
 
+        // Lắng nghe sự kiện change cho thanh lọc thương hiệu
+        document.getElementById("brand-filter").addEventListener("change", function() {
+            currentPage = 1;
+
+            // Gọi lại hàm lọc sản phẩm khi giá trị thay đổi
+            filterProducts(currentPage);
+        });
+
+
 
         // Hàm lọc sản phẩm
         function filterProducts(page) {
             // Lấy giá trị từ thanh tìm kiếm
             var searchText = document.getElementById("searchSanPham").value;
-
-            // Lấy giá trị từ thanh lọc giá
-            var priceFilter = document.getElementById("price-filter").value;
-            var minPrice, maxPrice;
-
-            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
-            switch (priceFilter) {
-                case "low":
-                    minPrice = 0;
-                    maxPrice = 1000000;
-                    break;
-                case "medium":
-                    minPrice = 1000000;
-                    maxPrice = 3000000;
-                    break;
-                case "high":
-                    minPrice = 3000000;
-                    maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
-                    break;
-                default:
-                    minPrice = 0;
-                    maxPrice = 1000000000; // Không giới hạn
-                    break;
-            }
 
             // Lấy giá trị từ thanh lọc thể tích
             var stateFilter = document.getElementById("state-filter").value;
@@ -319,8 +303,14 @@
                 categoryFilter = 0;
             }
 
+            var brandFilter = document.getElementById("brand-filter").value;
+            if (brandFilter == "") {
+                brandFilter = 0;
+            }
+
             // Gọi hàm lọc sản phẩm với các tham số vừa lấy được
-            getAllSanPham(page, searchText, minPrice, maxPrice, stateFilter, categoryFilter);
+            getAllSanPham(page, searchText,  stateFilter, categoryFilter, brandFilter);
+
         }
 
         // Lắng nghe sự kiện click vào nút search
@@ -331,29 +321,7 @@
             // Lấy giá trị từ thanh tìm kiếm
             var searchText = document.getElementById("searchSanPham").value;
 
-            // Lấy giá trị từ thanh lọc giá
-            var priceFilter = document.getElementById("price-filter").value;
-            var minPrice, maxPrice;
 
-            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
-            switch (priceFilter) {
-                case "low":
-                    minPrice = 0;
-                    maxPrice = 1000000;
-                    break;
-                case "medium":
-                    minPrice = 1000000;
-                    maxPrice = 3000000;
-                    break;
-                case "high":
-                    minPrice = 3000000;
-                    maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
-                    break;
-                default:
-                    minPrice = 0;
-                    maxPrice = 1000000000; // Không giới hạn
-                    break;
-            }
 
 
             // Lấy giá trị từ thanh lọc thể tích
@@ -366,7 +334,14 @@
                 categoryFilter = 0;
             }
 
-            getAllSanPham(currentPage, searchText, minPrice, maxPrice, stateFilter, categoryFilter);
+            var brandFilter = document.getElementById("brand-filter").value;
+            if (brandFilter == "") {
+                brandFilter = 0;
+            }
+
+
+            getAllSanPham(currentPage, searchText,  stateFilter, categoryFilter, brandFilter);
+
         });
 
 
@@ -406,22 +381,18 @@
             window.location.href = `FormUpdateSanPham.php?maSanPham=${maSanPham}`;
         }
 
-
         function getCategories() {
             $.ajax({
                 url: "http://localhost:8080/Category/noPaging",
                 method: "GET",
                 dataType: "json",
-                data: {
-                    isDemoHome: true
-                },
                 success: function(response) {
                     var categoryFilter = $('#category-filter');
                     var htmlContent = '';
 
                     // Duyệt qua danh sách loại sản phẩm và tạo option cho select
-                    $.each(response.data, function(index, category) {
-                        htmlContent += `<option value="${category.MaLoaiSanPham}">${category.TenLoaiSanPham}</option>`;
+                    $.each(response, function(index, category) {
+                        htmlContent += `<option value="${category.id}">${category.categoryName}</option>`;
                     });
 
                     // Thêm tùy chọn "Tất cả"
@@ -435,6 +406,33 @@
                 }
             });
         }
+
+        function getBrand() {
+            $.ajax({
+                url: "http://localhost:8080/Brand/noPaging",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    var brandFilter = $('#brand-filter'); // Thay đổi tên phần tử nếu cần
+                    var htmlContent = '';
+
+                    // Duyệt qua danh sách thương hiệu và tạo option cho select
+                    $.each(response, function(index, brand) {
+                        htmlContent += `<option value="${brand.brandId}">${brand.brandName}</option>`; // Sử dụng 'brandName'
+                    });
+
+                    // Thêm tùy chọn "Tất cả"
+                    htmlContent = '<option value="">Tất cả</option>' + htmlContent;
+
+                    // Thiết lập nội dung HTML cho select
+                    brandFilter.html(htmlContent);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
     </script>
 
 
