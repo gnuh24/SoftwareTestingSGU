@@ -71,9 +71,7 @@
         var maTaiKhoan = JSON.parse(localStorage.getItem("id"));
 
         function toCreateOrder() {
-            var maTaiKhoan = JSON.parse(localStorage.getItem("id"));
-            var numberOfItemsInCart = $('.cartItem').length; // Đếm số lượng phần tử có class .cartItem
-            console.log(numberOfItemsInCart)
+            var numberOfItemsInCart = $('.cartItem').length;
             if (numberOfItemsInCart === 0) {
                 Swal.fire({
                     title: 'Lỗi!',
@@ -99,31 +97,27 @@
             }
         }
 
-
         function thanhToan(maTaiKhoan) {
             window.location.href = `CreateOrder.php?maTaiKhoan=${maTaiKhoan}`;
         }
 
         function bindCartItemEvents() {
-            // Tăng số lượng sản phẩm
             $('.increase').on('click', function() {
-                var productId = $(this).data('id');
+                var productId = $(this).closest('.cartItem').attr('id');
                 var quantityElem = $(`#quantity_${productId}`);
                 var currentQuantity = parseInt(quantityElem.text());
-                updateQuantity(productId, currentQuantity + 1); // Gọi hàm để cập nhật số lượng
+                updateQuantity(productId, currentQuantity + 1);
             });
 
-            // Giảm số lượng sản phẩm
             $('.decrease').on('click', function() {
-                var productId = $(this).data('id');
+                var productId = $(this).closest('.cartItem').attr('id');
                 var quantityElem = $(`#quantity_${productId}`);
                 var currentQuantity = parseInt(quantityElem.text());
-                if (currentQuantity > 1) { // Chỉ giảm số lượng nếu lớn hơn 1
-                    updateQuantity(productId, currentQuantity - 1); // Gọi hàm để cập nhật số lượng
+                if (currentQuantity > 1) {
+                    updateQuantity(productId, currentQuantity - 1);
                 }
             });
 
-            // Xóa sản phẩm khỏi giỏ hàng
             $('.btnRemove').on('click', function() {
                 var productId = $(this).closest('.cartItem').attr('id');
                 $.ajax({
@@ -134,8 +128,8 @@
                         productId: productId
                     },
                     success: function(response) {
-                        $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
-                        $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền
+                        $('#' + productId).remove();
+                        $('.priceTotal').text(formatMoney(response.totalAmount));
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
@@ -145,41 +139,40 @@
         }
 
         $(document).ready(function() {
-            var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>'; // Lấy mã tài khoản từ PHP
-            var token = localStorage.getItem("token"); // Lấy token từ localStorage
+            var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>';
+            var token = localStorage.getItem("token");
 
-            // Hàm gọi API để lấy danh sách sản phẩm trong giỏ hàng
             function fetchCartItems() {
                 $.ajax({
                     url: `http://localhost:8080/CartItem/${maTaiKhoan}`,
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}` // Thêm JWT token vào header
+                        'Authorization': `Bearer ${token}`
                     },
                     success: function(response) {
-
-                        var cartHTML = ''; // Dùng để chứa HTML của các sản phẩm
-                        var totalAmount = 0; // Tổng tiền của giỏ hàng
+                        var cartHTML = '';
+                        var totalAmount = 0;
 
                         response.forEach(function(item) {
                             cartHTML += `
-                             <div class='cartItem' id='${item.productId}'>
+                            <div class='cartItem' id='${item.productId}'>
                                 <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}' /></a>
                                 <div class='inforCart'>
                                     <div class='quantity'>
                                         <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
-                                        <div style="display:flex;">            
-                                        <button class='btnQuantity decrease'>-</button>
-                                        <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
-                                        <button class='btnQuantity increase'>+</button></div>
+                                        <div style="display:flex;">
+                                            <button class='btnQuantity decrease' data-id='${item.productId}'>-</button>
+                                            <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
+                                            <button class='btnQuantity increase' data-id='${item.productId}'>+</button>
+                                        </div>
                                     </div>
-                                    <div class='unitPrice' style="">
+                                    <div class='unitPrice'>
                                         <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
-                                        <div class='txtunitPrice' id='unitPrice_${item.productId}'>${item.unitPrice}</div>
+                                        <div class='txtUnitPrice' id='unitPrice_${item.productId}'>${item.unitPrice}</div>
                                     </div>
                                 </div>
                                 <div class='wrapTotalPriceOfCart'>
-                                    <div class='totalPriceOfCart' style="height:100%;">
+                                    <div class='totalPriceOfCart'>
                                         <label for='totalPrice_${item.productId}' class='labelTotalPrice'>Thành tiền:</label>
                                         <p class='valueTotalPrice' id='totalPrice_${item.productId}'>${formatMoney(item.total)}</p>
                                     </div>
@@ -187,42 +180,29 @@
                                         <i class='fa-solid fa-xmark'></i>
                                     </button>
                                 </div>
-                            </div>
-
-                            `;
-
-                            // Cộng dồn vào tổng tiền
+                            </div>`;
                             totalAmount += item.total;
                         });
 
-                        // Hiển thị danh sách sản phẩm lên trang
                         $('.listCart').html(cartHTML);
-
-                        // Cập nhật tổng tiền
                         $('.priceTotal').text(formatMoney(totalAmount));
 
-                        // Ẩn/hiển thị nút thanh toán
                         if (response.length === 0) {
                             $('.btnCheckout').addClass('hidden');
                         } else {
                             $('.btnCheckout').removeClass('hidden');
                         }
 
-
-                        // Gọi lại các sự kiện như click "xóa sản phẩm" sau khi load xong giỏ hàng
                         bindCartItemEvents();
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
-                        // Xử lý lỗi nếu có
                     }
                 });
             }
 
-            // Gọi hàm fetchCartItems() khi trang tải xong
             fetchCartItems();
 
-            // Hàm định dạng số tiền thành chuỗi có dấu chấm ngăn cách hàng nghìn
             function formatMoney(amount) {
                 return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
             }
@@ -230,42 +210,39 @@
 
         });
 
-        function updateQuantity(productId) {
-            var token = localStorage.getItem("token"); // Lấy token từ localStorage
-            // Lấy số lượng của sản phẩm dựa trên id
-            var productId = '123'; // id của sản phẩm
-            var quantityElem = document.getElementById(`quantity_${productId}`);
-            var quantity = quantityElem ? quantityElem.innerText : '';
-
-            // Lấy đơn giá của sản phẩm dựa trên id
+        function updateQuantity(productId, quantity) {
+            var token = localStorage.getItem("token");
             var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
-            var unitPrice = unitPriceElem ? unitPriceElem.innerText : '';
+            var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
 
-            // Lấy thành tiền của sản phẩm dựa trên id
-            var totalPriceElem = document.getElementById(`totalPrice_${productId}`);
-            var totalPrice = totalPriceElem ? totalPriceElem.innerText : '';
+            var totalPrice = unitPrice * quantity;
 
+            var form = new FormData();
+            form.append("accountId", maTaiKhoan);
+            form.append("productId", productId);
+            form.append("unitPrice", unitPrice);
+            form.append('quantity', quantity);
+            form.append('total', totalPrice);
             $.ajax({
-                url: `http://localhost:8080/CartItem/updateQuantity`,
-                method: 'POST',
+                url: `http://localhost:8080/CartItem`,
+                type: 'PATCH',
+                dataType: 'json',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
                 },
-                data: {
-                    productId: productId,
-                    quantity: newQuantity,
-                    accountId: maTaiKhoan
-                },
+                data: form,
+                processData: false,
+                contentType: false,
                 success: function(response) {
-                    $(`#quantity_${productId}`).text(newQuantity); // Cập nhật số lượng hiển thị
-                    $(`#totalPrice_${productId}`).text(formatMoney(response.updatedTotal)); // Cập nhật tổng tiền của sản phẩm
-                    $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền của giỏ hàng
+                    fetchCartItems();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
                 }
             });
+        }
     </script>
+
 </body>
 
 </html>

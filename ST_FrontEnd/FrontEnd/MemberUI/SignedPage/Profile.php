@@ -27,14 +27,26 @@
         var email = '';
 
         function formatDateToYYYYMMDD(dateString) {
+            // Kiểm tra nếu dữ liệu đầu vào rỗng hoặc không hợp lệ
+            if (!dateString || dateString.trim() === '') {
+                return ''; // Trả về rỗng nếu đầu vào không hợp lệ
+            }
+
             var parts = dateString.split('/'); // Tách chuỗi theo dấu '/'
+
+            // Kiểm tra nếu định dạng ngày không đúng (không đủ 3 phần: ngày, tháng, năm)
+            if (parts.length !== 3) {
+                return ''; // Trả về rỗng nếu không đúng định dạng
+            }
+
             var day = parts[0]; // Ngày
             var month = parts[1]; // Tháng
             var year = parts[2]; // Năm
 
             // Trả về định dạng yyyy-MM-dd
-            return `${year}-${month}-${day}`;
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         }
+
 
         function loadUserInfoFromLocalStorage() {
             const token = localStorage.getItem("token");
@@ -56,11 +68,11 @@
                                     <div class='row g-3' style='text-align:left;'>
                                         <div class='col-md-6'>
                                             <label class='form-label'>Họ tên *</label>
-                                            <input type='text' class='form-control' name='hoten' value='${response.fullname}'>
+                                            <input type='text' class='form-control' name='hoten' value='${response.fullname ? response.fullname : ''}'>
                                         </div>
                                         <div class='col-md-6'>
                                             <label class='form-label'>Số điện thoại *</label>
-                                            <input type='text' class='form-control' name='sodienthoai' value='${response.phoneNumber}'>
+                                            <input type='text' class='form-control' name='sodienthoai' value='${response.phoneNumber ? response.phoneNumber : ''}'>
                                         </div>
                                         <div class='col-md-6'>
                                             <label for='gioitinh'>Giới tính</label>
@@ -83,7 +95,7 @@
                                         </div>
                                         <div class='col-md-6'>
                                             <label class='form-label'>Địa chỉ *</label>
-                                            <input type='text' class='form-control' name='diachi' value='${response.address}'>
+                                            <input type='text' class='form-control' name='diachi' value='${response.address ? response.address : ''}'>
                                         </div>
 
                                      

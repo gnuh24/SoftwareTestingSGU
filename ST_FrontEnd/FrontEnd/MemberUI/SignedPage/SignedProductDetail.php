@@ -57,10 +57,6 @@
         .btn-secondary:hover {
             background-color: #a31e1e;
         }
-
-        .btn-primary {
-            visibility: hidden;
-        }
     </style>
 </head>
 
