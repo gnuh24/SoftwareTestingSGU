@@ -193,7 +193,7 @@
                     }
 
                     htmlContent += `
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" style="visibility: hidden;">
                                 <span>Mua ngay</span>
                             </button>
                         </div>

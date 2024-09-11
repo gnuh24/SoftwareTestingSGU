@@ -30,16 +30,20 @@
                         <div class="payment_info">
                             <div id='checkout_form'>
                                 <div class='input__wrapper'>
-                                    <label for='username'>Họ tên: <i class="fa-solid fa-lock"></i></label>
-                                    <input type='text' name='username' id='username' placeholder='Nhập họ tên' readonly />
+                                    <label for='username'>Họ tên: </label>
+                                    <input type='text' name='username' id='username' placeholder='Nhập họ tên' />
                                 </div>
                                 <div class='input__wrapper'>
-                                    <label for='phonenumber'>Số điện thoại: <i class="fa-solid fa-lock"></i></label>
-                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' readonly />
+                                    <label for='phonenumber'>Số điện thoại: </label>
+                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' />
                                 </div>
                                 <div class='input__wrapper'>
                                     <label for='address'>Ghi chú:</label>
-                                    <input type='text' name='address' id='address' placeholder='Nhập địa chỉ' />
+                                    <input type='text' name='address' id='address' placeholder='Nhập ghi chú' />
+                                </div>
+                                <div class='input__wrapper'>
+                                    <label for='address1'>Địa chỉ: </label>
+                                    <input type='text' name='address1' id='address1' placeholder='Địa chỉ' />
                                 </div>
                                 <div class='payment__wrapper'>
                                     <label>Các sản phẩm đặt mua</label>
@@ -58,6 +62,7 @@
                             <div class="info__wrapper order_info2">
                                 <p><span class="span1">Họ tên người nhận:</span><span class="span2" id="spanHoTen"></span></p>
                                 <p><span class="span1">Số điện thoại:</span><span class="span2" id="spanSoDienThoai"></span></p>
+                                <p><span class="span1">Địa chỉ:</span><span class="span2" id="spanDiaChi1"></span></p>
                                 <p><span class="span1">Ghi chú:</span><span class="span2" id="spanDiaChi"></span></p>
                             </div>
                             <div class="divider"></div>
@@ -171,6 +176,15 @@
         document.getElementById('address').addEventListener('input', function() {
             fillOrderInfo();
         });
+        document.getElementById('username').addEventListener('input', function() {
+            fillOrderInfo();
+        });
+        document.getElementById('phonenumber').addEventListener('input', function() {
+            fillOrderInfo();
+        });
+        document.getElementById('address1').addEventListener('input', function() {
+            fillOrderInfo();
+        });
 
         function loadUserInfoFromLocalStorage() {
             const token = localStorage.getItem("token");
@@ -183,10 +197,14 @@
                     'Authorization': 'Bearer ' + token
                 },
                 success: function(response) {
+                    console.log(response)
                     document.getElementById('spanHoTen').textContent = response.fullname;
-                    document.getElementById('spanSoDienThoai').textContent =
-                        response.phoneNumber;
+                    document.getElementById('spanSoDienThoai').textContent = response.phoneNumber;
+                    document.getElementById('spanDiaChi1').textContent = response.address;
+
                     document.getElementById('username').value = response.fullname;
+                    document.getElementById('address1').value = response.address;
+
                     document.getElementById('phonenumber').value = response.phoneNumber;
                 },
                 error: function(xhr, status, error) {
@@ -197,52 +215,85 @@
 
         function fillOrderInfo() {
 
-            var diaChi = document.getElementById('address').value;
+            var diaChi = document.getElementById('username').value;
+            document.getElementById('spanHoTen').textContent = diaChi;
+            diaChi = document.getElementById('phonenumber').value;
+            document.getElementById('spanSoDienThoai').textContent = diaChi;
+            diaChi = document.getElementById('address').value;
             document.getElementById('spanDiaChi').textContent = diaChi;
+            diaChi = document.getElementById('address1').value;
+            document.getElementById('spanDiaChi1').textContent = diaChi;
         }
         document.getElementById('createOrder').addEventListener('click', function() {
-            const maTaiKhoan = localStorage.getItem("id");;
-            const hoTen = document.getElementById('username').value;
-            const soDienThoai = document.getElementById('phonenumber').value;
-            const diaChi = document.getElementById('address').value;
-            if (diaChi == "") {
+            const maTaiKhoan = localStorage.getItem("id");
+            const hoTen = document.getElementById('username').value.trim(); // Lấy giá trị của trường Họ tên
+            const soDienThoai = document.getElementById('phonenumber').value.trim(); // Lấy giá trị của trường Số điện thoại
+            const diaChi = document.getElementById('address1').value.trim(); // Lấy giá trị của trường Địa chỉ
+            const ghiChu = document.getElementById('address').value.trim(); // Lấy giá trị của trường Ghi chú
+
+            // Kiểm tra nếu bất kỳ trường nào bị trống
+            if (!hoTen || !soDienThoai || !diaChi) {
                 Swal.fire({
-                    title: 'Vui lòng không để trống địa chỉ giao hàng.',
-                    icon: 'info',
+                    title: 'Vui lòng điền đầy đủ thông tin!',
+                    text: 'Các trường Họ tên, Số điện thoại và Địa chỉ là bắt buộc.',
+                    icon: 'warning',
                     confirmButtonText: 'OK'
                 });
-                return;
+                return; // Ngăn không cho hàm createDonHang thực hiện
             }
 
-            if (hoTen && soDienThoai && diaChi) {
-                const diaChiGiaoHang = diaChi;
-                Swal.fire({
-                    title: 'Đặt hàng',
-                    text: 'Bạn có chắc muốn đặt hàng?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đồng ý'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        createDonHang();
-                        Swal.fire({
-                            title: 'Đặt hàng thành công!',
-                            text: 'Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result1) => {
-                            if (result1.isConfirmed) {
-                                window.location.href = 'SignedProduct.php'; // Chuyển hướng đến trang sản phẩm
-                            }
-                        });
-                    }
-                });
-            } else {
-                console.log("Vui lòng điền đầy đủ thông tin và chọn sản phẩm.");
-            }
+            // Xác nhận đặt hàng nếu tất cả các trường đều được điền
+            Swal.fire({
+                title: 'Đặt hàng',
+                text: 'Bạn có chắc muốn đặt hàng?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateInfor();
+                    createDonHang(); // Gọi hàm tạo đơn hàng
+                    Swal.fire({
+                        title: 'Đặt hàng thành công!',
+                        text: 'Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result1) => {
+                        if (result1.isConfirmed) {
+                            window.location.href = 'SignedProduct.php'; // Chuyển hướng đến trang sản phẩm
+                        }
+                    });
+                }
+            });
         });
+
+        function updateInfor() {
+            var formData = new FormData();
+            const maTaiKhoan = localStorage.getItem("id");
+
+            formData.append('accountId', maTaiKhoan);
+            formData.append('fullname', document.getElementById('username').value);
+            formData.append('phone', document.getElementById('phonenumber').value);
+            formData.append('address', document.getElementById('address1').value);
+            const token = localStorage.getItem("token");
+            $.ajax({
+                url: 'http://localhost:8080/Account/UpdateInformation',
+                type: 'PATCH',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {},
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+
 
         function createDonHang() {
             var token = localStorage.getItem("token");

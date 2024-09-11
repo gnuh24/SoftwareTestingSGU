@@ -69,6 +69,7 @@
 
     <script>
         var maTaiKhoan = JSON.parse(localStorage.getItem("id"));
+        var token = localStorage.getItem("token");
 
         function toCreateOrder() {
             var numberOfItemsInCart = $('.cartItem').length;
@@ -138,40 +139,29 @@
             });
         }
 
-        $(document).ready(function() {
-            var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>';
-            var token = localStorage.getItem("token");
+        function fetchCartItems() {
+            $.ajax({
+                url: `http://localhost:8080/CartItem/${maTaiKhoan}`,
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                success: function(response) {
+                    var cartHTML = '';
+                    var totalAmount = 0;
 
-            function fetchCartItems() {
-                $.ajax({
-                    url: `http://localhost:8080/CartItem/${maTaiKhoan}`,
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    success: function(response) {
-                        var cartHTML = '';
-                        var totalAmount = 0;
-
-                        response.forEach(function(item) {
-                            cartHTML += `
+                    response.forEach(function(item) {
+                        cartHTML += `
                             <div class='cartItem' id='${item.productId}'>
                                 <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}' /></a>
                                 <div class='inforCart'>
                                     <div class='quantity'>
                                         <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
-<<<<<<< HEAD
                                         <div style="display:flex;">
                                             <button class='btnQuantity decrease' data-id='${item.productId}'>-</button>
                                             <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
                                             <button class='btnQuantity increase' data-id='${item.productId}'>+</button>
                                         </div>
-=======
-                                        <div style="display:flex;">            
-                                        <button class='btnQuantity decrease' style="visibility: hidden">-</button>
-                                        <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
-                                        <button class='btnQuantity increase' style="visibility: hidden">+</button></div>
->>>>>>> 99952cd18f974dfdeb66d51c66dceffd9fffa23a
                                     </div>
                                     <div class='unitPrice'>
                                         <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
@@ -188,70 +178,43 @@
                                     </button>
                                 </div>
                             </div>`;
-                            totalAmount += item.total;
-                        });
+                        totalAmount += item.total;
+                    });
 
-                        $('.listCart').html(cartHTML);
-                        $('.priceTotal').text(formatMoney(totalAmount));
+                    $('.listCart').html(cartHTML);
+                    $('.priceTotal').text(formatMoney(totalAmount));
 
-                        if (response.length === 0) {
-                            $('.btnCheckout').addClass('hidden');
-                        } else {
-                            $('.btnCheckout').removeClass('hidden');
-                        }
-
-                        bindCartItemEvents();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
+                    if (response.length === 0) {
+                        $('.btnCheckout').addClass('hidden');
+                    } else {
+                        $('.btnCheckout').removeClass('hidden');
                     }
-                });
-            }
+
+                    bindCartItemEvents();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function formatMoney(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
+        }
+        $(document).ready(function() {
+
+
+
 
             fetchCartItems();
 
-            function formatMoney(amount) {
-                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
-            }
 
-            // Gắn sự kiện xóa sản phẩm sau khi sản phẩm được tải
-            function bindCartItemEvents(accountId, productId) {
-                $('.btnRemove').on('click', function() {
-                    var productId = $(this).closest('.cartItem').attr('id');
-                    $.ajax({
-                        url: `http://localhost:8080/CartItem`,
-                        method: 'DELETE',
-                        data: {
-                            accountId: localStorage.getItem('id') ,
-                            productId: productId
-                        },
-                        headers: {
-                            "Authorization": "Bearer " + localStorage.getItem('token') // Gửi token trong header
-                        },
-                        success: function(response) {
-                            $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
-                            $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(error);
-                        }
-                    });
-                });
-            }
+
+
         });
 
-<<<<<<< HEAD
         function updateQuantity(productId, quantity) {
             var token = localStorage.getItem("token");
-=======
-        function updateQuantity(productId) {
-            var token = localStorage.getItem("token"); // Lấy token từ localStorage
-            // Lấy số lượng của sản phẩm dựa trên id
-            var quantityElem = document.getElementById(`quantity_${productId}`);
-            var quantity = quantityElem ? quantityElem.innerText : '';
-
-            // Lấy đơn giá của sản phẩm dựa trên id
->>>>>>> 99952cd18f974dfdeb66d51c66dceffd9fffa23a
             var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
             var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
 

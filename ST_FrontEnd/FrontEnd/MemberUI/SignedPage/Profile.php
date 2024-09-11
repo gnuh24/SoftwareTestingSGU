@@ -151,26 +151,6 @@
             const token = localStorage.getItem("token");
             var formData1 = new FormData();
             var tokenChange = '';
-            // $.ajax({
-            //     url: 'http://localhost:8080/Account/GetKeyForUpdateEmail',
-            //     type: 'GET',
-            //     data: {
-            //         newEmail: email
-            //     },
-            //     headers: {
-            //         'Authorization': 'Bearer ' + token
-            //     },
-            //     success: function(response) {
-            //         console.log(response)
-            //     },
-            //     error: function(xhr, status, error) {
-            //         Swal.fire({
-            //             icon: 'error',
-            //             title: 'Lỗi',
-            //             text: 'Có lỗi xảy ra khi cập nhật thông tin!'
-            //         });
-            //     }
-            // });
             $.ajax({
                 url: 'http://localhost:8080/Account/UpdateInformation',
                 type: 'PATCH',
