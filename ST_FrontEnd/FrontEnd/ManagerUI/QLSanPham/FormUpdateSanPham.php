@@ -121,119 +121,112 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-        // Bắt sự kiện change trên input file
-        document.getElementById('anhMinhHoa').addEventListener('change', function(event) {
-            const file = event.target.files[0];  // Lấy file đầu tiên được chọn
-            if (file) {
-                const imageUrl = URL.createObjectURL(file);  // Tạo URL tạm thời từ file
-                document.getElementById('xuatAnh').src = imageUrl;  // Gán URL tạm thời cho thẻ img
-            }
-        });
-   
-    getCategories();
-    getBrand();
-    fetchProductDetails(<?php echo $_GET['maSanPham'] ?>);
+    document.addEventListener("DOMContentLoaded", function() {
+        getCategories();
+        getBrand();
+        fetchProductDetails(<?php echo $_GET['maSanPham'] ?>);
+    })
 
     anhMinhHoa = document.getElementById("anhMinhHoa");
 
+    // Bắt sự kiện change trên input file
+    document.getElementById('anhMinhHoa').addEventListener('change', function(event) {
+        const file = event.target.files[0];  // Lấy file đầu tiên được chọn
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);  // Tạo URL tạm thời từ file
+            document.getElementById('xuatAnh').src = imageUrl;  // Gán URL tạm thời cho thẻ img
+        }
+    });
+
 
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
-        event.preventDefault(); // Ngăn chặn hành động mặc định của form
+    event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-        let tenSanPham = document.getElementById("tenSanPham");
-        let loaiSanPham = document.getElementById("loaiSanPham");
-        let xuatXu = document.getElementById("xuatXu");
-        let thuongHieu = document.getElementById("thuongHieu");
-        let theTich = document.getElementById("theTich");
-        let nongDoCon = document.getElementById("nongDoCon");
-        let gia = document.getElementById("gia");
-        let anhMinhHoa = document.getElementById("anhMinhHoa");
+    let tenSanPham = document.getElementById("tenSanPham");
+    let loaiSanPham = document.getElementById("loaiSanPham");
+    let xuatXu = document.getElementById("xuatXu");
+    let thuongHieu = document.getElementById("thuongHieu");
+    let theTich = document.getElementById("theTich");
+    let nongDoCon = document.getElementById("nongDoCon");
+    let gia = document.getElementById("gia");
+    let anhMinhHoa = document.getElementById("anhMinhHoa");
 
-        if (!tenSanPham.value.trim()) {
-            showErrorAlert('Lỗi!', 'Tên sản phẩm không được để trống');
-            tenSanPham.focus();
-            event.preventDefault();
-            return;
-        }
-        // Validate loại sản phẩm
-        if (loaiSanPham.value === '') {
-            showErrorAlert('Lỗi!', 'Vui lòng chọn loại sản phẩm');
-            loaiSanPham.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!xuatXu.value.trim()) {
-            showErrorAlert('Lỗi!', 'Xuất xứ không được để trống');
-            xuatXu.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!thuongHieu.value.trim()) {
-            showErrorAlert('Lỗi!', 'Thương hiệu không được để trống');
-            thuongHieu.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!theTich.value.trim()) {
-            showErrorAlert('Lỗi!', 'Thể tích không được để trống');
-            theTich.focus();
-            event.preventDefault();
-            return;
-        }
-        // Kiểm tra thể tích là số dương
-        if (parseFloat(theTich.value) <= 0 || isNaN(parseFloat(theTich.value))) {
-            showErrorAlert('Lỗi!', 'Thể tích phải là số dương');
-            theTich.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!nongDoCon.value.trim()) {
-            showErrorAlert('Lỗi!', 'Nồng độ cồn không được để trống');
-            nongDoCon.focus();
-            event.preventDefault();
-            return;
-        }
-        // Kiểm tra nồng độ cồn là số dương và có giá trị từ 0 đến 100
-        if (parseFloat(nongDoCon.value) < 0 || parseFloat(nongDoCon.value) > 100 || isNaN(parseFloat(nongDoCon.value))) {
-            showErrorAlert('Lỗi!', 'Nồng độ cồn phải là số dương và có giá trị từ 0 đến 100');
-            nongDoCon.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!gia.value.trim()) {
-            showErrorAlert('Lỗi!', 'Giá không được để trống');
-            gia.focus();
-            event.preventDefault();
-            return;
-        }
-        // Kiểm tra giá là số dương
-        if (parseFloat(gia.value) <= 0 || isNaN(parseFloat(gia.value))) {
-            showErrorAlert('Lỗi!', 'Giá phải là số dương');
-            gia.focus();
-            event.preventDefault();
-            return;
-        }
+    if (!tenSanPham.value.trim()) {
+        showErrorAlert('Lỗi!', 'Tên sản phẩm không được để trống');
+        tenSanPham.focus();
+        return;
+    }
 
+    if (loaiSanPham.value === '') {
+        showErrorAlert('Lỗi!', 'Vui lòng chọn loại sản phẩm');
+        loaiSanPham.focus();
+        return;
+    }
 
+    if (!xuatXu.value.trim()) {
+        showErrorAlert('Lỗi!', 'Xuất xứ không được để trống');
+        xuatXu.focus();
+        return;
+    }
 
-       
-        updateSanPham(                  <?php echo $maSanPham ?>,
-                                        tenSanPham.value,
-                                        anhMinhHoa.files[0],
-                                        gia.value,
+    if (!thuongHieu.value.trim()) {
+        showErrorAlert('Lỗi!', 'Thương hiệu không được để trống');
+        thuongHieu.focus();
+        return;
+    }
 
-                                        xuatXu.value,
-                                        theTich.value,
-                                        nongDoCon.value,
+    if (!theTich.value.trim()) {
+        showErrorAlert('Lỗi!', 'Thể tích không được để trống');
+        theTich.focus();
+        return;
+    }
 
-                                        thuongHieu.value,
-                                        loaiSanPham.value,
-                                        );
-        
+    if (parseFloat(theTich.value) <= 0 || isNaN(parseFloat(theTich.value))) {
+        showErrorAlert('Lỗi!', 'Thể tích phải là số dương');
+        theTich.focus();
+        return;
+    }
 
-        //Sau khi tạo xong chuyển về trang QLSanPham
-        // showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
-    });
+    if (!nongDoCon.value.trim()) {
+        showErrorAlert('Lỗi!', 'Nồng độ cồn không được để trống');
+        nongDoCon.focus();
+        return;
+    }
+
+    if (parseFloat(nongDoCon.value) < 0 || parseFloat(nongDoCon.value) > 100 || isNaN(parseFloat(nongDoCon.value))) {
+        showErrorAlert('Lỗi!', 'Nồng độ cồn phải là số dương và có giá trị từ 0 đến 100');
+        nongDoCon.focus();
+        return;
+    }
+
+    if (!gia.value.trim()) {
+        showErrorAlert('Lỗi!', 'Giá không được để trống');
+        gia.focus();
+        return;
+    }
+
+    if (parseFloat(gia.value) <= 0 || isNaN(parseFloat(gia.value))) {
+        showErrorAlert('Lỗi!', 'Giá phải là số dương');
+        gia.focus();
+        return;
+    }
+
+    // Nếu mọi kiểm tra hợp lệ, gọi hàm updateSanPham
+    updateSanPham(
+        <?php echo $_GET['maSanPham'] ?>,
+        tenSanPham.value,
+        anhMinhHoa.files[0],
+        gia.value,
+        xuatXu.value,
+        theTich.value,
+        nongDoCon.value,
+        thuongHieu.value,
+        loaiSanPham.value
+    );
+
+    //Sau khi tạo xong chuyển về trang QLSanPham
+    showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
+});
 
     function fetchProductDetails(productId) {
         $.ajax({
@@ -306,7 +299,7 @@
 
 
     
-        function showErrorAlert(title, message) {
+    function showErrorAlert(title, message) {
         Swal.fire({
             title: title,
             text: message,

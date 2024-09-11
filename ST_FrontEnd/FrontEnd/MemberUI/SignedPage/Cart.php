@@ -160,11 +160,18 @@
                                 <div class='inforCart'>
                                     <div class='quantity'>
                                         <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
+<<<<<<< HEAD
                                         <div style="display:flex;">
                                             <button class='btnQuantity decrease' data-id='${item.productId}'>-</button>
                                             <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
                                             <button class='btnQuantity increase' data-id='${item.productId}'>+</button>
                                         </div>
+=======
+                                        <div style="display:flex;">            
+                                        <button class='btnQuantity decrease' style="visibility: hidden">-</button>
+                                        <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
+                                        <button class='btnQuantity increase' style="visibility: hidden">+</button></div>
+>>>>>>> 99952cd18f974dfdeb66d51c66dceffd9fffa23a
                                     </div>
                                     <div class='unitPrice'>
                                         <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
@@ -207,11 +214,44 @@
                 return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
             }
 
-
+            // Gắn sự kiện xóa sản phẩm sau khi sản phẩm được tải
+            function bindCartItemEvents(accountId, productId) {
+                $('.btnRemove').on('click', function() {
+                    var productId = $(this).closest('.cartItem').attr('id');
+                    $.ajax({
+                        url: `http://localhost:8080/CartItem`,
+                        method: 'DELETE',
+                        data: {
+                            accountId: localStorage.getItem('id') ,
+                            productId: productId
+                        },
+                        headers: {
+                            "Authorization": "Bearer " + localStorage.getItem('token') // Gửi token trong header
+                        },
+                        success: function(response) {
+                            $('#' + productId).remove(); // Xóa sản phẩm khỏi giao diện
+                            $('.priceTotal').text(formatMoney(response.totalAmount)); // Cập nhật tổng tiền
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                });
+            }
         });
 
+<<<<<<< HEAD
         function updateQuantity(productId, quantity) {
             var token = localStorage.getItem("token");
+=======
+        function updateQuantity(productId) {
+            var token = localStorage.getItem("token"); // Lấy token từ localStorage
+            // Lấy số lượng của sản phẩm dựa trên id
+            var quantityElem = document.getElementById(`quantity_${productId}`);
+            var quantity = quantityElem ? quantityElem.innerText : '';
+
+            // Lấy đơn giá của sản phẩm dựa trên id
+>>>>>>> 99952cd18f974dfdeb66d51c66dceffd9fffa23a
             var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
             var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
 

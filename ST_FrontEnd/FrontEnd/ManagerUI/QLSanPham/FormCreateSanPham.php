@@ -239,7 +239,7 @@
        
 
         //Sau khi tạo xong chuyển về trang QLSanPham
-        // showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
+        showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
     });
 
 
