@@ -169,9 +169,9 @@
                                     <div class='quantity'>
                                         <label for='quantity_${item.productId}' class='labelQuantity'>Số lượng:</label>
                                         <div style="display:flex;">            
-                                        <button class='btnQuantity decrease'>-</button>
+                                        <button class='btnQuantity decrease' style="visibility: hidden">-</button>
                                         <div class='txtQuantity' id='quantity_${item.productId}'>${item.quantity}</div>
-                                        <button class='btnQuantity increase'>+</button></div>
+                                        <button class='btnQuantity increase' style="visibility: hidden">+</button></div>
                                     </div>
                                     <div class='unitPrice' style="">
                                         <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
@@ -256,7 +256,6 @@
         function updateQuantity(productId) {
             var token = localStorage.getItem("token"); // Lấy token từ localStorage
             // Lấy số lượng của sản phẩm dựa trên id
-            var productId = '123'; // id của sản phẩm
             var quantityElem = document.getElementById(`quantity_${productId}`);
             var quantity = quantityElem ? quantityElem.innerText : '';
 
@@ -288,6 +287,7 @@
                     console.error(error);
                 }
             });
+        }
     </script>
 </body>
 

@@ -226,15 +226,13 @@
                 data: (function() {
                     var requestData = {
                         pageNumber: page,
+                        search: search,
                         minPrice: minGia,
                         maxPrice: maxGia,
                         pageSize: 12,
                     };
 
-                    // Nếu search có giá trị, thêm vào requestData
-                    if (search && search.trim() !== "") {
-                        requestData.search = search;
-                    }
+                    
 
                     // Nếu brandId khác 0, thêm vào requestData
                     if (brandId !== 0) {
@@ -266,7 +264,7 @@
                                                         <p class="price-tea">${formatCurrency(product.price)}</p>
                                                     </div>
                                                     <div class="buy-btn-container">
-                                                        <span class="btn btn-primary" style="background:none; color:black;border:none;">Mua ngay</span>
+                                                        <span class="btn btn-primary" style="background:none; color:white; border:none;">Mua ngay</span>
                                                     </div>
                                                 </div>
                                             </a>
