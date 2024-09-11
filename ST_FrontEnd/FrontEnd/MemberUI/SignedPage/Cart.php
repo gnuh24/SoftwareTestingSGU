@@ -165,11 +165,11 @@
                                     </div>
                                     <div class='unitPrice'>
                                         <label for='unitPrice_${item.productId}' class='labelUnitPrice'>Đơn giá:</label>
-                                        <div class='txtUnitPrice' id='unitPrice_${item.productId}'>${item.unitPrice}</div>
+                                        <div class='txtUnitPrice' id='unitPrice_${item.productId}'>${formatMoney(item.unitPrice)}</div>
                                     </div>
                                 </div>
                                 <div class='wrapTotalPriceOfCart'>
-                                    <div class='totalPriceOfCart'>
+                                    <div class='totalPriceOfCart' style="height:100%">
                                         <label for='totalPrice_${item.productId}' class='labelTotalPrice'>Thành tiền:</label>
                                         <p class='valueTotalPrice' id='totalPrice_${item.productId}'>${formatMoney(item.total)}</p>
                                     </div>
