@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../QLTaiKhoan/UserUpdate.css" />
     <link rel="stylesheet" href="../QLTaiKhoan/oneForAll.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>Tạo sản phẩm</title>
 </head>
@@ -40,52 +42,52 @@
                                             </div>
                                             <div class="boxTable">
                                                 <div style="display: flex; padding: 0rem 1rem 0rem 1rem; justify-content: space-around;">
-                                                        <div style="padding-left: 1rem; margin-left: 25px;">
-                                                        
-                                                            <p class="text">Tên sản phẩm</p>
-                                                            <input id="tenSanPham" class="input" type="text" name="tenSanPham" style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                    <div style="padding-left: 1rem; margin-left: 25px;">
 
-                                                            <p class="text">Loại sản phẩm</p>
-                                                            <select name="loaiSanPham" id="loaiSanPham" class="input"  style="width: 40rem" ></select>
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Tên sản phẩm</p>
+                                                        <input id="tenSanPham" class="input" type="text" name="tenSanPham" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+
+                                                        <p class="text">Loại sản phẩm</p>
+                                                        <select name="loaiSanPham" id="loaiSanPham" class="input" style="width: 40rem"></select>
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
 
-                                                            <p class="text">Xuất xứ</p>
-                                                            <input id="xuatXu" class="input"  name="xuatXu" style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Xuất xứ</p>
+                                                        <input id="xuatXu" class="input" name="xuatXu" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                            <p class="text">Thương hiệu</p>
-                                                            <select id="thuongHieu" class="input"  name="thuongHieu" style="width: 40rem"></select>
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Thương hiệu</p>
+                                                        <select id="thuongHieu" class="input" name="thuongHieu" style="width: 40rem"></select>
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                            <p class="text">Thể tích</p>
-                                                            <input id="theTich" class="input" type="text" name="theTich" style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Thể tích</p>
+                                                        <input id="theTich" class="input" type="text" name="theTich" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                            <p class="text">Nồng độ cồn</p>
-                                                            <input id="nongDoCon" type="text" class="input" name="nongDoCon"  style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Nồng độ cồn</p>
+                                                        <input id="nongDoCon" type="text" class="input" name="nongDoCon" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                    
-                                                            <p class="text">Giá</p>
-                                                            <input id="gia" class="input" name="gia"  style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
-                                                            <p class="text">Mô Tả</p>
-                                                            <input id="moTa" class="input" name="moTa"  style="width: 40rem" />
-                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
-                                                        </div>
 
-                                                        <div style="    display: flex;
+                                                        <p class="text">Giá</p>
+                                                        <input id="gia" class="input" name="gia" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                        <p class="text">Mô Tả</p>
+                                                        <input id="moTa" class="input" name="moTa" style="width: 40rem" />
+                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
+                                                    </div>
+
+                                                    <div style="    display: flex;
                                                                             flex-direction: column;
                                                                             justify-content: center;
                                                                             align-items: center;">
-                                                            <p class="text">Ảnh minh họa</p>
-                                                            <img id="xuatAnh" style="width: 350px; height: 400px;" src="../../public/img/anhMinhHoa.webp" alt="">
-                                                            <input  id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*">
-                                                        </div>
+                                                        <p class="text">Ảnh minh họa</p>
+                                                        <img id="xuatAnh" style="width: 350px; height: 400px;" src="../../public/img/anhMinhHoa.webp" alt="">
+                                                        <input id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*">
+                                                    </div>
 
-                                            
+
                                                 </div>
                                             </div>
                                         </form>
@@ -100,18 +102,14 @@
     </div>
 </body>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-
-
     getCategories();
     getBrand();
     anhMinhHoa = document.getElementById("anhMinhHoa");
     anhMinhHoa.addEventListener("change", function() {
 
-         // Lấy tệp hình ảnh được chọn
+        // Lấy tệp hình ảnh được chọn
         var selectedFile = anhMinhHoa.files[0];
 
 
@@ -131,7 +129,7 @@
         // Bắt đầu đọc tệp hình ảnh dưới dạng Data URL (Base64)
         reader.readAsDataURL(selectedFile);
     });
-    
+
 
 
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
@@ -219,24 +217,24 @@
         }
 
         //Kiểm tra tên loại sản phẩm
-      
 
 
 
-                createSanPham(tenSanPham.value,
-                                        loaiSanPham.value,
-                                        xuatXu.value,
-                                        thuongHieu.value,
 
-                                        theTich.value,
-                                        nongDoCon.value,
-                                        gia.value,
-                                        anhMinhHoa.files[0],
-                                        moTa.value);
-        
+        createSanPham(tenSanPham.value,
+            loaiSanPham.value,
+            xuatXu.value,
+            thuongHieu.value,
+
+            theTich.value,
+            nongDoCon.value,
+            gia.value,
+            anhMinhHoa.files[0],
+            moTa.value);
 
 
-       
+
+
 
         //Sau khi tạo xong chuyển về trang QLSanPham
         showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
@@ -245,53 +243,53 @@
 
 
     function getCategories() {
-            $.ajax({
-                url: "http://localhost:8080/Category/noPaging",
-                method: "GET",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response)
-                    if (response && response.length > 0) {
-                        // Xóa tất cả các option hiện có trong dropdown
-                        $('#loaiSanPham').empty();
-                        // Thêm option "Tất cả"
-                        $('#loaiSanPham').append('<option value="">Chọn loại sản phẩm</option>');
-                        // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
-                        $.each(response, function(index, category) {
-                            $('#loaiSanPham').append(`<option value="${category.id}">${category.categoryName}</option>`);
-                        });
-                    } else {
-                        console.log("Không có loại sản phẩm nào được trả về từ API.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
+        $.ajax({
+            url: "http://localhost:8080/Category/noPaging",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                console.log(response)
+                if (response && response.length > 0) {
+                    // Xóa tất cả các option hiện có trong dropdown
+                    $('#loaiSanPham').empty();
+                    // Thêm option "Tất cả"
+                    $('#loaiSanPham').append('<option value="">Chọn loại sản phẩm</option>');
+                    // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
+                    $.each(response, function(index, category) {
+                        $('#loaiSanPham').append(`<option value="${category.id}">${category.categoryName}</option>`);
+                    });
+                } else {
+                    console.log("Không có loại sản phẩm nào được trả về từ API.");
                 }
-            });
-        }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
 
-        function getBrand() {
-            $.ajax({
-                url: "http://localhost:8080/Brand/noPaging",
-                method: "GET",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response)
-                    if (response && response.length > 0) {
-                        $('#thuongHieu').empty();
-                        $('#thuongHieu').append('<option value="">Chọn thương hiệu sản phẩm</option>');
-                        $.each(response, function(index, brand) {
-                            $('#thuongHieu').append(`<option value="${brand.brandId}">${brand.brandName}</option>`);
-                        });
-                    } else {
-                        console.log("Không có thương hiệu sản phẩm nào được trả về từ API.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
+    function getBrand() {
+        $.ajax({
+            url: "http://localhost:8080/Brand/noPaging",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                console.log(response)
+                if (response && response.length > 0) {
+                    $('#thuongHieu').empty();
+                    $('#thuongHieu').append('<option value="">Chọn thương hiệu sản phẩm</option>');
+                    $.each(response, function(index, brand) {
+                        $('#thuongHieu').append(`<option value="${brand.brandId}">${brand.brandName}</option>`);
+                    });
+                } else {
+                    console.log("Không có thương hiệu sản phẩm nào được trả về từ API.");
                 }
-            });
-        }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
 
 
     function showErrorAlert(title, message) {
@@ -317,7 +315,7 @@
     }
 
 
- 
+
 
 
     function createSanPham(tenSanPham, maLoaiSanPham, xuatXu, thuongHieu, theTich, nongDoCon, gia, anhMinhHoa, moTa) {
@@ -329,11 +327,11 @@
         formData.append("capacity", theTich);
         formData.append("abv", nongDoCon);
         formData.append("price", gia);
-        formData.append("image", anhMinhHoa); 
+        formData.append("image", anhMinhHoa);
         formData.append("description", moTa);
         for (var pair of formData.entries()) {
             console.log(pair[0] + ': ' + pair[1]);
-        } 
+        }
 
         $.ajax({
             url: 'http://localhost:8080/Product', // Kiểm tra URL chính xác
@@ -342,7 +340,7 @@
             processData: false,
             contentType: false,
             headers: {
-                "Authorization": "Bearer " + localStorage.getItem('token')  // Gửi token trong header
+                "Authorization": "Bearer " + sessionStorage.getItem('token') // Gửi token trong header
             },
             success: function(data) {
                 console.log(data); // Log dữ liệu trả về để kiểm tra
@@ -358,11 +356,6 @@
             }
         });
     }
-
-
- 
-
-
 </script>
 
 </html>

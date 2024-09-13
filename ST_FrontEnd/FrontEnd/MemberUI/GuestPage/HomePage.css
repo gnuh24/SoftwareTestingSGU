@@ -263,9 +263,7 @@
    border-radius: 8px;
    text-align: center;
  }
- .buy-btn-container:hover{
-  color: black !important;
- }
+
  .product-card-content img {
    width: 100%;
    height: auto;
@@ -386,12 +384,14 @@
     margin-top: 24px;
     margin-bottom: 10px;
   }
-  
+    form{
+      margin: 15px 0;
+    }
     /* Button Container */
     .row .buy-btn-container {
       margin-top: 16px;
       /* margin-bottom: 12px; */
-      color: #fff;
+      color: black;
       /* Màu chữ */
       border: 1px solid rgb(146, 26, 26);
       /* Đường viền màu đỏ */
@@ -449,10 +449,10 @@
     background-color: black;
     color: white;
   }
-  .row .buy-btn-container:hover {
-    background-color: white;
-    /* color: white; */
-  }
+ .row .buy-btn-container:hover {
+      background-color: white;
+      color: rgb(146, 26, 26);
+    }
   .cart {
     width: 30%;
     height: 50%;

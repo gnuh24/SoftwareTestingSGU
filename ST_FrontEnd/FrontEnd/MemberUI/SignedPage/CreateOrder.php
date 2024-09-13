@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="CreateOrder.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Thanh toán</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
@@ -78,55 +80,55 @@
         </section>
         <?php require_once "../Footer/Footer.php" ?>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // fillUserDataToInputs();
-            // fillOrderInfo();
-            loadCart();
-            loadUserInfoFromLocalStorage();
-        });
-        var listproduct = [];
-        var totalpriceall = 0;
+</body>
 
-        function convertPriceToNumber(priceString) {
-            var priceWithoutDot = priceString.replace(/\./g, '');
-            var priceWithoutDong = priceWithoutDot.replace('đ', '');
-            var priceNumber = parseInt(priceWithoutDong);
-            return priceNumber;
-        }
+<script>
+    $(document).ready(function() {
+        // fillUserDataToInputs();
+        // fillOrderInfo();
+        loadCart();
+        loadUserInfoFromsessionStorage();
+    });
+    var listproduct = [];
+    var totalpriceall = 0;
 
-        function loadCart() {
-            var token = localStorage.getItem("token"); // Lấy token từ localStorage
-            var maTaiKhoan = localStorage.getItem("id"); // Lấy token từ localStorage
-            $.ajax({
-                url: 'http://localhost:8080/CartItem/' + maTaiKhoan, // URL của file PHP API
-                method: 'GET',
-                dataType: 'json',
-                headers: {
-                    'Authorization': `Bearer ${token}` // Thêm JWT token vào header
-                },
-                success: function(response) {
-                    let cartHTML = '';
-                    let totalPrice = 0;
+    function convertPriceToNumber(priceString) {
+        var priceWithoutDot = priceString.replace(/\./g, '');
+        var priceWithoutDong = priceWithoutDot.replace('đ', '');
+        var priceNumber = parseInt(priceWithoutDong);
+        return priceNumber;
+    }
 
-                    // Duyệt qua các sản phẩm trong giỏ hàng và tạo HTML
-                    response.forEach(function(cartProduct) {
-                        totalPrice += cartProduct.total;
-                        var maSanPham = cartProduct.productId;
-                        var donGia = cartProduct.unitPrice;
-                        var soLuong = cartProduct.quantity;
-                        var total1 = cartProduct.total;
+    function loadCart() {
+        var token = sessionStorage.getItem("token");
+        var maTaiKhoan = sessionStorage.getItem("id");
+        $.ajax({
+            url: 'http://localhost:8080/CartItem/' + maTaiKhoan, // URL của file PHP API
+            method: 'GET',
+            dataType: 'json',
+            headers: {
+                'Authorization': `Bearer ${token}` // Thêm JWT token vào header
+            },
+            success: function(response) {
+                let cartHTML = '';
+                let totalPrice = 0;
 
-                        var productItem = {
-                            'idProductId': maSanPham,
-                            'unitPrice': donGia,
-                            'quantity': soLuong,
-                            'total': total1
-                        };
-                        listproduct.push(productItem);
-                        cartHTML += `
+                // Duyệt qua các sản phẩm trong giỏ hàng và tạo HTML
+                response.forEach(function(cartProduct) {
+                    totalPrice += cartProduct.total;
+                    var maSanPham = cartProduct.productId;
+                    var donGia = cartProduct.unitPrice;
+                    var soLuong = cartProduct.quantity;
+                    var total1 = cartProduct.total;
+
+                    var productItem = {
+                        'idProductId': maSanPham,
+                        'unitPrice': donGia,
+                        'quantity': soLuong,
+                        'total': total1
+                    };
+                    listproduct.push(productItem);
+                    cartHTML += `
                         <div class='radio__wrapper'>
                             <div>
                                 <div class='cartItem' id='${cartProduct.productId}'>
@@ -148,173 +150,191 @@
                                 </div>
                             </div>
                         </div>`;
-                    });
-
-                    // Hiển thị giỏ hàng trên trang
-                    $('#cartItems').html(cartHTML);
-                    totalpriceall = totalPrice;
-                    $('#totalPrice').text(formatCurrency(totalPrice));
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Có lỗi xảy ra: ', error);
-                }
-            });
-        }
-
-        function formatCurrency(number) {
-            // Chuyển đổi số thành chuỗi và đảm bảo nó là số nguyên
-            number = parseInt(number);
-
-            // Sử dụng hàm toLocaleString() để định dạng số tiền
-            // và thêm đơn vị tiền tệ "đ" vào cuối chuỗi
-            return number.toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            });
-        }
-        document.getElementById('address').addEventListener('input', function() {
-            fillOrderInfo();
-        });
-        document.getElementById('username').addEventListener('input', function() {
-            fillOrderInfo();
-        });
-        document.getElementById('phonenumber').addEventListener('input', function() {
-            fillOrderInfo();
-        });
-        document.getElementById('address1').addEventListener('input', function() {
-            fillOrderInfo();
-        });
-
-        function loadUserInfoFromLocalStorage() {
-            const token = localStorage.getItem("token");
-            var userData = localStorage.getItem("id");
-            $.ajax({
-                url: "http://localhost:8080/Account/" + userData,
-                method: "GET",
-                dataType: "json",
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {
-                    console.log(response)
-                    document.getElementById('spanHoTen').textContent = response.fullname;
-                    document.getElementById('spanSoDienThoai').textContent = response.phoneNumber;
-                    document.getElementById('spanDiaChi1').textContent = response.address;
-
-                    document.getElementById('username').value = response.fullname;
-                    document.getElementById('address1').value = response.address;
-
-                    document.getElementById('phonenumber').value = response.phoneNumber;
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
-            });
-        }
-
-        function fillOrderInfo() {
-
-            var diaChi = document.getElementById('username').value;
-            document.getElementById('spanHoTen').textContent = diaChi;
-            diaChi = document.getElementById('phonenumber').value;
-            document.getElementById('spanSoDienThoai').textContent = diaChi;
-            diaChi = document.getElementById('address').value;
-            document.getElementById('spanDiaChi').textContent = diaChi;
-            diaChi = document.getElementById('address1').value;
-            document.getElementById('spanDiaChi1').textContent = diaChi;
-        }
-        document.getElementById('createOrder').addEventListener('click', function() {
-            const maTaiKhoan = localStorage.getItem("id");
-            const hoTen = document.getElementById('username').value.trim(); // Lấy giá trị của trường Họ tên
-            const soDienThoai = document.getElementById('phonenumber').value.trim(); // Lấy giá trị của trường Số điện thoại
-            const diaChi = document.getElementById('address1').value.trim(); // Lấy giá trị của trường Địa chỉ
-            const ghiChu = document.getElementById('address').value.trim(); // Lấy giá trị của trường Ghi chú
-
-            // Kiểm tra nếu bất kỳ trường nào bị trống
-            if (!hoTen || !soDienThoai || !diaChi) {
-                Swal.fire({
-                    title: 'Vui lòng điền đầy đủ thông tin!',
-                    text: 'Các trường Họ tên, Số điện thoại và Địa chỉ là bắt buộc.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
                 });
-                return; // Ngăn không cho hàm createDonHang thực hiện
+
+                // Hiển thị giỏ hàng trên trang
+                $('#cartItems').html(cartHTML);
+                totalpriceall = totalPrice;
+                $('#totalPrice').text(formatCurrency(totalPrice));
+
+            },
+            error: function(xhr, status, error) {
+                console.error('Có lỗi xảy ra: ', error);
             }
-
-            // Xác nhận đặt hàng nếu tất cả các trường đều được điền
-            Swal.fire({
-                title: 'Đặt hàng',
-                text: 'Bạn có chắc muốn đặt hàng?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Đồng ý'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    updateInfor();
-                    createDonHang(); // Gọi hàm tạo đơn hàng
-                    Swal.fire({
-                        title: 'Đặt hàng thành công!',
-                        text: 'Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result1) => {
-                        if (result1.isConfirmed) {
-                            window.location.href = 'SignedProduct.php'; // Chuyển hướng đến trang sản phẩm
-                        }
-                    });
-                }
-            });
         });
+    }
 
-        function updateInfor() {
-            var formData = new FormData();
-            const maTaiKhoan = localStorage.getItem("id");
+    function formatCurrency(number) {
+        // Chuyển đổi số thành chuỗi và đảm bảo nó là số nguyên
+        number = parseInt(number);
 
-            formData.append('accountId', maTaiKhoan);
-            formData.append('fullname', document.getElementById('username').value);
-            formData.append('phone', document.getElementById('phonenumber').value);
-            formData.append('address', document.getElementById('address1').value);
-            const token = localStorage.getItem("token");
-            $.ajax({
-                url: 'http://localhost:8080/Account/UpdateInformation',
-                type: 'PATCH',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {},
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
+        // Sử dụng hàm toLocaleString() để định dạng số tiền
+        // và thêm đơn vị tiền tệ "đ" vào cuối chuỗi
+        return number.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+    }
+    document.getElementById('address').addEventListener('input', function() {
+        fillOrderInfo();
+    });
+    document.getElementById('username').addEventListener('input', function() {
+        fillOrderInfo();
+    });
+    document.getElementById('phonenumber').addEventListener('input', function() {
+        fillOrderInfo();
+    });
+    document.getElementById('address1').addEventListener('input', function() {
+        fillOrderInfo();
+    });
+
+    function loadUserInfoFromsessionStorage() {
+        const token = sessionStorage.getItem("token");
+        var userData = sessionStorage.getItem("id");
+        $.ajax({
+            url: "http://localhost:8080/Account/" + userData,
+            method: "GET",
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                console.log(response)
+                document.getElementById('spanHoTen').textContent = response.fullname;
+                document.getElementById('spanSoDienThoai').textContent = response.phoneNumber;
+                document.getElementById('spanDiaChi1').textContent = response.address;
+
+                document.getElementById('username').value = response.fullname;
+                document.getElementById('address1').value = response.address;
+
+                document.getElementById('phonenumber').value = response.phoneNumber;
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    function fillOrderInfo() {
+
+        var diaChi = document.getElementById('username').value;
+        document.getElementById('spanHoTen').textContent = diaChi;
+        diaChi = document.getElementById('phonenumber').value;
+        document.getElementById('spanSoDienThoai').textContent = diaChi;
+        diaChi = document.getElementById('address').value;
+        document.getElementById('spanDiaChi').textContent = diaChi;
+        diaChi = document.getElementById('address1').value;
+        document.getElementById('spanDiaChi1').textContent = diaChi;
+    }
+    document.getElementById('createOrder').addEventListener('click', function() {
+        const maTaiKhoan = sessionStorage.getItem("id");
+        const hoTen = document.getElementById('username').value.trim(); // Lấy giá trị của trường Họ tên
+        const soDienThoai = document.getElementById('phonenumber').value.trim(); // Lấy giá trị của trường Số điện thoại
+        const diaChi = document.getElementById('address1').value.trim(); // Lấy giá trị của trường Địa chỉ
+        const ghiChu = document.getElementById('address').value.trim(); // Lấy giá trị của trường Ghi chú
+
+        // Kiểm tra nếu bất kỳ trường nào bị trống
+        if (!hoTen || !soDienThoai || !diaChi) {
+            Swal.fire({
+                title: 'Vui lòng điền đầy đủ thông tin!',
+                text: 'Các trường Họ tên, Số điện thoại và Địa chỉ là bắt buộc.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
             });
+            return; // Ngăn không cho hàm createDonHang thực hiện
         }
 
+        // Xác nhận đặt hàng nếu tất cả các trường đều được điền
+        Swal.fire({
+            title: 'Đặt hàng',
+            text: 'Bạn có chắc muốn đặt hàng?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updateInfor();
+                createDonHang(); // Gọi hàm tạo đơn hàng
+                Swal.fire({
+                    title: 'Đặt hàng thành công!',
+                    text: 'Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result1) => {
+                    if (result1.isConfirmed) {
+                        window.location.href = 'SignedProduct.php'; // Chuyển hướng đến trang sản phẩm
+                    }
+                });
+            }
+        });
+    });
 
-        function createDonHang() {
-            var token = localStorage.getItem("token");
-            var userData = localStorage.getItem("id");
-            var formData = new FormData();
-            formData.append('totalPrice', totalpriceall);
-            var diaChi = document.getElementById('address').value;
+    function updateInfor() {
+        var formData = new FormData();
+        const maTaiKhoan = sessionStorage.getItem("id");
 
-            formData.append('accountId', userData);
-            formData.append('note', diaChi);
+        formData.append('accountId', maTaiKhoan);
+        formData.append('fullname', document.getElementById('username').value);
+        formData.append('phone', document.getElementById('phonenumber').value);
+        formData.append('address', document.getElementById('address1').value);
+        const token = sessionStorage.getItem("token");
+        $.ajax({
+            url: 'http://localhost:8080/Account/UpdateInformation',
+            type: 'PATCH',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {},
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
 
-            listproduct.forEach((item, index) => {
-                formData.append(`listOrderDetail[${index}].productId`, item.idProductId);
-                formData.append(`listOrderDetail[${index}].unitPrice`, item.unitPrice);
-                formData.append(`listOrderDetail[${index}].quantity`, item.quantity);
-                formData.append(`listOrderDetail[${index}].total`, item.total);
-            });
+
+    function createDonHang() {
+        var token = sessionStorage.getItem("token");
+        var userData = sessionStorage.getItem("id");
+        var formData = new FormData();
+        formData.append('totalPrice', totalpriceall);
+        var diaChi = document.getElementById('address').value;
+
+        formData.append('accountId', userData);
+        formData.append('note', diaChi);
+
+        listproduct.forEach((item, index) => {
+            formData.append(`listOrderDetail[${index}].productId`, item.idProductId);
+            formData.append(`listOrderDetail[${index}].unitPrice`, item.unitPrice);
+            formData.append(`listOrderDetail[${index}].quantity`, item.quantity);
+            formData.append(`listOrderDetail[${index}].total`, item.total);
+        });
+        $.ajax({
+            url: "http://localhost:8080/Order/User",
+            method: "POST",
+            data: formData,
+            processData: false, // Ngăn jQuery xử lý dữ liệu
+            contentType: false, // Ngăn jQuery thiết lập tiêu đề `Content-Type`
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {},
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+        listproduct.forEach((item, index) => {
+            var formData1 = new FormData();
+            formData1.append('accountId', userData);
+            formData1.append('productId', item.idProductId);
             $.ajax({
-                url: "http://localhost:8080/Order/User",
-                method: "POST",
-                data: formData,
+                url: "http://localhost:8080/CartItem",
+                method: "DELETE",
+                data: formData1,
                 processData: false, // Ngăn jQuery xử lý dữ liệu
                 contentType: false, // Ngăn jQuery thiết lập tiêu đề `Content-Type`
                 headers: {
@@ -325,28 +345,9 @@
                     console.error("Error:", error);
                 }
             });
-            listproduct.forEach((item, index) => {
-                var formData1 = new FormData();
-                formData1.append('accountId', userData);
-                formData1.append('productId', item.idProductId);
-                $.ajax({
-                    url: "http://localhost:8080/CartItem",
-                    method: "DELETE",
-                    data: formData1,
-                    processData: false, // Ngăn jQuery xử lý dữ liệu
-                    contentType: false, // Ngăn jQuery thiết lập tiêu đề `Content-Type`
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    success: function(response) {},
-                    error: function(xhr, status, error) {
-                        console.error("Error:", error);
-                    }
-                });
-            });
+        });
 
-        }
-    </script>
-</body>
+    }
+</script>
 
 </html>

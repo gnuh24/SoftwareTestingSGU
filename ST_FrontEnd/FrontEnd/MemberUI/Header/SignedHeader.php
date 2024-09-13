@@ -197,9 +197,8 @@
     function toCart() {
         const form = document.getElementById("search");
         if (form) {
-            // Lấy dữ liệu từ localStorage
-            const localStorageData = JSON.parse(localStorage.getItem("id"));
-            const maTaiKhoan = localStorageData;
+            const sessionStoragedata = JSON.parse(sessionStorage.getItem("id"));
+            const maTaiKhoan = sessionStoragedata;
 
 
 
@@ -215,9 +214,8 @@
     function toProfile() {
         const form = document.getElementById("search");
         if (form) {
-            // Lấy dữ liệu từ localStorage
-            const localStorageData = JSON.parse(localStorage.getItem("id"));
-            const maTaiKhoan = localStorageData;
+            const sessionStorageData = JSON.parse(sessionStorage.getItem("id"));
+            const maTaiKhoan = sessionStorageData;
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "Profile.php?maTaiKhoan=" + maTaiKhoan;
@@ -231,9 +229,8 @@
     function toMyOrder() {
         const form = document.getElementById("search");
         if (form) {
-            // Lấy dữ liệu từ localStorage
-            const localStorageData = JSON.parse(localStorage.getItem("id"));
-            const maTaiKhoan = localStorageData;
+            const sessionStorageData = JSON.parse(sessionStorage.getItem("id"));
+            const maTaiKhoan = sessionStorageData;
 
 
             // Thêm MaTaiKhoan vào action của form
@@ -247,8 +244,8 @@
     }
 
 
-        // Sự kiện đăng xuất
-        function logout() {
+    // Sự kiện đăng xuất
+    function logout() {
         Swal.fire({
             title: 'Xác nhận đăng xuất',
             text: 'Bạn có chắc chắn muốn đăng xuất?',
@@ -260,15 +257,13 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Lấy refreshToken từ localStorage
-                const refreshToken = localStorage.getItem("refreshToken");
+                const refreshToken = sessionStorage.getItem("refreshToken");
 
                 if (refreshToken) {
                     // Gọi API logout qua Ajax
                     logoutApi(refreshToken).then(() => {
-                        // Xóa các item trong localStorage sau khi API thành công
-                        localStorage.removeItem("key");
-                        localStorage.removeItem("refreshToken");
+                        sessionStorage.removeItem("key");
+                        sessionStorage.removeItem("refreshToken");
 
                         // Chuyển hướng về trang chủ khách
                         window.location.href = "../GuestPage/GuestHomePage.php";
@@ -303,10 +298,10 @@
                 url: 'http://localhost:8080/Auth/Logout',
                 type: 'POST',
                 data: formData,
-                processData: false,  // Không xử lý dữ liệu (FormData cần giữ nguyên)
-                contentType: false,  // Đặt là false để sử dụng multipart/form-data mặc định
+                processData: false, // Không xử lý dữ liệu (FormData cần giữ nguyên)
+                contentType: false, // Đặt là false để sử dụng multipart/form-data mặc định
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
                 },
                 success: function(response) {
                     // Nếu thành công, resolve promise

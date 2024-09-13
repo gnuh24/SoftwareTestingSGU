@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +8,11 @@
     <link rel="stylesheet" href="ThongKeDonHang.css" />
     <link rel="stylesheet" href="ThongKeTaiChinh.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Thống kê sản phẩm bán chạy</title>
 </head>
+
 <body>
     <div id="root">
         <div>
@@ -32,14 +35,14 @@
                                             <input id="from" type="date" style="height: 3rem; padding: 0.3rem;">
                                             <span class="text">Ngày Kết Thúc</span>
                                             <input id="to" type="date" style="height: 3rem; padding: 0.3rem;">
-                                            
+
                                             <select id="topProductsSelect" style="height: 100%">
                                                 <option value="10">Top 10</option>
                                                 <option value="20">Top 20</option>
                                                 <option value="50">Top 50</option>
                                                 <option value="100">Top 100</option>
                                             </select>
-                                            
+
                                             <div id="thongKeButton" style="display: flex; justify-content: center; align-items: center; width: 50px; height: 3rem; padding: 0.3rem; color: white; font-weight: 700; background-color: white;"><i style="color: black; font-size: 20px;" class="fa-solid fa-magnifying-glass"></i></div>
                                             <div id="resetButton" style="display: flex; justify-content: center; align-items: center; width: 50px; height: 3rem; padding: 0.3rem; color: white; font-weight: 700; background-color: white;"><i style="color: black; font-size: 20px;" class="fa-solid fa-rotate-right"></i></div>
 
@@ -70,7 +73,6 @@
         </div>
     </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     const resetButton = document.getElementById("resetButton");
     const thongKeButton = document.getElementById("thongKeButton");
@@ -80,7 +82,7 @@
 
     thongKeButton.addEventListener("click", () => {
         let fromValue = from.value !== "" ? from.value : "2010-01-01";
-        let toValue = to.value !== "" ? to.value : formattedDate;  
+        let toValue = to.value !== "" ? to.value : formattedDate;
         let topCount = limit.value; // Đổi tên biến ở đây
 
         thongKeSanPhamBanChay(fromValue, toValue, topCount); // Gọi hàm để lấy dữ liệu sản phẩm
@@ -112,8 +114,8 @@
 
             },
             headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
-                },
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+            },
             success: function(response) {
                 var tableBody = document.querySelector("#sanPhamBanChayTable tbody");
                 tableBody.innerHTML = ""; // Clear existing rows

@@ -102,11 +102,11 @@
             type: 'GET',
             dataType: "json",
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
             },
             success: function(response) {
                 var data = response;
-                
+
                 // Handle order details
                 var transaction_list = document.getElementById("transaction_list");
                 transaction_list.innerHTML = "";

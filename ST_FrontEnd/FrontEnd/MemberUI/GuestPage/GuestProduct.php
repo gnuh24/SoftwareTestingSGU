@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="login.css" />
     <link rel="stylesheet" href="GuestProduct.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <title>Các sản phẩm</title>
 </head>
@@ -16,7 +17,7 @@
     <?php require_once "../Header/GuestHeader.php"; ?>
     <!-- Thanh lọc menu -->
     <div id="filter-menu" class="container-fluid bg-white p-3 rounded mb-4">
-        <div class="row" style="width:80%">
+        <div class="row d-flex justify-content-around" style="width:80%">
             <div class="col-12 col-md-3 mb-2 mb-md-0">
                 <label for="price-filter" class="form-label text-danger fw-bold">Giá:</label>
                 <select id="price-filter" class="form-select form-select-sm bg-danger text-white">
@@ -64,7 +65,6 @@
 
 </body>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     // Lắng nghe sự kiện click vào id "reset-button"
@@ -266,7 +266,7 @@
                                                         <p class="price-tea">${formatCurrency(product.price)}</p>
                                                     </div>
                                                     <div class="buy-btn-container">
-                                                        <span class="btn btn-primary" style="background:none; color:black;border:none;">Mua ngay</span>
+                                                        MUA NGAY
                                                     </div>
                                                 </div>
                                             </a>

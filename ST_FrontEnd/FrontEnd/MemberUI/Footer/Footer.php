@@ -1,7 +1,7 @@
 <!-- Footer -->
 <footer id="footer" class="bg-light py-5">
     <div class="container">
-        <div class="row" style="height: fit-content;">
+        <div class="row d-flex justify-content-around" style="height: fit-content;">
             <!-- Contact Info -->
             <div class="col-12 col-md-3 mb-4">
                 <h5>Thông tin liên hệ</h5>
@@ -19,27 +19,7 @@
                 </p>
             </div>
 
-            <!-- Policies -->
-            <div class="col-12 col-md-3 mb-4">
-                <h5>CHÍNH SÁCH</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Chính sách giao hàng</a></li>
-                    <li><a href="#">Chính sách thẻ thành viên</a></li>
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                </ul>
-            </div>
 
-            <!-- About Us -->
-            <div class="col-12 col-md-3 mb-4">
-                <h5>ABOUT US</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#">Giới thiệu</a></li>
-                    <li><a href="#">Tuyển dụng</a></li>
-                    <li><a href="#">Nhượng quyền</a></li>
-                    <li><a href="#">Tin tức</a></li>
-                </ul>
-            </div>
 
             <!-- Follow Us -->
             <div class="col-12 col-md-3 mb-4">

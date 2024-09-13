@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="HomePage.css" />
     <link rel="stylesheet" href="login.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <title>Kinh doanh rượu</title>
 </head>
@@ -90,7 +91,6 @@
     <?php require_once "../Footer/Footer.php" ?>
 </body>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     function formatCurrency(number) {
@@ -149,15 +149,15 @@
                         }
                         var imageSrc = product.AnhMinhHoa;
                         htmlContent += `
-                        <div class="col-md-4 col-sm-6 mb-4">
+                       <div class="col-md-4 col-sm-6 mb-4">
                             <div class="product-card-content">
-                                <a href="GuestProductDetail.php?maSanPham=${product.id}">
-                                    <img src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${product.image}" alt="" style="height: 300px;">
+                                <a href="SignedProductDetail.php?maSanPham=${product.id}">
+                                    <img src="https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${product.image}" alt="" style="height: 300px;">
                                     <div class="product-card-details">
                                         <h4 class="name-product">${product.productName}</h4>
-                                        <p class="price-tea">${formatCurrency(product.price)}</p>
+                                        <p class="price-tea text-center">${formatCurrency(product.price)}</p>
                                         <div class="buy-btn-container">
-                                        Mua ngay
+                                            Mua ngay
                                         </div>
                                     </div>
                                 </a>
