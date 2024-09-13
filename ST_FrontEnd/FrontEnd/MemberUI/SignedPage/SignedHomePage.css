@@ -360,15 +360,18 @@
     margin-top: 24px;
     margin-bottom: 10px;
   }
-  
+     form {
+       margin: 15px 0;
+     }
         .row .buy-btn-container {
           margin-top: 16px;
           /* margin-bottom: 12px; */
-          color: #fff;
+          color:black;
           /* Màu chữ */
           border: 1px solid rgb(146, 26, 26);
           /* Đường viền màu đỏ */
           background: rgb(146, 26, 26);
+          
           /* Màu nền đỏ */
           padding: 8px 16px;
           cursor: pointer;

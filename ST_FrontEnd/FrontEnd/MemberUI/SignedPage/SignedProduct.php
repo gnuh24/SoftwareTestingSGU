@@ -9,16 +9,22 @@
     <link rel="stylesheet" href="SignedHomePage.css" />
     <title>Các sản phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+<style>
+    label {
+        color: rgb(146, 26, 26) !important;
+    }
+</style>
 
 <body>
     <?php require_once "../Header/SignedHeader.php" ?>
     <!-- Thanh lọc menu -->
     <div id="filter-menu" class="container-fluid bg-white p-3 rounded mb-4">
-        <div class="row" style="width:80%">
+        <div class="row d-flex justify-content-around" style="width:80%">
             <div class="col-12 col-md-3 mb-2 mb-md-0">
-                <label for="price-filter" class="form-label text-danger fw-bold">Giá:</label>
+                <label for="price-filter" class="form-label fw-bold">Giá:</label>
                 <select id="price-filter" class="form-select form-select-sm bg-danger text-white">
                     <option value="">Tất cả</option>
                     <option value="low">Dưới 1 triệu</option>
@@ -28,14 +34,14 @@
             </div>
 
             <div class="col-12 col-md-3 mb-2 mb-md-0">
-                <label for="brand-filter" class="form-label text-danger fw-bold">Thương hiệu :</label>
+                <label for="brand-filter" class="form-label  fw-bold">Thương hiệu :</label>
                 <select id="brand-filter" class="form-select form-select-sm bg-danger text-white">
 
                 </select>
             </div>
 
             <div class="col-12 col-md-3 mb-2 mb-md-0">
-                <label for="category-filter" class="form-label text-danger fw-bold">Loại sản phẩm:</label>
+                <label for="category-filter" class="form-label  fw-bold">Loại sản phẩm:</label>
                 <select id="category-filter" class="form-select form-select-sm bg-danger text-white">
                     <!-- Hiển thị menu LoaiSanPham -->
                 </select>
@@ -61,8 +67,7 @@
     <!-- Footer -->
     <?php require_once "../Footer/Footer.php" ?>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <script>
         // Lắng nghe sự kiện click vào id "reset-button"
@@ -195,8 +200,6 @@
             if (brandFilter == "") {
                 brandFilter = 0;
             }
-
-
             // Lấy giá trị từ thanh lọc loại sản phẩm
             var categoryFilter = document.getElementById("category-filter").value;
             if (categoryFilter == "") {
@@ -232,7 +235,7 @@
                         pageSize: 12,
                     };
 
-                    
+
 
                     // Nếu brandId khác 0, thêm vào requestData
                     if (brandId !== 0) {
@@ -263,8 +266,8 @@
                                                         <h4 class="name-product">${product.productName}</h4>
                                                         <p class="price-tea">${formatCurrency(product.price)}</p>
                                                     </div>
-                                                    <div class="buy-btn-container">
-                                                        <span class="btn btn-primary" style="background:none; color:white; border:none;">Mua ngay</span>
+                                                    <div class="buy-btn-container" >
+                                                        Mua ngay
                                                     </div>
                                                 </div>
                                             </a>
@@ -321,7 +324,7 @@
                         currentPage = index + 1;
                         filterProducts(currentPage);
                     });
-                    });
+                });
 
 
                 // Đánh dấu trang hiện tại
