@@ -16,7 +16,7 @@
 
     .search-input {
         padding-left: 25px;
-        background-image: url("../img/search.png");
+        /* background-image: url("../img/search.png"); */
         background-size: 20px;
         background-repeat: no-repeat;
         background-position: 5px center;
@@ -179,6 +179,7 @@
         event.preventDefault();
         const form = document.getElementById("search");
         const searchValue = document.getElementById("searchSanPham").value;
+        console.log(searchValue);
         if (searchValue != "") {
             form.action = `SignedProduct.php?searchFromAnotherPage=${searchValue}`;
             form.submit();

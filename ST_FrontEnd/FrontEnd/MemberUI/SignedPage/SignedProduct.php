@@ -226,7 +226,7 @@
                 data: (function() {
                     var requestData = {
                         pageNumber: page,
-                        search: search,
+                        search: ' <?php echo $_GET['searchFromAnotherPage'] ?>',
                         minPrice: minGia,
                         maxPrice: maxGia,
                         pageSize: 12,

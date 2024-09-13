@@ -23,12 +23,10 @@ CREATE TABLE IF NOT EXISTS `Product`(
     `Status`            BOOLEAN            	NOT NULL,
     `CreateTime`        DATETIME           	NOT NULL,
     `Image`             VARCHAR(255)        NOT NULL,
-    `Price`             INT UNSIGNED        NOT NULL,
 
     `Origin`            NVARCHAR(255)       NOT NULL,
     `Capacity`          INT UNSIGNED        NOT NULL,
     `ABV`               INT UNSIGNED        NOT NULL,
-    `Quantity`          INT UNSIGNED        NOT NULL,
     `Description`       TEXT,
 
 
@@ -36,6 +34,18 @@ CREATE TABLE IF NOT EXISTS `Product`(
 	`CategoryId`	    INT UNSIGNED   		NOT NULL,
     FOREIGN KEY (`BrandId`)     	REFERENCES `Brand`(`Id`),
     FOREIGN KEY (`CategoryId`)  	REFERENCES `Category`(`Id`)
+);
+
+DROP TABLE IF EXISTS `Batch`;
+CREATE TABLE IF NOT EXISTS `Batch`(
+	`Id` 				INT UNSIGNED 		PRIMARY KEY 	AUTO_INCREMENT,
+	`Price`             INT UNSIGNED        NOT NULL,
+    `Quantity`          INT UNSIGNED        NOT NULL,
+    `ReceivingTime`		DATETIME			NOT NULL,
+    `ProductId`			INT UNSIGNED		NOT NULL,
+    
+    FOREIGN KEY (`ProductId`)     REFERENCES `Product`(`Id`)
+
 );
 
 
@@ -61,25 +71,10 @@ CREATE TABLE IF NOT EXISTS `Account`(
     `Status`            BOOLEAN                                     NOT NULL,
     `Active`			BOOLEAN 		                            NOT NULL,
     `Role`              ENUM("User", "Admin")                       NOT NULL,
-    -- `Type`				ENUM("FACEBOOK", "GOOGLE", "WEB", "OTHER"),
     `UserInformationId` INT UNSIGNED                                NOT NULL,
     FOREIGN KEY (`UserInformationId`) REFERENCES `UserInformation`(`Id`)
 );
 
-DROP TABLE IF EXISTS `TokenType`;
-CREATE TABLE IF NOT EXISTS `TokenType`(
-    `Id`                INT UNSIGNED       PRIMARY KEY    AUTO_INCREMENT,
-    `TokenTypeName`     NVARCHAR(255)      NOT NULL     
-);
-
-DROP TABLE IF EXISTS `LogoutJWTToken`;
-CREATE TABLE IF NOT EXISTS `LogoutJWTToken`(
-    `Id`            INT UNSIGNED       PRIMARY KEY      AUTO_INCREMENT,
-    `Token`         CHAR(255)          NOT NULL         UNIQUE,
-    `LogoutTime`	DATETIME		   NOT NULL	
-    -- `AccountId`     INT UNSIGNED       NOT NULL,
-    -- FOREIGN KEY (`AccountId`) REFERENCES `Account`(`Id`)
-);
 
 DROP TABLE IF EXISTS `Token`;
 CREATE TABLE IF NOT EXISTS `Token`(
@@ -87,9 +82,7 @@ CREATE TABLE IF NOT EXISTS `Token`(
     `Token`             CHAR(36)           NOT NULL         UNIQUE,
     `CreateTime`	    DATETIME		   NOT NULL,
     `Expiration`    	DATETIME           NOT NULL,
-    `TokenTypeId`       INT UNSIGNED       NOT NULL,
     `AccountId`         INT UNSIGNED       NOT NULL,
-    FOREIGN KEY (`TokenTypeId`) REFERENCES `TokenType`(`Id`),
     FOREIGN KEY (`AccountId`) REFERENCES `Account`(`Id`)
 );
 
@@ -113,9 +106,7 @@ CREATE TABLE IF NOT EXISTS `Order` (
     `Id`                CHAR(12)           NOT NULL    PRIMARY KEY,
     `OrderTime`         DATETIME           NOT NULL,
     `TotalPrice`        INT UNSIGNED       NOT NULL,
-    `Note`              TEXT,
-    `Paid`				BOOLEAN				,
-    `PaymentOption`		ENUM("COD", "Online")	,				
+    `Note`              TEXT,		
     `AccountId`         INT UNSIGNED,
     FOREIGN KEY (`AccountId`) REFERENCES `Account` (`Id`)
 );
@@ -163,11 +154,12 @@ CREATE TABLE IF NOT EXISTS `InventoryReportStatus` (
 
 DROP TABLE IF EXISTS `InventoryReportDetail`;
 CREATE TABLE IF NOT EXISTS `InventoryReportDetail` (
-    `InventoryReportId`       	INT UNSIGNED       NOT NULL,
-    `ProductId`        			INT UNSIGNED       NOT NULL,
-    `Quantity`      			INT UNSIGNED       NOT NULL,
-    `UnitPrice`     			INT UNSIGNED       NOT NULL,
-    `Total`         			INT UNSIGNED       NOT NULL,
+    `InventoryReportId`       	INT UNSIGNED       	NOT NULL,
+    `ProductId`        			INT UNSIGNED       	NOT NULL,
+    `Quantity`      			INT UNSIGNED       	NOT NULL,
+    `UnitPrice`     			INT UNSIGNED       	NOT NULL,
+    `Total`         			INT UNSIGNED       	NOT NULL,
+    `Profit`					INT UNSIGNED		NOT NULL,
     FOREIGN KEY (`InventoryReportId`) REFERENCES `InventoryReport`(`Id`),
     FOREIGN KEY (`ProductId`)     REFERENCES `Product`(`Id`),
     PRIMARY KEY (`ProductId`, `InventoryReportId`)
