@@ -1,5 +1,6 @@
 package BackEnd.Entity.ProductEntity;
 
+import BackEnd.Entity.ShoppingEntities.OrderDetail;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -56,4 +58,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "CategoryId", nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "product")
+    private List<Batch> batches;
 }

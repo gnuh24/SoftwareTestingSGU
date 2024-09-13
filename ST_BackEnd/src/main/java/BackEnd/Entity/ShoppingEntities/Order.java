@@ -31,12 +31,6 @@ public class Order {
     @Column(name = "Note")
     private String note;
 
-//    @Column(nullable = false)
-//    private PaymentOption paymentOption;
-//
-//    @Column(nullable = false)
-//    private Boolean paid;
-
     @ManyToOne
     @JoinColumn(name = "AccountId")
     private Account account;
@@ -46,10 +40,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<OrderDetail> orderDetails;
-
-//    public enum PaymentOption{
-//        COD, Online
-//    }
 
 
 }
