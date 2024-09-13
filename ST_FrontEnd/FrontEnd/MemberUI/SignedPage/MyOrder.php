@@ -34,48 +34,49 @@
         <div id="orderHistory"></div>
 
     </div>
+</body>
 
 
-    <?php require_once "../Footer/Footer.php" ?>
-    <script>
-        function loadOrders() {
-            var customerId = sessionStorage.getItem("id");
-            var token = sessionStorage.getItem("token");
+<?php require_once "../Footer/Footer.php" ?>
+<script>
+    function loadOrders() {
+        var customerId = sessionStorage.getItem("id");
+        var token = sessionStorage.getItem("token");
 
-            $.ajax({
-                url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
-                type: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {
-                    // Kiểm tra kiểu dữ liệu của response
-                    if (Array.isArray(response)) {
-                        const orders = response;
-                        const numberOfProducts = orders.length;
+        $.ajax({
+            url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
+            type: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                // Kiểm tra kiểu dữ liệu của response
+                if (Array.isArray(response)) {
+                    const orders = response;
+                    const numberOfProducts = orders.length;
 
-                        if (numberOfProducts <= 0) {
-                            $('#emptyCartMessage').show();
-                        } else {
-                            $('#emptyCartMessage').hide();
-                            displayOrders(orders);
-                        }
+                    if (numberOfProducts <= 0) {
+                        $('#emptyCartMessage').show();
                     } else {
-                        console.error('Dữ liệu trả về không phải là mảng.');
+                        $('#emptyCartMessage').hide();
+                        displayOrders(orders);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Đã xảy ra lỗi khi tải đơn hàng.');
+                } else {
+                    console.error('Dữ liệu trả về không phải là mảng.');
                 }
-            });
-        }
+            },
+            error: function(xhr, status, error) {
+                console.error('Đã xảy ra lỗi khi tải đơn hàng.');
+            }
+        });
+    }
 
-        function displayOrders(orders) {
-            const orderHistory = document.getElementById('orderHistory');
-            orderHistory.innerHTML = ''; // Xóa dữ liệu cũ
+    function displayOrders(orders) {
+        const orderHistory = document.getElementById('orderHistory');
+        orderHistory.innerHTML = ''; // Xóa dữ liệu cũ
 
-            orders.forEach(hoaDon => {
-                var orderHtml = `
+        orders.forEach(hoaDon => {
+            var orderHtml = `
                     <div class='orderManagement_order_list'>
                         <table class='orderManagement_order_info'>
                             <thead>
@@ -88,21 +89,21 @@
                                 </tr>
                             </thead>
                             <tbody>`;
-                var token = sessionStorage.getItem("token");
-                // AJAX call to get chiTietDonHang
-                $.ajax({
-                    url: `http://localhost:8080/Order/MyOrder/${hoaDon.id}`, // Đường dẫn API lấy chi tiết đơn hàng
-                    type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    async: false, // Đảm bảo AJAX này hoàn tất trước khi tiếp tục
-                    success: function(chiTietDonHangResponse) {
+            var token = sessionStorage.getItem("token");
+            // AJAX call to get chiTietDonHang
+            $.ajax({
+                url: `http://localhost:8080/Order/MyOrder/${hoaDon.id}`, // Đường dẫn API lấy chi tiết đơn hàng
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                async: false, // Đảm bảo AJAX này hoàn tất trước khi tiếp tục
+                success: function(chiTietDonHangResponse) {
 
-                        const listCTDH = chiTietDonHangResponse.orderDetails;
+                    const listCTDH = chiTietDonHangResponse.orderDetails;
 
-                        listCTDH.forEach(chiTiet => {
-                            orderHtml += `
+                    listCTDH.forEach(chiTiet => {
+                        orderHtml += `
                             <tr class='orderManagement_order_detail'>
                                 <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${chiTiet.image}'></td>
                                 <td class='tenSanPham'>${chiTiet.productName}</td>
@@ -110,8 +111,8 @@
                                 <td class='soLuong'>${chiTiet.quantity}</td>
                                 <td class='thanhTien'>${formatMoney(chiTiet.total)}</td>
                             </tr>`;
-                        });
-                        orderHtml += `
+                    });
+                    orderHtml += `
                             </tbody>
                         </table>
                         <div class='orderManagement_order_thanhTien'>
@@ -119,109 +120,108 @@
                             <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
                         <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
 
-                        if (hoaDon.status !== 'DangGiao' && hoaDon.status !== 'GiaoThanhCong' && hoaDon.status !== 'Huy') {
-                            const listSanPham = JSON.stringify(listCTDH);
-                            orderHtml += `<button class='cancel_order_button' onclick="cancelOrder('${hoaDon.id}')">Hủy đơn hàng</button>`;
-                        }
-
-                        orderHtml += `</div></div>`;
-
-                        orderHistory.innerHTML += orderHtml;
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Đã xảy ra lỗi khi tải chi tiết đơn hàng.');
+                    if (hoaDon.status !== 'DangGiao' && hoaDon.status !== 'GiaoThanhCong' && hoaDon.status !== 'Huy') {
+                        const listSanPham = JSON.stringify(listCTDH);
+                        orderHtml += `<button class='cancel_order_button' onclick="cancelOrder('${hoaDon.id}')">Hủy đơn hàng</button>`;
                     }
-                });
-            });
-        }
 
-        // Format tiền tệ (Giả định)
-        function formatMoney(value) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            }).format(value);
-        }
+                    orderHtml += `</div></div>`;
 
-        // Chuyển đổi trạng thái
-        function translateStatus(status) {
-            switch (status) {
-                case 'ChoDuyet':
-                    return 'Chờ duyệt';
-                case 'DaDuyet':
-                    return 'Đã duyệt';
-                case 'DangGiao':
-                    return 'Đang giao hàng';
-                case 'GiaoThanhCong':
-                    return 'Giao thành công';
-                case 'Huy':
-                    return 'Đã hủy';
-                default:
-                    return status;
-            }
-        }
-
-        // Hàm xử lý hủy đơn hàng
-        function cancelOrder(maDonHang) {
-            console.log(maDonHang);
-            // Hiển thị hộp thoại xác thực
-            Swal.fire({
-                title: 'Xác nhận hủy đơn hàng?',
-                text: "Bạn có chắc muốn hủy đơn hàng này?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Hủy đơn hàng'
-            }).then((result) => {
-                // Nếu người dùng xác nhận hủy đơn hàng
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'http://localhost:8080/OrderStatus/User', // API hủy đơn hàng
-                        type: 'POST',
-                        data: {
-                            orderId: maDonHang,
-                            idStatus: "Huy"
-                        },
-                        headers: {
-                            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
-
-                        },
-                        success: function(response) {
-
-                            // Hiển thị thông báo và reload trang
-                            Swal.fire(
-                                'Hủy đơn hàng thành công!',
-                                '',
-                                'success'
-                            ).then((result) => {
-                                console.log("Result: " + response);
-                                if (result.isConfirmed) {
-                                    location.reload(); // Hoặc window.location.reload()
-                                }
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
-                        }
-                    });
-
-
+                    orderHistory.innerHTML += orderHtml;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Đã xảy ra lỗi khi tải chi tiết đơn hàng.');
                 }
             });
-
-        }
-
-        function toOrderDetail(maDonHang) {
-            window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}`;
-        }
-
-        // Gọi hàm loadOrders khi trang được load
-        $(document).ready(function() {
-            loadOrders();
         });
-    </script>
+    }
 
-</body>
+    // Format tiền tệ (Giả định)
+    function formatMoney(value) {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(value);
+    }
+
+    // Chuyển đổi trạng thái
+    function translateStatus(status) {
+        switch (status) {
+            case 'ChoDuyet':
+                return 'Chờ duyệt';
+            case 'DaDuyet':
+                return 'Đã duyệt';
+            case 'DangGiao':
+                return 'Đang giao hàng';
+            case 'GiaoThanhCong':
+                return 'Giao thành công';
+            case 'Huy':
+                return 'Đã hủy';
+            default:
+                return status;
+        }
+    }
+
+    // Hàm xử lý hủy đơn hàng
+    function cancelOrder(maDonHang) {
+        console.log(maDonHang);
+        // Hiển thị hộp thoại xác thực
+        Swal.fire({
+            title: 'Xác nhận hủy đơn hàng?',
+            text: "Bạn có chắc muốn hủy đơn hàng này?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Hủy đơn hàng'
+        }).then((result) => {
+            // Nếu người dùng xác nhận hủy đơn hàng
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'http://localhost:8080/OrderStatus/User', // API hủy đơn hàng
+                    type: 'POST',
+                    data: {
+                        orderId: maDonHang,
+                        idStatus: "Huy"
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + sessionStorage.getItem("token")
+
+                    },
+                    success: function(response) {
+
+                        // Hiển thị thông báo và reload trang
+                        Swal.fire(
+                            'Hủy đơn hàng thành công!',
+                            '',
+                            'success'
+                        ).then((result) => {
+                            console.log("Result: " + response);
+                            if (result.isConfirmed) {
+                                location.reload(); // Hoặc window.location.reload()
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
+                    }
+                });
+
+
+            }
+        });
+
+    }
+
+    function toOrderDetail(maDonHang) {
+        window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}`;
+    }
+
+    // Gọi hàm loadOrders khi trang được load
+    $(document).ready(function() {
+        loadOrders();
+    });
+</script>
+
 
 </html>

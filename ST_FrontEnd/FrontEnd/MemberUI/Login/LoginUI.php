@@ -9,6 +9,8 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <link rel="stylesheet" href="LoginUI.css" />
     <link rel="stylesheet" href="../../../Resources/bootstrap-5.3.2-dist\css\bootstrap.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Login</title>
 </head>
 
@@ -58,108 +60,270 @@
             </div>
         </div>
     </div>
+</body>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-    <script>
-        //Script xử lý Registation
-        const container = document.getElementById("container");
-        const registerBtn = document.getElementById("register");
-        const loginBtn = document.getElementById("login");
+<script>
+    //Script xử lý Registation
+    const container = document.getElementById("container");
+    const registerBtn = document.getElementById("register");
+    const loginBtn = document.getElementById("login");
 
-        registerBtn.addEventListener("click", () => {
-            container.classList.add("active");
-        });
+    registerBtn.addEventListener("click", () => {
+        container.classList.add("active");
+    });
 
-        loginBtn.addEventListener("click", () => {
-            container.classList.remove("active");
-        });
+    loginBtn.addEventListener("click", () => {
+        container.classList.remove("active");
+    });
 
-        const signUpButton = document.getElementById("signUpButton");
+    const signUpButton = document.getElementById("signUpButton");
 
-        signUpButton.addEventListener('click', async function check(event) {
-            event.preventDefault(); // Ngăn chặn hành động mặc định của form
+    signUpButton.addEventListener('click', async function check(event) {
+        event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-            let matKhau = document.getElementById("matKhau");
-            let xacNhanMatKhau = document.getElementById("xacNhanMatKhau");
-            let email = document.getElementById("email");
+        let matKhau = document.getElementById("matKhau");
+        let xacNhanMatKhau = document.getElementById("xacNhanMatKhau");
+        let email = document.getElementById("email");
 
 
-            if (!matKhau.value.trim()) {
+        if (!matKhau.value.trim()) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Mật khẩu không được để trống',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            matKhau.focus();
+            event.preventDefault();
+            return;
+        }
+
+        if (!xacNhanMatKhau.value.trim()) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Mật khẩu xác nhận không được để trống',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            xacNhanMatKhau.focus();
+            event.preventDefault();
+            return;
+        }
+        if (matKhau.value !== xacNhanMatKhau.value) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Mật khẩu xác nhận và mật khẩu phải giống nhau',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            xacNhanMatKhau.focus();
+            event.preventDefault();
+            return;
+        }
+
+        if (!email.value.trim()) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Email không được để trống',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            email.focus();
+            event.preventDefault();
+            return;
+        }
+
+        // Kiểm tra định dạng Email
+        if (!isValidEmail(email.value.trim())) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Email không hợp lệ',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            email.focus();
+            event.preventDefault();
+            return;
+        }
+        try {
+            const emailExists = await checkEmail(email.value); // đợi kết quả
+            if (emailExists === true) {
                 Swal.fire({
                     title: 'Lỗi!',
-                    text: 'Mật khẩu không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                matKhau.focus();
-                event.preventDefault();
-                return;
-            }
-
-            if (!xacNhanMatKhau.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Mật khẩu xác nhận không được để trống',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                xacNhanMatKhau.focus();
-                event.preventDefault();
-                return;
-            }
-            if (matKhau.value !== xacNhanMatKhau.value) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Mật khẩu xác nhận và mật khẩu phải giống nhau',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                xacNhanMatKhau.focus();
-                event.preventDefault();
-                return;
-            }
-
-            if (!email.value.trim()) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Email không được để trống',
+                    text: 'Email tồn tại',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
                 email.focus();
-                event.preventDefault();
                 return;
             }
+        } catch (error) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Đã xảy ra lỗi khi kiểm tra tài khoản!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+        var formData = new FormData();
+        formData.append('email', email.value.trim());
+        formData.append('password', matKhau.value);
+        $.ajax({
+            url: 'http://localhost:8080/Auth/Registration',
+            type: 'POST',
+            data: formData, // Gửi FormData
+            processData: false, // Ngăn jQuery tự động xử lý dữ liệu
+            contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
+            success: function(response) {
+                // Kiểm tra xem phản hồi có thành công hay không
+                Swal.fire({
+                    title: response.message,
+                    text: "Vui lòng xác thực email",
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                return;
 
-            // Kiểm tra định dạng Email
-            if (!isValidEmail(email.value.trim())) {
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi:', error);
                 Swal.fire({
                     title: 'Lỗi!',
-                    text: 'Email không hợp lệ',
+                    text: 'Đã xảy ra lỗi khi đăng kí tài khoản!',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-                email.focus();
-                event.preventDefault();
-                return;
             }
-            try {
-                const emailExists = await checkEmail(email.value); // đợi kết quả
-                if (emailExists === true) {
+        });
+
+    });
+
+    function isValidEmail(email) {
+        // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
+        // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
+        return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
+    }
+
+    async function checkEmail(email) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: 'http://localhost:8080/Account/isThisEmailExists',
+                type: 'GET',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    resolve(response); // Resolve the promise with the response
+                },
+                error: function(error) {
+                    reject(error); // Reject the promise if there's an error
+                }
+            });
+        });
+    }
+</script>
+
+
+
+
+
+<script>
+    const loginButton = document.getElementById("signInButton");
+    const tenDangNhap = document.getElementById("tenDangNhapLogin");
+    const matKhau = document.getElementById("passwordLogin");
+    loginButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        if (tenDangNhap.value.trim() === "") {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Bạn không được để trống tên đăng nhập !!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            tenDangNhap.focus();
+            return
+        }
+        if (matKhau.value.trim() === "") {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Bạn không được để trống mật khẩu !!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            matKhau.focus();
+            return
+        }
+
+        checkTaiKhoan(tenDangNhap.value, matKhau.value)
+    });
+
+
+
+    // Hàm xử lý kiểm tra tài khoản
+    function checkTaiKhoan(email, password) {
+        // Tạo đối tượng FormData
+        var formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
+
+        $.ajax({
+            url: 'http://localhost:8080/Auth/SignIn',
+            type: 'POST',
+            data: formData, // Gửi FormData
+            processData: false, // Ngăn jQuery tự động xử lý dữ liệu
+            contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
+            success: function(response) {
+                // Kiểm tra xem phản hồi có thành công hay không
+                if (response.code === 8) {
                     Swal.fire({
-                        title: 'Lỗi!',
-                        text: 'Email tồn tại',
+                        title: response.message,
+                        text: response.detailMessage,
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
-                    email.focus();
                     return;
                 }
-            } catch (error) {
+                if (response.statusCode === 200) {
+                    Swal.fire({
+                        title: 'Thành công!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result) {
+                            const quyen = response.role;
+
+                            sessionStorage.setItem('id', response.id);
+                            sessionStorage.setItem('token', response.token);
+                            sessionStorage.setItem('refreshToken', response.refreshToken);
+                            switch (quyen) {
+                                case 'Admin':
+                                    window.location.href = `../../AdminUI/QLTaiKhoan.php`;
+                                    break;
+                                case 'Manager':
+                                    window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
+                                    break;
+                                default:
+                                    window.location.href = `../SignedPage/SignedHomePage.php`;
+                                    break;
+                            }
+                        }
+                    });
+                } else {
+                    // Trường hợp đăng nhập thất bại
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đăng nhập thất bại, hãy kiểm tra lại tên đăng nhập và mật khẩu !!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Lỗi:', error);
                 Swal.fire({
                     title: 'Lỗi!',
                     text: 'Đã xảy ra lỗi khi kiểm tra tài khoản!',
@@ -167,173 +331,9 @@
                     confirmButtonText: 'OK'
                 });
             }
-            var formData = new FormData();
-            formData.append('email', email.value.trim());
-            formData.append('password', matKhau.value);
-            $.ajax({
-                url: 'http://localhost:8080/Auth/Registration',
-                type: 'POST',
-                data: formData, // Gửi FormData
-                processData: false, // Ngăn jQuery tự động xử lý dữ liệu
-                contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
-                success: function(response) {
-                    // Kiểm tra xem phản hồi có thành công hay không
-                    Swal.fire({
-                        title: response.message,
-                        text: "Vui lòng xác thực email",
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-
-                },
-                error: function(xhr, status, error) {
-                    console.error('Lỗi:', error);
-                    Swal.fire({
-                        title: 'Lỗi!',
-                        text: 'Đã xảy ra lỗi khi đăng kí tài khoản!',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-
         });
+    }
+</script>
 
-        function isValidEmail(email) {
-            // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
-            // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
-            return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
-        }
-
-        async function checkEmail(email) {
-            return new Promise((resolve, reject) => {
-                $.ajax({
-                    url: 'http://localhost:8080/Account/isThisEmailExists',
-                    type: 'GET',
-                    data: {
-                        email: email
-                    },
-                    success: function(response) {
-                        resolve(response); // Resolve the promise with the response
-                    },
-                    error: function(error) {
-                        reject(error); // Reject the promise if there's an error
-                    }
-                });
-            });
-        }
-    </script>
-
-
-
-
-
-    <script>
-        const loginButton = document.getElementById("signInButton");
-        const tenDangNhap = document.getElementById("tenDangNhapLogin");
-        const matKhau = document.getElementById("passwordLogin");
-        loginButton.addEventListener("click", (event) => {
-            event.preventDefault();
-            if (tenDangNhap.value.trim() === "") {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Bạn không được để trống tên đăng nhập !!',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                tenDangNhap.focus();
-                return
-            }
-            if (matKhau.value.trim() === "") {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Bạn không được để trống mật khẩu !!',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                matKhau.focus();
-                return
-            }
-
-            checkTaiKhoan(tenDangNhap.value, matKhau.value)
-        });
-
-
-
-        // Hàm xử lý kiểm tra tài khoản
-        function checkTaiKhoan(email, password) {
-            // Tạo đối tượng FormData
-            var formData = new FormData();
-            formData.append('email', email);
-            formData.append('password', password);
-
-            $.ajax({
-                url: 'http://localhost:8080/Auth/SignIn',
-                type: 'POST',
-                data: formData, // Gửi FormData
-                processData: false, // Ngăn jQuery tự động xử lý dữ liệu
-                contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
-                success: function(response) {
-                    // Kiểm tra xem phản hồi có thành công hay không
-                    if (response.code === 8) {
-                        Swal.fire({
-                            title: response.message,
-                            text: response.detailMessage,
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                        return;
-                    }
-                    if (response.statusCode === 200) {
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: response.message,
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result) {
-                                const quyen = response.role;
-
-                                sessionStorage.setItem('id', response.id);
-                                sessionStorage.setItem('token', response.token);
-                                sessionStorage.setItem('refreshToken', response.refreshToken);
-                                switch (quyen) {
-                                    case 'Admin':
-                                        window.location.href = `../../AdminUI/QLTaiKhoan.php`;
-                                        break;
-                                    case 'Manager':
-                                        window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
-                                        break;
-                                    default:
-                                        window.location.href = `../SignedPage/SignedHomePage.php`;
-                                        break;
-                                }
-                            }
-                        });
-                    } else {
-                        // Trường hợp đăng nhập thất bại
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Đăng nhập thất bại, hãy kiểm tra lại tên đăng nhập và mật khẩu !!',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Lỗi:', error);
-                    Swal.fire({
-                        title: 'Lỗi!',
-                        text: 'Đã xảy ra lỗi khi kiểm tra tài khoản!',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-        }
-    </script>
-
-</body>
 
 </html>

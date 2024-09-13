@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../QLNhaCungCap/QLNhaCungCap.css" />
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>Thêm Nhà Cung Cấp</title>
 </head>
 
@@ -65,21 +66,7 @@
                                                             color: rgb(150, 150, 150);
                                                             ">*</span>
 
-                                                            <!-- <p class="text">Email</p>
-                                                            <input id="Email" class="input" type="text" name="Email" style="width: 40rem" />
-                                                            <span style="
-                                                            margin-left: 1rem;
-                                                            font-weight: 700;
-                                                            color: rgb(150, 150, 150);
-                                                            ">*</span>
 
-                                                            <p class="text">Số điện thoại</p>
-                                                            <input id="SoDienThoai" class="input" type="text" name="SoDienThoai" style="width: 40rem" />
-                                                            <span style="
-                                                            margin-left: 1rem;
-                                                            font-weight: 700;
-                                                            color: rgb(150, 150, 150);
-                                                            ">*</span> -->
                                                         </div>
 
                                                     </div>
@@ -106,8 +93,7 @@
 
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
 <script>
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
@@ -127,38 +113,7 @@
             event.preventDefault();
             return;
         }
-        // if (!Email.value.trim()) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Lỗi!',
-        //         text: 'Email không được để trống',
-        //     });
-        //     Email.focus();
-        //     event.preventDefault();
-        //     return;
-        // }
-        // if (!SoDienThoai.value.trim()) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Lỗi!',
-        //         text: 'Số điện thoại không được để trống',
-        //     });
-        //     SoDienThoai.focus();
-        //     event.preventDefault();
-        //     return;
-        // }
 
-        // Kiểm tra định dạng Email
-        // if (!isValidEmail(Email.value.trim())) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Lỗi!',
-        //         text: 'Email không hợp lệ',
-        //     });
-        //     Email.focus();
-        //     event.preventDefault();
-        //     return;
-        // }
 
         //Kiểm tra tên thương hiệu
         if (isTenNhaCungCapExists(brandName.value.trim())) {
@@ -171,24 +126,6 @@
             event.preventDefault();
             return;
         }
-
-        //Kiểm tra xem email đã tồn tại hay chưa
-        // if (isEmailExists(Email.value.trim())) {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Lỗi!',
-        //         text: 'Email đã tồn tại',
-        //     });
-        //     Email.focus();
-        //     event.preventDefault();
-        //     return;
-        // }
-
-        // console.log("EMail: ", Email.value);
-        // console.log("SoDienThoai: ", SoDienThoai.value);
-
-
-        //Tạo thông tin nhà cung cấp
         let isCreateNhaCungCapComplete = createNhaCungCap(
             brandName.value,
             // Email.value,
@@ -205,13 +142,6 @@
         });
 
     });
-
-
-    // function isValidEmail(Email) {
-    // // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
-    // // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
-    //     return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(Email);
-    // }
 
     function isTenNhaCungCapExists(value) {
         let exists = false;
@@ -241,32 +171,6 @@
         });
         return exists;
     }
-
-
-    // function isEmailExists(value) {
-    //     let exists = false;
-    //     $.ajax({
-    //         url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-    //         type: 'GET',
-    //         dataType: "json",
-    //         async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-    //         data: {
-    //             Email: value
-    //         },
-    //         success: function(data) {
-
-    //             if (data.status === 200) {
-    //                 exists = data.isExists == 1;
-    //             } else {
-    //                 console.error('Error:', data.message);
-    //             }
-    //         },
-    //         error: function(xhr, status, error) {
-    //             console.error('Error: ' + xhr.status + ' - ' + error);
-    //         }
-    //     });
-    //     return exists;
-    // }
 
     function createNhaCungCap(brandName) {
         var token = sessionStorage.getItem('token');

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="ThongKeDonHang.css" />
     <link rel="stylesheet" href="ThongKeTaiChinh.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title>Thống kê sản phẩm bán chạy</title>
 </head>
@@ -72,7 +73,6 @@
         </div>
     </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     const resetButton = document.getElementById("resetButton");
     const thongKeButton = document.getElementById("thongKeButton");

@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="ThongKeDonHang.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Thống kê đơn hàng</title>
 </head>
 
@@ -18,7 +18,6 @@
             <div class="App">
                 <div class="StaffLayout_wrapper__CegPk">
                     <?php require_once "../ManagerHeader.php" ?>
-
                     <div>
                         <div>
                             <div class="Manager_wrapper__vOYy">
@@ -55,8 +54,6 @@
         </div>
     </div>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     const resetButton = document.getElementById("resetButton");
@@ -168,11 +165,6 @@
                 }
 
             } else {
-
-
-
-
-                // Nếu labels không chứa ngày này, thêm ngày vào labels
                 if (!labels.includes(ngayFormatted)) {
                     labels.push(ngayFormatted);
                     dataDonHang.push(tempDonHang);
@@ -265,9 +257,6 @@
                         <p>${totalDonHang}</p>
                     </div>
                 </div>
-
-                
-                   
                 </div>
                 <div>
                     <canvas id="myChart" width="400" height="120"></canvas>

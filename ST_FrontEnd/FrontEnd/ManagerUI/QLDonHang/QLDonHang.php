@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="./QLDonHang.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Quản lý đơn hàng</title>
 </head>
 
@@ -80,7 +82,6 @@
     </div>
 </body>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var udPage = 1;
     var udminNgayTao = 0;
@@ -217,10 +218,6 @@
                           Hủy
                       </button>`;
             }
-
-
-
-
             html += '</td>';
             html += '</tr>';
         });

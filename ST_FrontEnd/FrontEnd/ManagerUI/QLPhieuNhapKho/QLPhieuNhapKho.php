@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="QLPhieuNhapKho.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title>Quản lý đơn hàng</title>
   </head>
 
@@ -87,7 +89,6 @@
   </body>
 
   </html>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     // Hàm để xóa hết các dòng trong bảng
     function clearTable() {

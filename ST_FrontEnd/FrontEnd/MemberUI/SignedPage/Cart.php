@@ -8,9 +8,16 @@
     <link rel="stylesheet" href="SignedHomePage.css">
     <link rel="stylesheet" href="Cart.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Giỏ hàng</title>
 </head>
+<style>
+    .btn-outline-danger:hover {
+        background-color: rgb(146, 26, 26) !important;
+        color: white !important;
+    }
+</style>
 
 <body>
     <?php require_once "../Header/SignedHeader.php" ?>
@@ -58,100 +65,95 @@
         <?php require_once "../Footer/Footer.php" ?>
 
     </div>
-    <style>
-        .btn-outline-danger:hover {
-            background-color: rgb(146, 26, 26) !important;
-            color: white !important;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        var maTaiKhoan = JSON.parse(sessionStorage.getItem("id"));
-        var token = sessionStorage.getItem("token");
+</body>
 
-        function toCreateOrder() {
-            var numberOfItemsInCart = $('.cartItem').length;
-            if (numberOfItemsInCart === 0) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: 'Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Xác nhận đặt hàng',
-                    text: "Bạn có chắc chắn muốn đặt hàng không?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đồng ý',
-                    cancelButtonText: 'Hủy bỏ'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        thanhToan(maTaiKhoan);
-                    }
-                });
-            }
-        }
 
-        function thanhToan(maTaiKhoan) {
-            window.location.href = `CreateOrder.php?maTaiKhoan=${maTaiKhoan}`;
-        }
+<script>
+    var maTaiKhoan = JSON.parse(sessionStorage.getItem("id"));
+    var token = sessionStorage.getItem("token");
 
-        function bindCartItemEvents() {
-            $('.increase').on('click', function() {
-                var productId = $(this).closest('.cartItem').attr('id');
-                var quantityElem = $(`#quantity_${productId}`);
-                var currentQuantity = parseInt(quantityElem.text());
-                updateQuantity(productId, currentQuantity + 1);
+    function toCreateOrder() {
+        var numberOfItemsInCart = $('.cartItem').length;
+        if (numberOfItemsInCart === 0) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng.',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
-
-            $('.decrease').on('click', function() {
-                var productId = $(this).closest('.cartItem').attr('id');
-                var quantityElem = $(`#quantity_${productId}`);
-                var currentQuantity = parseInt(quantityElem.text());
-                if (currentQuantity > 1) {
-                    updateQuantity(productId, currentQuantity - 1);
+        } else {
+            Swal.fire({
+                title: 'Xác nhận đặt hàng',
+                text: "Bạn có chắc chắn muốn đặt hàng không?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    thanhToan(maTaiKhoan);
                 }
             });
-
-            $('.btnRemove').on('click', function() {
-                var productId = $(this).closest('.cartItem').attr('id');
-                $.ajax({
-                    url: `http://localhost:8080/CartItem`,
-                    method: 'DELETE',
-                    data: {
-                        accountId: maTaiKhoan,
-                        productId: productId
-                    },
-                    success: function(response) {
-                        $('#' + productId).remove();
-                        $('.priceTotal').text(formatMoney(response.totalAmount));
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
         }
+    }
 
-        function fetchCartItems() {
+    function thanhToan(maTaiKhoan) {
+        window.location.href = `CreateOrder.php?maTaiKhoan=${maTaiKhoan}`;
+    }
+
+    function bindCartItemEvents() {
+        $('.increase').on('click', function() {
+            var productId = $(this).closest('.cartItem').attr('id');
+            var quantityElem = $(`#quantity_${productId}`);
+            var currentQuantity = parseInt(quantityElem.text());
+            updateQuantity(productId, currentQuantity + 1);
+        });
+
+        $('.decrease').on('click', function() {
+            var productId = $(this).closest('.cartItem').attr('id');
+            var quantityElem = $(`#quantity_${productId}`);
+            var currentQuantity = parseInt(quantityElem.text());
+            if (currentQuantity > 1) {
+                updateQuantity(productId, currentQuantity - 1);
+            }
+        });
+
+        $('.btnRemove').on('click', function() {
+            var productId = $(this).closest('.cartItem').attr('id');
             $.ajax({
-                url: `http://localhost:8080/CartItem/${maTaiKhoan}`,
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
+                url: `http://localhost:8080/CartItem`,
+                method: 'DELETE',
+                data: {
+                    accountId: maTaiKhoan,
+                    productId: productId
                 },
                 success: function(response) {
-                    var cartHTML = '';
-                    var totalAmount = 0;
+                    $('#' + productId).remove();
+                    $('.priceTotal').text(formatMoney(response.totalAmount));
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+    }
 
-                    response.forEach(function(item) {
-                        cartHTML += `
+    function fetchCartItems() {
+        $.ajax({
+            url: `http://localhost:8080/CartItem/${maTaiKhoan}`,
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function(response) {
+                var cartHTML = '';
+                var totalAmount = 0;
+
+                response.forEach(function(item) {
+                    cartHTML += `
                             <div class='cartItem' id='${item.productId}'>
                                 <a href='#' class='img'><img class='img' src='http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${item.image}' /></a>
                                 <div class='inforCart'>
@@ -178,74 +180,65 @@
                                     </button>
                                 </div>
                             </div>`;
-                        totalAmount += item.total;
-                    });
+                    totalAmount += item.total;
+                });
 
-                    $('.listCart').html(cartHTML);
-                    $('.priceTotal').text(formatMoney(totalAmount));
+                $('.listCart').html(cartHTML);
+                $('.priceTotal').text(formatMoney(totalAmount));
 
-                    if (response.length === 0) {
-                        $('.btnCheckout').addClass('hidden');
-                    } else {
-                        $('.btnCheckout').removeClass('hidden');
-                    }
-
-                    bindCartItemEvents();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
+                if (response.length === 0) {
+                    $('.btnCheckout').addClass('hidden');
+                } else {
+                    $('.btnCheckout').removeClass('hidden');
                 }
-            });
-        }
 
-        function formatMoney(amount) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
-        }
-        $(document).ready(function() {
-
-
-
-
-            fetchCartItems();
-
-
-
-
+                bindCartItemEvents();
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
         });
+    }
 
-        function updateQuantity(productId, quantity) {
-            var token = sessionStorage.getItem("token");
-            var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
-            var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
+    function formatMoney(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
+    }
+    $(document).ready(function() {
+        fetchCartItems();
+    });
 
-            var totalPrice = unitPrice * quantity;
+    function updateQuantity(productId, quantity) {
+        var token = sessionStorage.getItem("token");
+        var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
+        var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
 
-            var form = new FormData();
-            form.append("accountId", maTaiKhoan);
-            form.append("productId", productId);
-            form.append("unitPrice", unitPrice);
-            form.append('quantity', quantity);
-            form.append('total', totalPrice);
-            $.ajax({
-                url: `http://localhost:8080/CartItem`,
-                type: 'PATCH',
-                dataType: 'json',
-                headers: {
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-                },
-                data: form,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    fetchCartItems();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-    </script>
+        var totalPrice = unitPrice * quantity;
 
-</body>
+        var form = new FormData();
+        form.append("accountId", maTaiKhoan);
+        form.append("productId", productId);
+        form.append("unitPrice", unitPrice);
+        form.append('quantity', quantity);
+        form.append('total', totalPrice);
+        $.ajax({
+            url: `http://localhost:8080/CartItem`,
+            type: 'PATCH',
+            dataType: 'json',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
+            data: form,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                fetchCartItems();
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+</script>
+
 
 </html>

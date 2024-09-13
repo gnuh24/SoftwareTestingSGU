@@ -23,45 +23,47 @@
         <div class="row mb-5 gx-5 d-flex justify-content-center" id="contentprofile" style="height: fit-content; margin: 0px;"></div>
     </div>
     <?php require_once "../Footer/Footer.php" ?>
-    <script>
-        var email = '';
+</body>
 
-        function formatDateToYYYYMMDD(dateString) {
-            // Kiểm tra nếu dữ liệu đầu vào rỗng hoặc không hợp lệ
-            if (!dateString || dateString.trim() === '') {
-                return ''; // Trả về rỗng nếu đầu vào không hợp lệ
-            }
+<script>
+    var email = '';
 
-            var parts = dateString.split('/'); // Tách chuỗi theo dấu '/'
-
-            // Kiểm tra nếu định dạng ngày không đúng (không đủ 3 phần: ngày, tháng, năm)
-            if (parts.length !== 3) {
-                return ''; // Trả về rỗng nếu không đúng định dạng
-            }
-
-            var day = parts[0]; // Ngày
-            var month = parts[1]; // Tháng
-            var year = parts[2]; // Năm
-
-            // Trả về định dạng yyyy-MM-dd
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    function formatDateToYYYYMMDD(dateString) {
+        // Kiểm tra nếu dữ liệu đầu vào rỗng hoặc không hợp lệ
+        if (!dateString || dateString.trim() === '') {
+            return ''; // Trả về rỗng nếu đầu vào không hợp lệ
         }
 
+        var parts = dateString.split('/'); // Tách chuỗi theo dấu '/'
 
-        function loadUserInfoFromsessionStorage() {
-            const token = sessionStorage.getItem("token");
-            var userData = sessionStorage.getItem("id");
-            $.ajax({
-                url: "http://localhost:8080/Account/" + userData,
-                method: "GET",
-                dataType: "json",
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {
-                    email = response.email;
-                    var infoPage = document.getElementById("contentprofile");
-                    infoPage.innerHTML = `
+        // Kiểm tra nếu định dạng ngày không đúng (không đủ 3 phần: ngày, tháng, năm)
+        if (parts.length !== 3) {
+            return ''; // Trả về rỗng nếu không đúng định dạng
+        }
+
+        var day = parts[0]; // Ngày
+        var month = parts[1]; // Tháng
+        var year = parts[2]; // Năm
+
+        // Trả về định dạng yyyy-MM-dd
+        return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+
+
+    function loadUserInfoFromsessionStorage() {
+        const token = sessionStorage.getItem("token");
+        var userData = sessionStorage.getItem("id");
+        $.ajax({
+            url: "http://localhost:8080/Account/" + userData,
+            method: "GET",
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                email = response.email;
+                var infoPage = document.getElementById("contentprofile");
+                infoPage.innerHTML = `
                         <div class='col-xxl-8 mb-5 mb-xxl-0'>
                             <form name="profileForm" action="Profile.php?maTaiKhoan=${response.accountId}" method="POST" onsubmit="return validateForm()">
                                 <div class='bg-secondary-soft px-4 py-5 rounded'>
@@ -107,98 +109,97 @@
                             </form>
                         </div>
                     `;
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error:", error);
-                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+
+    window.onload = loadUserInfoFromsessionStorage;
+
+
+    function validateForm() {
+        var form = document.forms["profileForm"];
+        var formData = new FormData();
+
+        // Lấy accountId từ URL
+        var accountId = new URLSearchParams(window.location.search).get('maTaiKhoan');
+
+        // Lấy các giá trị từ form
+        var fullname = form['hoten'].value.trim();
+        var phone = form['sodienthoai'].value.trim();
+        var birthday = form['ngaysinh'].value.trim();
+        var gender = form['gioitinh'].value;
+        var address = form['diachi'].value.trim();
+
+        // Kiểm tra các trường bắt buộc
+        if (!fullname || !phone || !birthday || !address) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng điền đầy đủ thông tin!'
             });
+            return false;
         }
 
-        window.onload = loadUserInfoFromsessionStorage;
-
-
-        function validateForm() {
-            var form = document.forms["profileForm"];
-            var formData = new FormData();
-
-            // Lấy accountId từ URL
-            var accountId = new URLSearchParams(window.location.search).get('maTaiKhoan');
-
-            // Lấy các giá trị từ form
-            var fullname = form['hoten'].value.trim();
-            var phone = form['sodienthoai'].value.trim();
-            var birthday = form['ngaysinh'].value.trim();
-            var gender = form['gioitinh'].value;
-            var address = form['diachi'].value.trim();
-
-            // Kiểm tra các trường bắt buộc
-            if (!fullname || !phone || !birthday || !address) {
+        // Thêm các thông tin bắt buộc vào formData
+        formData.append('accountId', accountId);
+        formData.append('fullname', fullname);
+        formData.append('phone', phone);
+        formData.append('birthday', formatDateToDDMMYYYY(birthday));
+        formData.append('gender', gender);
+        formData.append('address', address);
+        const token = sessionStorage.getItem("token");
+        var formData1 = new FormData();
+        var tokenChange = '';
+        $.ajax({
+            url: 'http://localhost:8080/Account/UpdateInformation',
+            type: 'PATCH',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Cập nhật thông tin thành công!'
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function(xhr, status, error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Lỗi',
-                    text: 'Vui lòng điền đầy đủ thông tin!'
+                    text: 'Có lỗi xảy ra khi cập nhật thông tin!'
                 });
-                return false;
             }
+        });
 
-            // Thêm các thông tin bắt buộc vào formData
-            formData.append('accountId', accountId);
-            formData.append('fullname', fullname);
-            formData.append('phone', phone);
-            formData.append('birthday', formatDateToDDMMYYYY(birthday));
-            formData.append('gender', gender);
-            formData.append('address', address);
-            const token = sessionStorage.getItem("token");
-            var formData1 = new FormData();
-            var tokenChange = '';
-            $.ajax({
-                url: 'http://localhost:8080/Account/UpdateInformation',
-                type: 'PATCH',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công',
-                        text: 'Cập nhật thông tin thành công!'
-                    }).then(() => {
-                        location.reload();
-                    });
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Lỗi',
-                        text: 'Có lỗi xảy ra khi cập nhật thông tin!'
-                    });
-                }
-            });
+        return false; // Ngăn chặn form gửi theo cách truyền thống
+    }
 
-            return false; // Ngăn chặn form gửi theo cách truyền thống
+    function formatDateToDDMMYYYY(dateString) {
+        // Tách chuỗi theo dấu gạch ngang "-"
+        var parts = dateString.split("-");
+
+        // Đảm bảo chuỗi có đủ các phần (năm, tháng, ngày)
+        if (parts.length === 3) {
+            var year = parts[0];
+            var month = parts[1];
+            var day = parts[2];
+
+            // Trả về định dạng dd/mm/yyyy
+            return `${day}/${month}/${year}`;
+        } else {
+            // Nếu chuỗi không hợp lệ, trả về giá trị ban đầu
+            return dateString;
         }
-
-        function formatDateToDDMMYYYY(dateString) {
-            // Tách chuỗi theo dấu gạch ngang "-"
-            var parts = dateString.split("-");
-
-            // Đảm bảo chuỗi có đủ các phần (năm, tháng, ngày)
-            if (parts.length === 3) {
-                var year = parts[0];
-                var month = parts[1];
-                var day = parts[2];
-
-                // Trả về định dạng dd/mm/yyyy
-                return `${day}/${month}/${year}`;
-            } else {
-                // Nếu chuỗi không hợp lệ, trả về giá trị ban đầu
-                return dateString;
-            }
-        }
-    </script>
-</body>
+    }
+</script>
 
 </html>
