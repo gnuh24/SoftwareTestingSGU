@@ -208,7 +208,7 @@
             }
 
             // Kiểm tra trạng thái trước khi hiển thị nút Hủy
-            if (record.status !== 'GiaoThanhCong' && record.status !== 'Huy') {
+            if (record.status !== 'GiaoThanhCong' && record.status !== 'Huy' && record.status !== 'DangGiao') {
                 html += `
                       <button 
                           type="button" 
