@@ -105,7 +105,7 @@
   // Hàm getAllNhaCungCap
   // Hàm getAllNhaCungCap
   function getAllNhaCungCap(page, search) {
-    var token = localStorage.getItem('token');
+    var token = sessionStorage.getItem('token');
     $.ajax({
       url: 'http://localhost:8080/Brand',
       type: 'GET',
@@ -257,7 +257,7 @@
       // Nếu người dùng nhấn nút Xóa
       if (result.isConfirmed) {
         // Thực hiện gọi Ajax để xóa nhà cung cấp
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
         $.ajax({
           url: 'http://localhost:8080/Brand/' + brandId,
           type: 'DELETE',

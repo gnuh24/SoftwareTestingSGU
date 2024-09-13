@@ -28,7 +28,7 @@
     <script>
         $(document).ready(function() {
             $('#adminLoginButton').click(function(e) {
-                e.preventDefault();  // Ngăn hành động mặc định của nút submit
+                e.preventDefault(); // Ngăn hành động mặc định của nút submit
 
                 var email = $('#adminEmail').val();
                 var password = $('#adminPassword').val();
@@ -52,7 +52,7 @@
                 $.ajax({
                     url: 'http://localhost:8080/Auth/LoginAdmin',
                     type: 'POST',
-                    data: formData,  // Gửi dữ liệu dưới dạng form-data
+                    data: formData, // Gửi dữ liệu dưới dạng form-data
                     contentType: false, // Không yêu cầu định dạng JSON
                     processData: false, // Không xử lý dữ liệu thành chuỗi query
                     success: function(response) {
@@ -65,10 +65,9 @@
                                 confirmButtonText: 'OK'
                             });
                         } else {
-                            // Lưu id, token, và refreshToken vào localStorage
-                            localStorage.setItem('id', response.id);
-                            localStorage.setItem('token', response.token);
-                            localStorage.setItem('refreshToken', response.refreshToken);
+                            sessionStorage.setItem('id', response.id);
+                            sessionStorage.setItem('token', response.token);
+                            sessionStorage.setItem('refreshToken', response.refreshToken);
 
                             Swal.fire({
                                 title: 'Thành công!',

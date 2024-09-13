@@ -42,7 +42,7 @@
 
                                                         $id = "";
                                                         $categoryName =  "";
-                                                        
+
                                                         if (isset($_GET['id'])) {
                                                             // Lấy các tham số được gửi từ AJAX
                                                             $id = $_GET['id'];
@@ -151,14 +151,14 @@
     }
 
     function updateLoaiSanPham(Id, CategoryName) {
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
         $.ajax({
             url: 'http://localhost:8080/Category',
             type: 'PATCH',
             dataType: "json",
             headers: {
-        'Authorization': 'Bearer ' + token
-      },
+                'Authorization': 'Bearer ' + token
+            },
             data: {
                 Id: Id,
                 CategoryName: CategoryName

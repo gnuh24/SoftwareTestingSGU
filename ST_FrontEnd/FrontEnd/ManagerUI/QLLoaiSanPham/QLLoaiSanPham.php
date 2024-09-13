@@ -100,8 +100,7 @@
 
   // Hàm getAllLoaiSanPham
   function getAllLoaiSanPham(page, search) {
-    // Lấy token JWT từ localStorage
-    var token = localStorage.getItem('token');
+    var token = sessionStorage.getItem('token');
     $.ajax({
       url: "http://localhost:8080/Category",
       type: "GET",
@@ -250,7 +249,7 @@
     }).then((result) => {
       if (result.isConfirmed) {
         // Gọi Ajax để xóa loại sản phẩm
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
         $.ajax({
           url: 'http://localhost:8080/Category/' +
             id,

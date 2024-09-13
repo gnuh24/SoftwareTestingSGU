@@ -119,16 +119,16 @@
     }
 
     function getUpdateStatusText(status) {
-      switch (status) {
-          case 'ChoDuyet':
-              return 'Duyệt';
-          case 'DaDuyet':
-              return 'Giao hàng';
-          case 'DangGiao':
-              return 'Hoàn tất';
-          default:
-              return 'Cập nhật trạng thái'; // Nội dung mặc định nếu không khớp với bất kỳ trạng thái nào
-      }
+        switch (status) {
+            case 'ChoDuyet':
+                return 'Duyệt';
+            case 'DaDuyet':
+                return 'Giao hàng';
+            case 'DangGiao':
+                return 'Hoàn tất';
+            default:
+                return 'Cập nhật trạng thái'; // Nội dung mặc định nếu không khớp với bất kỳ trạng thái nào
+        }
     }
 
     function getUpdateStatus(status) {
@@ -139,7 +139,7 @@
                 return 'DangGiao';
             case 'DangGiao':
                 return 'GiaoThanhCong';
-          }
+        }
     }
 
     function updateStatus(orderId, currentStatus) {
@@ -157,7 +157,7 @@
                     type: "POST",
                     url: "http://localhost:8080/OrderStatus/Admin",
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token') 
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
                     },
                     data: {
                         orderId: orderId,
@@ -165,7 +165,7 @@
                     },
                     success: function(response) {
                         Swal.fire('Thành công!', 'Đã cập nhật trạng thái đơn hàng.', 'success');
-                        loadDataToTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai); 
+                        loadDataToTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
                     },
                     error: function(error) {
                         console.error('Error:', error);
@@ -195,7 +195,7 @@
             if (record.status !== 'GiaoThanhCong' && record.status !== 'Huy') {
                 const updateStatusText = getUpdateStatusText(record.status);
                 const nextStatus = getUpdateStatus(record.status);
-                
+
                 html += `
                     <button 
                         type="button" 
@@ -215,11 +215,11 @@
                           onclick="updateStatus('${record.id}', 'Huy')"
                       >
                           Hủy
-                      </button>`;        
-                    }
+                      </button>`;
+            }
 
-            
-            
+
+
 
             html += '</td>';
             html += '</tr>';
@@ -258,7 +258,7 @@
             type: "GET",
             url: "http://localhost:8080/Order/Admin",
             headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
             },
             data: {
                 pageNumber: page,
@@ -302,8 +302,6 @@
 
         pagination.innerHTML = html;
     }
-
-    
 </script>
 
 </html>

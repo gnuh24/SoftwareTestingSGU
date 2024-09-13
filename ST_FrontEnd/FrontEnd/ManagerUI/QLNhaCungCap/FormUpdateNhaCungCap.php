@@ -102,7 +102,7 @@
     })
 
     function updateNhaCungCap(brandId, brandName) {
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
 
         // Kiểm tra nếu token không tồn tại
         if (!token) {

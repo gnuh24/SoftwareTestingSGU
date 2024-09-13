@@ -108,7 +108,7 @@
     }
     // Hàm getAllphieunhapkho
     function getAllphieunhapkho(page, datenhapkho) {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       $.ajax({
         url: 'http://localhost:8080/InventoryReport',

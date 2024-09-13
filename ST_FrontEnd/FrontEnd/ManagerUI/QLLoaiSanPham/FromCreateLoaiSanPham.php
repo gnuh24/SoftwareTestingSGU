@@ -61,7 +61,7 @@
 
                                                 <div style=" display: flex; padding: 0rem 1rem 0rem 1rem; justify-content: space-between;">
                                                     <div>
-                                                   
+
                                                         <div style="padding-left: 1rem">
                                                             <p class="text">Loại sản phẩm</p>
                                                             <input id="categoryName" class="input" type="text" name="categoryName" style="width: 40rem" />
@@ -80,6 +80,7 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +88,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
     </div>
 </body>
@@ -100,7 +100,7 @@
 
 
         let categoryName = document.getElementById("categoryName");
-        
+
         if (!categoryName.value.trim()) {
 
             Swal.fire({
@@ -112,8 +112,8 @@
             event.preventDefault();
             return;
         }
-       
-      
+
+
 
         //Kiểm tra tên loại sản phẩm
         if (isTenLoaiSanPhamExists(categoryName.value.trim())) {
@@ -127,13 +127,13 @@
             return;
         }
 
-        
+
 
         //Tạo thông tin nhà cung cấp
         let isCreateLoaiSanPhamComplete = createLoaiSanPham(
             categoryName.value
         );
-        
+
         //Sau khi tạo xong chuyển về trang QLLoaiSanPham
         Swal.fire({
             icon: 'success',
@@ -146,7 +146,7 @@
         });
     });
 
-    
+
     function isTenLoaiSanPhamExists(value) {
         let exists = false;
         $.ajax({
@@ -172,14 +172,14 @@
     }
 
     function createLoaiSanPham(categoryName) {
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
         $.ajax({
             url: 'http://localhost:8080/Category',
             type: 'POST',
             dataType: "json",
             headers: {
-        'Authorization': 'Bearer ' + token
-      },
+                'Authorization': 'Bearer ' + token
+            },
             data: {
                 categoryName: categoryName
             },
@@ -191,6 +191,4 @@
             }
         });
     }
-
-
 </script>

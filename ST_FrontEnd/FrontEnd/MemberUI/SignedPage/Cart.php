@@ -68,8 +68,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        var maTaiKhoan = JSON.parse(localStorage.getItem("id"));
-        var token = localStorage.getItem("token");
+        var maTaiKhoan = JSON.parse(sessionStorage.getItem("id"));
+        var token = sessionStorage.getItem("token");
 
         function toCreateOrder() {
             var numberOfItemsInCart = $('.cartItem').length;
@@ -214,7 +214,7 @@
         });
 
         function updateQuantity(productId, quantity) {
-            var token = localStorage.getItem("token");
+            var token = sessionStorage.getItem("token");
             var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
             var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
 
@@ -231,7 +231,7 @@
                 type: 'PATCH',
                 dataType: 'json',
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
                 },
                 data: form,
                 processData: false,

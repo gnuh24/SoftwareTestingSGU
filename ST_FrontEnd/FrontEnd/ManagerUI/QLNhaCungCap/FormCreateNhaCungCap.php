@@ -55,7 +55,7 @@
 
                                                 <div style=" display: flex; padding: 0rem 1rem 0rem 1rem; justify-content: space-between;">
                                                     <div>
-                                                   
+
                                                         <div style="padding-left: 1rem">
                                                             <p class="text">Thương hiệu</p>
                                                             <input id="brandName" class="input" type="text" name="brandName" style="width: 40rem" />
@@ -91,20 +91,20 @@
                                             </div>
                                         </form>
                                     </div>
-                                    </div>
-                                    </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                                <div>
-
-
                                 </div>
                             </div>
                         </div>
-                       
                     </div>
+
+                </div>
+                <div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -215,14 +215,14 @@
 
     function isTenNhaCungCapExists(value) {
         let exists = false;
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
         $.ajax({
             url: 'http://localhost:8080/Brand',
             type: 'GET',
             dataType: "json",
             headers: {
-        'Authorization': 'Bearer ' + token
-      },
+                'Authorization': 'Bearer ' + token
+            },
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
                 action: "isExists",
@@ -269,14 +269,14 @@
     // }
 
     function createNhaCungCap(brandName) {
-        var token = localStorage.getItem('token');
+        var token = sessionStorage.getItem('token');
         $.ajax({
             url: 'http://localhost:8080/Brand',
             type: 'POST',
             dataType: "json",
             headers: {
-        'Authorization': 'Bearer ' + token
-      },
+                'Authorization': 'Bearer ' + token
+            },
             data: {
                 action: "create",
                 brandName: brandName
@@ -292,4 +292,5 @@
         });
     }
 </script>
+
 </html>
