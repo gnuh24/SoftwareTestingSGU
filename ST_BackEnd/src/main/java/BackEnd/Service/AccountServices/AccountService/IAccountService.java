@@ -16,10 +16,6 @@ public interface IAccountService extends UserDetailsService {
 
     int activateUser(String token);
 
-    String getKeyForUpdateEmail(String token, String newEmail);
-
-    String getKeyForUpdatePassword(String token);
-
     Page<Account> getAllAccounts(Pageable pageable, String search, AccountFilterForm form);
 
     Account getAccountById(Integer accountId);
@@ -30,9 +26,6 @@ public interface IAccountService extends UserDetailsService {
 
     Account createAccount(AccountCreateForm form) throws TheValueAlreadyExists;
 
-    Account createAccountByEmail(AccountCreateForm form);
-
-    Account  updateEmailOfAccount(String token, AccountUpdateFormForEmail form) throws InvalidToken, TokenNotExists;
 
     Account updateAccount(String token, AccountUpdateForm form);
 
@@ -40,7 +33,4 @@ public interface IAccountService extends UserDetailsService {
 
     void deleteByAccountId(Integer accountId);
 
-    int updatePasswordOfAccount(String token, AccountUpdateFormForPassword form) throws InvalidToken, InvalidOldPassword, TokenNotExists;
-
-    Account registerOrAuthenticateUser(String email);
 }

@@ -50,11 +50,6 @@ public class WebSecutiryConfiguration {
     @Autowired
     private JWTAuthorizationFilter jwtAuthFIlter;
 
-    @Autowired
-    private LogoutAuthFilter logoutAuthFilter;
-
-    @Autowired
-    private OAuthAuthenicationSuccessHandler handler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -96,30 +91,19 @@ public class WebSecutiryConfiguration {
 
                         // TODO: Các API liên quan đến `Account`
 
-                        .requestMatchers(HttpMethod.POST, "/Auth/Logout").hasAnyAuthority("User", "Admin")
                         .requestMatchers(HttpMethod.POST, "/Auth/SignIn").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/LoginAdmin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/Registration").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/Refresh").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Auth/ActiveUser").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/Auth/Google").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/Auth/Facebook").permitAll()
-
-                        .requestMatchers("/oauth2/authorization/**").permitAll()
-                        .requestMatchers("/login/oauth2/code/google").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/Account/isThisEmailExists").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Account").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.GET, "/Account/{accountId}").hasAnyAuthority("User", "Admin")
-                        .requestMatchers(HttpMethod.GET, "/Account/GetKeyForUpdateEmail")
-                        .hasAnyAuthority("User", "Admin")
+
                         .requestMatchers(HttpMethod.PATCH, "/Account/UpdateInformation")
                         .hasAnyAuthority("User", "Admin")
                         .requestMatchers(HttpMethod.PATCH, "/Account/ChangeStatus").hasAnyAuthority("Admin")
-                        .requestMatchers(HttpMethod.PATCH, "/Account/NewEmail").hasAnyAuthority("User", "Admin")
-                        .requestMatchers(HttpMethod.GET, "/Account/GetKeyForUpdatePassword")
-                        .hasAnyAuthority("User", "Admin")
-                        .requestMatchers(HttpMethod.PATCH, "/Account/NewPassword").hasAnyAuthority("User", "Admin")
 
                         .requestMatchers(HttpMethod.POST, "/UserInformation").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.PATCH, "/UserInformation").hasAnyAuthority("Admin")
@@ -169,9 +153,6 @@ public class WebSecutiryConfiguration {
                         .requestMatchers(HttpMethod.GET, "/Statistic/IncomeSummary").hasAnyAuthority("Admin")
 
 
-                    .requestMatchers(HttpMethod.GET, "/VnPay/pay").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/VnPay/returnPay").permitAll()
-
                     // Xác thực tất cả các request
                         .anyRequest()
                         .authenticated()
@@ -181,8 +162,7 @@ public class WebSecutiryConfiguration {
                 // Add JWT vào chuỗi lọc và ưu tiên loc theo JWT
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(logoutAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class)
+
                 .addFilterBefore(
                         jwtAuthFIlter, UsernamePasswordAuthenticationFilter.class)
 
@@ -194,11 +174,7 @@ public class WebSecutiryConfiguration {
                         // Cấu hình xử lý ngoại lệ cho trường hợp truy cập bị từ chối (Không đủ quyền)
                         .accessDeniedHandler(authExceptionHandler)
 
-                )
-                .oauth2Login(oauth -> {
-                    oauth.loginPage("/Auth/SignIn");
-                    oauth.successHandler(handler);
-                });
+                );
 
         return http.build();
     }

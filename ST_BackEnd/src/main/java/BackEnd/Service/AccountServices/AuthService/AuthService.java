@@ -6,7 +6,6 @@ import BackEnd.Entity.AccountEntity.Account;
 import BackEnd.Form.AuthForm.LoginInfoDTO;
 import BackEnd.Form.AuthForm.LoginInputForm;
 import BackEnd.Service.AccountServices.AccountService.IAccountService;
-import BackEnd.Service.AccountServices.LogoutJWTToken.LogoutJWTTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +36,6 @@ public class AuthService implements IAuthService{
     @Autowired
     private AuthExceptionHandler authExceptionHandler;
 
-    @Autowired
-    private LogoutJWTTokenService logoutJWTTokenService;
 
     @Override
     public LoginInfoDTO signInForUser(LoginInputForm signinRequest) throws InvalidCredentialsException {
@@ -49,10 +46,6 @@ public class AuthService implements IAuthService{
             if (user == null) {
                 throw new InvalidCredentialsException("Email hoặc mật khẩu không đúng !!");
             }
-
-//            if (!user.getType().equals(Account.AccountType.WEB)){
-//                throw new InvalidCredentialsException("Email hoặc mật khẩu không đúng !!");
-//            }
 
             if (user.getRole().toString().equals("Admin")){
                 throw new InvalidCredentialsException("Email hoặc mật khẩu không đúng !!");
@@ -139,9 +132,6 @@ public class AuthService implements IAuthService{
     public LoginInfoDTO refreshToken(String oldToken, String refreshToken) throws LoggedOutTokenException, MismatchedTokenAccountException, TokenExpiredException, InvalidJWTSignatureException{
         LoginInfoDTO response = new LoginInfoDTO();
 
-        if(logoutJWTTokenService.isThisTokenLogouted(refreshToken)){
-            throw new LoggedOutTokenException("Refresh Token đã bị vô hiệu hóa vì thế không sử dụng được nữa !!");
-        }
 
         //Lấy Email từ Token (Dùng hàm viết tay -> Vì hàm có sẵn sẽ tự kiểm tra thời hạn của Token cũ)
         String ourEmailByOldToken = jwtUtils.extractUsernameWithoutLibrary(oldToken);

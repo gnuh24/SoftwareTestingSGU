@@ -2,7 +2,6 @@ package BackEnd.Service.AccountServices.TokenServices;
 
 import BackEnd.Entity.AccountEntity.Account;
 import BackEnd.Entity.AccountEntity.Token;
-import BackEnd.Entity.AccountEntity.TokenType;
 import BackEnd.Repository.AccountRepository.ITokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,6 @@ public class TokenService implements ITokenService{
     @Autowired
     private ITokenRepository tokenRepository;
 
-    @Autowired
-    private ITokenTypeService tokenTypeService;
-
 
     //Lấy Token dựa tên ID
     @Override
@@ -29,16 +25,15 @@ public class TokenService implements ITokenService{
 
     //Lấy Token dựa trên Mã tài khoản tương ứng
     @Override
-    public Token getRegistrationTokenByAccountIdAndTypeToken_Id(Integer accountId, Byte typeTokenId) {
-        return tokenRepository.findTokenByAccountIdAndTypeTokenId(accountId, typeTokenId);
+    public Token getRegistrationTokenByAccountIdAndTypeToken_Id(Integer accountId) {
+        return tokenRepository.findTokenByAccountIdAndTypeTokenId(accountId);
     }
 
     //Lấy Token dựa trên mã Token
     @Override
-    public Token getRegistrationTokenByToken(String token, Byte typeTokenId) {
-        return tokenRepository.findByTokenAndTypeTokenId(token, typeTokenId);
+    public Token getRegistrationTokenByToken(String token) {
+        return tokenRepository.findByTokenAndTypeTokenId(token);
     }
-
 
 
     //Tạo Token
@@ -55,56 +50,7 @@ public class TokenService implements ITokenService{
 
         registrationToken.setAccount(account);
 
-        TokenType tokenType = tokenTypeService.getTokenTypeById( (byte) 1 );
-
-        registrationToken.setTokenType(tokenType);
-
         return tokenRepository.save(registrationToken);
-    }
-
-
-
-    @Override
-    @Transactional
-    public Token createUpdateEmailToken(Account account) {
-
-        Token updateEmailToken = new Token();
-
-        //Tạo token bằng mã UUID
-        Random random = new Random();
-        int tokenNumber = 100000 + random.nextInt(900000); // Tạo số ngẫu nhiên từ 100000 đến 999999
-        String token = String.valueOf(tokenNumber);
-
-        updateEmailToken.setToken(token);
-
-        updateEmailToken.setAccount(account);
-
-        TokenType tokenType = tokenTypeService.getTokenTypeById( (byte) 4 );
-
-        updateEmailToken.setTokenType(tokenType);
-
-        return tokenRepository.save(updateEmailToken);
-    }
-
-    @Override
-    public Token createUpdatePasswordToken(Account account) {
-
-        Token resetPasswordToken = new Token();
-
-        //Tạo token bằng mã UUID
-        Random random = new Random();
-        int tokenNumber = 100000 + random.nextInt(900000); // Tạo số ngẫu nhiên từ 100000 đến 999999
-        String token = String.valueOf(tokenNumber);
-
-        resetPasswordToken.setToken(token);
-
-        resetPasswordToken.setAccount(account);
-
-        TokenType tokenType = tokenTypeService.getTokenTypeById( (byte) 2 );
-
-        resetPasswordToken.setTokenType(tokenType);
-
-        return tokenRepository.save(resetPasswordToken);
     }
 
 

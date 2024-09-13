@@ -8,8 +8,6 @@ import BackEnd.Entity.AccountEntity.Account;
 import BackEnd.Entity.AccountEntity.Token;
 import BackEnd.Entity.AccountEntity.UserInformation;
 import BackEnd.Event.SendingRegistrationTokenEvent;
-import BackEnd.Event.SendingUpdateEmailTokenEvent;
-import BackEnd.Event.SendingUpdatePasswordTokenEvent;
 import BackEnd.Form.UsersForms.AccountForms.*;
 import BackEnd.Repository.AccountRepository.IAccountRepository;
 import BackEnd.Service.AccountServices.AuthService.JWTUtils;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class AccountService implements IAccountService {
@@ -95,7 +91,6 @@ public class AccountService implements IAccountService {
     }
 
 
-
     @Override
     public Account getAccountByEmail(String email) {
         return repository.findByUserInformation_Email(email);
@@ -117,24 +112,6 @@ public class AccountService implements IAccountService {
         return account;
     }
 
-    @Override
-    @Transactional
-    public Account createAccountByEmail(AccountCreateForm form) {
-
-        UserInformation in4 = userService.createUserByEmail(form.getEmail());
-
-        Account account = new Account();
-        account.setPassword(passwordEncoder.encode(form.getPassword()));
-        account.setUserInformation(in4);
-//        account.setType(Account.AccountType.GOOGLE);
-        account.setStatus(true);
-        account = repository.save(account);
-        tokenService.createRegistrationToken(account);
-        eventPublisher.publishEvent(new SendingRegistrationTokenEvent(form.getEmail()));
-
-        return account;
-    }
-
 
 
     @Override
@@ -147,39 +124,6 @@ public class AccountService implements IAccountService {
         }
 
         return repository.save(account);
-    }
-
-    @Override
-    @Transactional
-    public Account updateEmailOfAccount(String authToken, AccountUpdateFormForEmail form) throws InvalidToken, TokenNotExists {
-        String tokenString = form.getToken();
-
-        Token token = tokenService.getRegistrationTokenByToken(tokenString, (byte) 4 );
-
-        if (token == null){
-            throw new TokenNotExists("Token không tồn tại !!");
-        }
-
-
-        String oldEmail = jwtUtils.extractUsernameWithoutLibrary(authToken);
-
-        if (!oldEmail.equals(token.getAccount().getUserInformation().getEmail())){
-            throw new InvalidToken("Token bạn gửi không có chức năng thay đổi email của tài khoản này !!");
-        }
-
-        if ( token.getExpiration().isAfter(LocalDateTime.now())){
-            Account account = getAccountByEmail(oldEmail);
-            UserInformation userInformation = userService.getUserByEmail(account.getUserInformation().getEmail());
-            userService.updateEmailOfUser(userInformation, form.getNewEmail());
-            tokenService.deleteToken(token.getId());
-            return account;
-        }else{
-            // remove Registration User Token
-            tokenService.deleteToken(token.getId());
-            return null;
-            //throw new TokenExpiredException("Token kích hoạt tài khoản của bạn đã hết hạn !! Xin hãy tạo lại tài khoản !!");
-        }
-
     }
 
     @Override
@@ -222,7 +166,7 @@ public class AccountService implements IAccountService {
 
      */
     public int activateUser(String token){
-        Token registrationToken = tokenService.getRegistrationTokenByToken(token, (byte) 1);
+        Token registrationToken = tokenService.getRegistrationTokenByToken(token);
 
         if (registrationToken == null){
             return 2;
@@ -248,71 +192,12 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public String getKeyForUpdateEmail(String token, String newEmail) {
-        String oldEmail = jwtUtils.extractUsernameWithoutLibrary(token);
-        Account account = getAccountByEmail(oldEmail);
-        Token token1 = tokenService.createUpdateEmailToken(account);
-
-        eventPublisher.publishEvent(new SendingUpdateEmailTokenEvent(oldEmail, newEmail));
-
-        return "Khởi tạo mã xác thực thành công !! Hãy kiểm tra email: " + newEmail;
-    }
-
-    @Override
-    public String getKeyForUpdatePassword(String token) {
-        String oldEmail = jwtUtils.extractUsernameWithoutLibrary(token);
-        Account account = getAccountByEmail(oldEmail);
-        Token token1 = tokenService.createUpdatePasswordToken(account);
-
-        eventPublisher.publishEvent(new SendingUpdatePasswordTokenEvent(oldEmail));
-
-        return "Khởi tạo mã xác thực thành công !! Hãy kiểm tra email: " + oldEmail;
-    }
-
-
-    @Override
     @Transactional
     public void deleteByAccountId(Integer accountId) {
         userService.deleteUser(accountId);
         repository.deleteById(accountId);
     }
 
-    @Override
-    public int updatePasswordOfAccount(String authToken, AccountUpdateFormForPassword form) throws InvalidToken, InvalidOldPassword, TokenNotExists {
-        String tokenString = form.getToken();
-        Token token = tokenService.getRegistrationTokenByToken(tokenString, (byte) 2 );
-
-        if (token == null){
-            throw new TokenNotExists("Token không tồn tại !!");
-        }
-
-        String email = jwtUtils.extractUsernameWithoutLibrary(authToken);
-        Account account = token.getAccount();
-
-        if (!email.equals(account.getUserInformation().getEmail())){
-            throw new InvalidToken("Token bạn gửi không có chức năng thay đổi mật khẩu của tài khoản này !!");
-        }
-
-        String encodedOldPasswordFromInputForm = passwordEncoder.encode(form.getOldPassword());
-
-        if (!passwordEncoder.matches(form.getOldPassword(), account.getPassword())) {
-            throw new InvalidOldPassword("Mật khẩu cũ không đúng !!");
-        }
-
-        if ( token.getExpiration().isAfter(LocalDateTime.now())){
-            String newPassword = passwordEncoder.encode(form.getNewPassword());
-            account.setPassword(newPassword);
-            repository.save(account);
-            tokenService.deleteToken(token.getId());
-            return 0;
-        }else{
-            // remove Registration User Token
-            tokenService.deleteToken(token.getId());
-            return 1;
-            //throw new TokenExpiredException("Token kích hoạt tài khoản của bạn đã hết hạn !! Xin hãy tạo lại tài khoản !!");
-        }
-
-    }
 
 
     @Override
@@ -328,25 +213,6 @@ public class AccountService implements IAccountService {
             account.getPassword(),
             AuthorityUtils.createAuthorityList(account.getRole().toString())
         );
-    }
-
-    @Override
-    public Account registerOrAuthenticateUser(String email) {
-       Account userOptional = getAccountByEmail(email);
-
-        if (userOptional == null) {
-            // Đăng ký người dùng mới
-            AccountCreateForm form = new AccountCreateForm();
-            form.setEmail(email);
-            form.setPassword("123456");
-
-
-            return  createAccountByEmail(form);
-        }
-
-        return userOptional;
-
-
     }
 
 }

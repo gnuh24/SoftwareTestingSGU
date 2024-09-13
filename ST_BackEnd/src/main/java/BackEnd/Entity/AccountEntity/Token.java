@@ -27,10 +27,6 @@ public class Token {
     private LocalDateTime createTime = LocalDateTime.now();;
 
     @ManyToOne
-    @JoinColumn(name = "tokenTypeId", nullable = false)
-    private TokenType tokenType;
-
-    @ManyToOne
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
