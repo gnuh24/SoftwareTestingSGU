@@ -2,7 +2,6 @@ package BackEnd.Form.InventoryForms.InventoryReportForms;
 
 import BackEnd.Entity.InventoryEntities.InventoryReportDetail;
 import BackEnd.Form.InventoryForms.InventoryReportDetailForms.InventoryReportDetailDTO;
-import BackEnd.Form.InventoryForms.InventoryReportStatusForms.InventoryReportStatusDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +27,5 @@ public class InventoryReportInDetailDTO {
 
     private List<InventoryReportDetailDTO> inventoryReportDetails;
 
-    private List<InventoryReportStatusDTO> inventoryReportStatuses;
 
 }

@@ -17,7 +17,7 @@ public interface IProductService {
 
     int updateDefaultCategoryOfProduct(Integer categoryId);
 
-    Product createProduct(ProductCreateForm form) throws IOException;
+    Product createProduct(ProductCreateForm form);
 
     Product updateProduct(ProductUpdateForm form);
 

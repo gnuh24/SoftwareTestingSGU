@@ -18,7 +18,5 @@ public class InventoryReportFilterForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date to;
 
-    private String status;
-
 }
 

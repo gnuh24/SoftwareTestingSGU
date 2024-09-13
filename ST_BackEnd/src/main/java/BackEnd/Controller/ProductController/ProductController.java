@@ -1,7 +1,9 @@
 package BackEnd.Controller.ProductController;
 
+import BackEnd.Entity.ProductEntity.Batch;
 import BackEnd.Entity.ProductEntity.Product;
 import BackEnd.Form.ProductForm.ProductForms.*;
+import BackEnd.Service.ProductService.Batch.IBatchService;
 import BackEnd.Service.ProductService.Product.IProductService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -24,6 +26,9 @@ public class ProductController {
     private IProductService productService;
 
     @Autowired
+    private IBatchService batchService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
 
@@ -38,6 +43,18 @@ public class ProductController {
         // Chuyển sang List DTO
         List<ProductDTOListAdmin> dtos = modelMapper.map(entites.getContent(), new TypeToken<List<ProductDTOListAdmin>>() {
         }.getType());
+
+
+        for (ProductDTOListAdmin dtoListAdmin: dtos){
+            Batch batch = batchService.getTheValidBatch(dtoListAdmin.getId());
+
+            if (batch == null){
+                batch = batchService.getTheValidBatchBackup(dtoListAdmin.getId());
+            }
+
+            dtoListAdmin.setPrice(batch.getUnitPrice());
+            dtoListAdmin.setQuantity(batch.getQuantity());
+        }
 
 
         // Trả về FrontEnd với định dạng Page (Tích họp Sort, Paging)
@@ -67,6 +84,16 @@ public class ProductController {
         List<ProductDTOListUser> dtos = modelMapper.map(entites.getContent(), new TypeToken<List<ProductDTOListUser>>() {
         }.getType());
 
+        for (ProductDTOListUser dtoListAdmin: dtos){
+            Batch batch = batchService.getTheValidBatch(dtoListAdmin.getId());
+
+            if (batch == null){
+                batch = batchService.getTheValidBatchBackup(dtoListAdmin.getId());
+            }
+
+            dtoListAdmin.setPrice(batch.getUnitPrice());
+        }
+
 
 
         // Trả về FrontEnd với định dạng Page (Tích họp Sort, Paging)
@@ -78,7 +105,20 @@ public class ProductController {
     public ProductDTODetailUser getShoeInDetailForUser(@PathVariable Integer shoeId) {
 
         Product entity = productService.getProductById(shoeId);
-        return modelMapper.map(entity, ProductDTODetailUser.class);
+
+        ProductDTODetailUser dto = modelMapper.map(entity, ProductDTODetailUser.class);
+
+            Batch batch = batchService.getTheValidBatch(dto.getId());
+
+            if (batch == null){
+                batch = batchService.getTheValidBatchBackup(dto.getId());
+            }
+
+            dto.setPrice(batch.getUnitPrice());
+            dto.setQuantity(batch.getQuantity());
+
+
+        return dto;
 
     }
 

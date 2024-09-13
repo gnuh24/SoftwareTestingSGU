@@ -169,7 +169,7 @@
                         loadDataToTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
                     },
                     error: function(error) {
-                        console.error('Error:', error);
+                        Swal.fire('Thất bại!', error.responseJSON.detailMessage, 'error');
                     }
                 });
             }
@@ -259,6 +259,7 @@
             },
             data: {
                 pageNumber: page,
+                sort: "orderTime,desc",
                 from: minNgayTao,
                 to: maxNgayTao,
                 status: trangThai,

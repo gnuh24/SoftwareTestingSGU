@@ -1,25 +1,18 @@
 package BackEnd.Controller.AccountController;
 
-
-import BackEnd.Configure.ErrorResponse.AuthException.MismatchedTokenAccountException;
 import BackEnd.Configure.ErrorResponse.TheValueAlreadyExists;
-import BackEnd.Entity.AccountEntity.Account;
 import BackEnd.Form.UsersForms.AccountForms.AccountCreateForm;
 import BackEnd.Form.AuthForm.LoginInfoDTO;
 import BackEnd.Form.AuthForm.LoginInputForm;
 import BackEnd.Service.AccountServices.AccountService.IAccountService;
 import BackEnd.Service.AccountServices.AuthService.AuthService;
-import BackEnd.Service.AccountServices.AuthService.IAuthService;
 import BackEnd.Service.AccountServices.AuthService.JWTUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/Auth")
@@ -58,7 +51,7 @@ public class  AuthController {
     }
 
     @PostMapping(value = "/Registration")
-    public String registration(@ModelAttribute AccountCreateForm form) throws TheValueAlreadyExists {
+    public String registration(@ModelAttribute @Valid AccountCreateForm form) throws TheValueAlreadyExists {
         accountService.createAccount(form);
         return "Tạo tài khoản thành công !! Hãy kiêm email " + form.getEmail() + "!";
     }

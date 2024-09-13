@@ -33,9 +33,6 @@ public class Product {
     @Column(name = "Image", nullable = false)
     private String image;
 
-    @Column(name = "Price", nullable = false)
-    private Integer price;
-
     @Column(name = "Origin", nullable = false)
     private String origin;
 
@@ -44,9 +41,6 @@ public class Product {
 
     @Column(name = "ABV", nullable = false)
     private Integer abv;
-
-    @Column(name = "Quantity", nullable = false)
-    private Integer quantity = 0;
 
     @Column(name = "Description")
     private String description;

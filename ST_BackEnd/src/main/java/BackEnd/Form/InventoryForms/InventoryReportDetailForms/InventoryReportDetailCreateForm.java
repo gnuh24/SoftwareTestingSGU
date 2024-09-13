@@ -22,5 +22,7 @@ public class InventoryReportDetailCreateForm {
     private Integer unitPrice;
 
     private Integer total;
+
+    private Integer profit;
 }
 

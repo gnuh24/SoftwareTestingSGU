@@ -34,7 +34,4 @@ public class InventoryReport {
     @OneToMany(mappedBy = "inventoryReport")
     private List<InventoryReportDetail> inventoryReportDetails;
 
-    @OneToMany(mappedBy = "inventoryReport")
-    private List<InventoryReportStatus> inventoryReportStatuses;
-
 }

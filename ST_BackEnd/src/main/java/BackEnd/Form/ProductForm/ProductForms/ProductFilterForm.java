@@ -16,13 +16,6 @@ public class ProductFilterForm {
     //Admin
     private Boolean status;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date minCreateTime;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date maxCreateTime;
-
-
     private  Integer brandId;
 
     private  Integer categoryId;
@@ -31,9 +24,9 @@ public class ProductFilterForm {
 
     //User
 
-    private Integer minPrice;
-
-    private Integer maxPrice;
+//    private Integer minPrice;
+//
+//    private Integer maxPrice;
 
 
 }

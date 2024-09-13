@@ -54,33 +54,18 @@ public class ProductService implements IProductService {
         return productRepository.updateCategoryToDefault(categoryId);
     }
 
-
     @Override
     @Transactional
-    public Product createProduct(ProductCreateForm form) throws IOException {
+    public Product createProduct(ProductCreateForm form){
 
         Product entity = new Product();
 
         entity.setProductName(form.getProductName());
-        entity.setPrice(form.getPrice());
-        String path = CloundinaryServices.createImageFromMultipart(form.getImage());
 
-        if (path != null){
-            entity.setImage(path);
-        }else{
-            System.err.println("Lỗi Clound");
-        }
-
-
-        entity.setDescription(form.getDescription());
-        entity.setAbv(form.getAbv());
-        entity.setCapacity(form.getCapacity());
-        entity.setOrigin(form.getOrigin());
-
-        Brand brand = brandService.getBrandById(form.getBrandId());
+        Brand brand = brandService.getBrandById(1);
         entity.setBrand(brand);
 
-        Category category = categoryService.getCategoryById(form.getCategoryId());
+        Category category = categoryService.getCategoryById(1);
         entity.setCategory(category);
 
         return productRepository.save(entity);
@@ -93,21 +78,20 @@ public class ProductService implements IProductService {
         Product oldProduct = getProductById(form.getId());
 
         // Update fields if they are not null
-        if (form.getProductName() != null) {
-            oldProduct.setProductName(form.getProductName());
-        }
+
+
         if (form.getStatus() != null) {
             oldProduct.setStatus(form.getStatus());
         }
         if (form.getImage() != null) {
-            CloundinaryServices.deleteImage(oldProduct.getImage());
+            if (oldProduct.getImage() != null){
+                CloundinaryServices.deleteImage(oldProduct.getImage());
+            }
             oldProduct.setImage(
                 CloundinaryServices.createImageFromMultipart(form.getImage())
             );
         }
-        if (form.getPrice() != null) {
-            oldProduct.setPrice(form.getPrice());
-        }
+
         if (form.getOrigin() != null) {
             oldProduct.setOrigin(form.getOrigin());
         }

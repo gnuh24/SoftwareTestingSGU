@@ -27,6 +27,9 @@ public class InventoryReportDetail implements Serializable {
     @Column(name = "Total", nullable = false)
     private Integer total;
 
+    @Column(nullable = false)
+    private Integer profit;
+
     @ManyToOne
     @MapsId("inventoryReportId")
     @JoinColumn(name = "InventoryReportId", referencedColumnName = "Id")

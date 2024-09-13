@@ -18,14 +18,9 @@ public class ProductUpdateForm {
     @NotNull(message = "Id is required")
     private Integer id;
 
-    private String productName;
-
     private Boolean status;
 
     private MultipartFile image;
-
-    private Integer price;
-
 
     private String origin;
 
@@ -34,7 +29,6 @@ public class ProductUpdateForm {
     private Integer abv;
 
     private String description;
-
 
     private Integer brandId;
 

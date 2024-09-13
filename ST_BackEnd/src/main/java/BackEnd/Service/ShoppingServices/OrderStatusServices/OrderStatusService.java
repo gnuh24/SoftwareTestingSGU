@@ -2,6 +2,7 @@ package BackEnd.Service.ShoppingServices.OrderStatusServices;
 
 import BackEnd.Configure.ErrorResponse.NotEnoughInventory;
 import BackEnd.Entity.AccountEntity.UserInformation;
+import BackEnd.Entity.ProductEntity.Batch;
 import BackEnd.Entity.ProductEntity.Product;
 import BackEnd.Entity.ShoppingEntities.OrderDetail;
 import BackEnd.Entity.ShoppingEntities.OrderStatus;
@@ -9,6 +10,7 @@ import BackEnd.Form.ShoppingForms.OrderStatusForms.OrderStatusCreateFormForFirst
 import BackEnd.Repository.ShoppingRepositories.IOrderStatusRepository;
 import BackEnd.Service.AccountServices.AuthService.JWTUtils;
 import BackEnd.Service.AccountServices.UserInformationService.IUserInformationService;
+import BackEnd.Service.ProductService.Batch.IBatchService;
 import BackEnd.Service.ProductService.Product.IProductService;
 import BackEnd.Service.ShoppingServices.OrderDetailServices.IOrderDetailService;
 import BackEnd.Service.ShoppingServices.OrderServices.IOrderService;
@@ -41,6 +43,9 @@ public class OrderStatusService implements IOrderStatusService{
 
     @Autowired
     private IUserInformationService userInformationService;
+
+    @Autowired
+    private IBatchService batchService;
 
     @Autowired
     private ModelMapper  modelMapper;
@@ -87,14 +92,17 @@ public class OrderStatusService implements IOrderStatusService{
             if (form.getIdStatus().equals(OrderStatus.Status.DaDuyet)) {
                 List<OrderDetail> chiTietDonHang = orderDetailService.getAllOrderDetailByOrderId(form.getOrderId());
                 for (OrderDetail ctdh : chiTietDonHang) {
-                    Product product = productService.getProductById(ctdh.getId().getProductId());
+                    Batch batch = batchService.getTheValidBatch(ctdh.getId().getProductId());
 
-                    int soLuongConLai = product.getQuantity() - ctdh.getQuantity();
+                    if (batch == null){
+                        batch = batchService.getTheValidBatchBackup(ctdh.getId().getProductId());
+                    }
+                    int soLuongConLai = batch.getQuantity() - ctdh.getQuantity();
 
                     if (soLuongConLai >= 0){
-                        product.setQuantity(soLuongConLai);
+                        batch.setQuantity(soLuongConLai);
                     }else{
-                        throw new NotEnoughInventory("Không đủ sản phẩm " + product.getProductName() +  " tồn kho !!");
+                        throw new NotEnoughInventory("Không đủ sản phẩm  " + batch.getProduct().getProductName() +  " tồn kho !!");
                     }
 
                 }
@@ -110,8 +118,8 @@ public class OrderStatusService implements IOrderStatusService{
 
                 for (OrderDetail ctdh : chiTietDonHang) {
 
-                    Product product = productService.getProductById(ctdh.getId().getProductId());
-                    product.setQuantity( product.getQuantity() + ctdh.getQuantity() );
+                    Batch batch = batchService.getTheValidBatch(ctdh.getId().getProductId());
+                    batch.setQuantity( batch.getQuantity() + ctdh.getQuantity());
 
                 }
             }

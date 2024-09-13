@@ -22,12 +22,12 @@ CREATE TABLE IF NOT EXISTS `Product`(
     `ProductName`       NVARCHAR(1000)      NOT NULL,
     `Status`            BOOLEAN            	NOT NULL,
     `CreateTime`        DATETIME           	NOT NULL,
-    `Image`             VARCHAR(255)        NOT NULL,
+    `Image`             VARCHAR(255)        ,
 
-    `Origin`            NVARCHAR(255)       NOT NULL,
-    `Capacity`          INT UNSIGNED        NOT NULL,
-    `ABV`               INT UNSIGNED        NOT NULL,
-    `Description`       TEXT,
+    `Origin`            NVARCHAR(255)       ,
+    `Capacity`          INT UNSIGNED        ,
+    `ABV`               INT UNSIGNED        ,
+    `Description`       TEXT				,
 
 
     `BrandId`           INT UNSIGNED   		NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `Product`(
 DROP TABLE IF EXISTS `Batch`;
 CREATE TABLE IF NOT EXISTS `Batch`(
 	`Id` 				INT UNSIGNED 		PRIMARY KEY 	AUTO_INCREMENT,
-	`Price`             INT UNSIGNED        NOT NULL,
+	`UnitPrice`             INT UNSIGNED        NOT NULL,
     `Quantity`          INT UNSIGNED        NOT NULL,
     `ReceivingTime`		DATETIME			NOT NULL,
     `ProductId`			INT UNSIGNED		NOT NULL,
@@ -143,14 +143,14 @@ CREATE TABLE IF NOT EXISTS `InventoryReport` (
     `TotalPrice`	INT UNSIGNED		NOT NULL
 );
 
-DROP TABLE IF EXISTS `InventoryReportStatus`;
-CREATE TABLE IF NOT EXISTS `InventoryReportStatus` (
-    `InventoryReportId`           	INT UNSIGNED                            NOT NULL,
-    `Status`        				ENUM("ChoNhapKho", "DaNhapKho",  "Huy") NOT NULL,
-    `UpdateTime`    				DATETIME                                NOT NULL,
-    PRIMARY KEY (`InventoryReportId`, `Status`),
-    FOREIGN KEY (`InventoryReportId`) REFERENCES `InventoryReport`(`Id`)
-);
+-- DROP TABLE IF EXISTS `InventoryReportStatus`;
+-- CREATE TABLE IF NOT EXISTS `InventoryReportStatus` (
+--     `InventoryReportId`           	INT UNSIGNED                            NOT NULL,
+--     `Status`        				ENUM("ChoNhapKho", "DaNhapKho",  "Huy") NOT NULL,
+--     `UpdateTime`    				DATETIME                                NOT NULL,
+--     PRIMARY KEY (`InventoryReportId`, `Status`),
+--     FOREIGN KEY (`InventoryReportId`) REFERENCES `InventoryReport`(`Id`)
+-- );
 
 DROP TABLE IF EXISTS `InventoryReportDetail`;
 CREATE TABLE IF NOT EXISTS `InventoryReportDetail` (

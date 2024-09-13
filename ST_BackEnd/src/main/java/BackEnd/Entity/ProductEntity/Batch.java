@@ -18,7 +18,7 @@ public class Batch {
     private Integer id;
 
     @Column(nullable = false)
-    private Integer price;
+    private Integer unitPrice;
 
     @Column(nullable = false)
     private Integer quantity;

@@ -62,8 +62,6 @@ public class InventoryReportDetailService implements IInventoryReportDetailServi
         );
         InventoryReportDetail inventoryReportDetail = getInventoryReportDetailById(id);
 
-//        InventoryReport inventoryReport = inventoryReportService.getInventoryReportById(form.getIdInventoryReportId());
-//        inventoryReportDetail.setInventoryReport(inventoryReport);
 
         if (inventoryReportDetail != null) {
             if (form.getQuantity() != null) {

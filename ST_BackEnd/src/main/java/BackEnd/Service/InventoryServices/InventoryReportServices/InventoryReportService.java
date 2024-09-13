@@ -2,16 +2,19 @@ package BackEnd.Service.InventoryServices.InventoryReportServices;
 
 
 import BackEnd.Entity.InventoryEntities.InventoryReport;
-import BackEnd.Entity.InventoryEntities.InventoryReportStatus;
+import BackEnd.Entity.ProductEntity.Batch;
+import BackEnd.Entity.ProductEntity.Product;
 import BackEnd.Form.InventoryForms.InventoryReportDetailForms.InventoryReportDetailCreateForm;
 import BackEnd.Form.InventoryForms.InventoryReportDetailForms.InventoryReportDetailCreateFormForFirstTime;
 import BackEnd.Form.InventoryForms.InventoryReportForms.InventoryReportCreateForm;
 import BackEnd.Form.InventoryForms.InventoryReportForms.InventoryReportFilterForm;
 import BackEnd.Form.InventoryForms.InventoryReportForms.InventoryReportUpdateForm;
-import BackEnd.Form.InventoryForms.InventoryReportStatusForms.InventoryReportStatusCreateForm;
+import BackEnd.Form.ProductForm.BatchForms.BatchCreateForm;
+import BackEnd.Form.ProductForm.ProductForms.ProductCreateForm;
 import BackEnd.Repository.InventoryRepositoties.IInventoryReportRepository;
 import BackEnd.Service.InventoryServices.InventoryReportDetailServices.IInventoryReportDetailService;
-import BackEnd.Service.InventoryServices.InventoryReportStatusServices.IInventoryReportStatusService;
+import BackEnd.Service.ProductService.Batch.IBatchService;
+import BackEnd.Service.ProductService.Product.IProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,7 +34,11 @@ public class InventoryReportService implements IInventoryReportService {
     private IInventoryReportDetailService inventoryReportDetailService;
 
     @Autowired
-    private IInventoryReportStatusService inventoryReportStatusService;
+    private IBatchService batchService;
+
+    @Autowired
+    private IProductService productService;
+
 
     @Autowired
     private ModelMapper modelMapper;
@@ -54,17 +61,27 @@ public class InventoryReportService implements IInventoryReportService {
         inventoryReport = inventoryReportRepository.save(inventoryReport);
         for(InventoryReportDetailCreateFormForFirstTime detailForm: form.getInventoryReportDetailCreateFormList()){
 
+            if (detailForm.getIdProductId() == null){
+                ProductCreateForm productCreateForm = new ProductCreateForm(detailForm.getProductName());
+                Product newProduct = productService.createProduct(productCreateForm);
+                detailForm.setIdProductId(newProduct.getId());
+            }
+
             InventoryReportDetailCreateForm detailCreateForm = modelMapper.map(detailForm, InventoryReportDetailCreateForm.class);
             detailCreateForm.setIdInventoryReportId(inventoryReport.getId());
-
-
             inventoryReportDetailService.createInventoryReportDetail(detailCreateForm);
-        }
 
-        InventoryReportStatusCreateForm createForm = new InventoryReportStatusCreateForm();
-        createForm.setInventoryReportId(inventoryReport.getId());
-        createForm.setIdStatus(InventoryReportStatus.Status.ChoNhapKho);
-        inventoryReportStatusService.createInventoryReportStatus(createForm);
+            BatchCreateForm batchCreateForm = modelMapper.map(detailCreateForm, BatchCreateForm.class);
+            System.err.println("Batch Create From: ");
+            System.err.println("ProductId: " + batchCreateForm.getProductId());
+            System.err.println("UnitPrice B: " + batchCreateForm.getUnitPrice());
+            System.err.println("Quantity: " + batchCreateForm.getQuantity());
+
+            batchCreateForm.setUnitPrice(detailCreateForm.getUnitPrice() * (100 + detailCreateForm.getProfit()) / 100);
+            System.err.println("UnitPrice A: " + batchCreateForm.getUnitPrice());
+
+            Batch batch = batchService.createBatch(batchCreateForm);
+        }
 
         return inventoryReport;
     }

@@ -81,8 +81,13 @@ public class WebSecutiryConfiguration {
                         .requestMatchers(HttpMethod.POST, "/Product").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.PATCH, "/Product").hasAnyAuthority("Admin")
 
+                        // Các API `Batch`
+                    .requestMatchers(HttpMethod.GET, "/Batch/{productId}").hasAnyAuthority("Admin")
+                    .requestMatchers(HttpMethod.POST, "/Batch").hasAnyAuthority("Admin")
+                    .requestMatchers(HttpMethod.PATCH, "/Batch").hasAnyAuthority("Admin")
 
-                        // TODO: Các API liên quan đến `Account`
+
+                    // TODO: Các API liên quan đến `Account`
 
                         .requestMatchers(HttpMethod.POST, "/Auth/SignIn").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/LoginAdmin").permitAll()
@@ -127,17 +132,10 @@ public class WebSecutiryConfiguration {
 
 
                         // TODO: API liên quan đến Inventory (nhập kho)
-
                         .requestMatchers(HttpMethod.GET, "/InventoryReport").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.GET, "/InventoryReport/{id}").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.POST, "/InventoryReport").hasAnyAuthority("Admin")
                         .requestMatchers(HttpMethod.PATCH, "/InventoryReport").hasAnyAuthority("Admin")
-
-                        .requestMatchers(HttpMethod.POST, "/InventoryReportDetail").hasAnyAuthority("Admin")
-                        .requestMatchers(HttpMethod.PATCH, "/InventoryReportDetail").hasAnyAuthority("Admin")
-                        .requestMatchers(HttpMethod.DELETE, "/InventoryReportDetail").hasAnyAuthority("Admin")
-
-                        .requestMatchers(HttpMethod.POST, "/InventoryReportStatus").hasAnyAuthority("Admin")
 
                         // TODO: API Thống kê
                         .requestMatchers(HttpMethod.GET, "/Statistic/BestSeller").hasAnyAuthority("Admin")

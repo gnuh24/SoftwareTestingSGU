@@ -46,6 +46,9 @@
         $.ajax({
             url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
             type: 'GET',
+            body: {
+                sort: "orderTime,desc"
+            },
             headers: {
                 'Authorization': 'Bearer ' + token
             },
