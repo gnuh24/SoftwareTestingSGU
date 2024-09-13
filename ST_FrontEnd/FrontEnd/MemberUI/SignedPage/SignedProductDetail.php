@@ -244,9 +244,8 @@
 
     function addToCart(productId, unitPrice) {
 
-        // Lấy thông tin người dùng từ localStorage
-        const token = localStorage.getItem("token");
-        const accountId = localStorage.getItem("id")
+        const token = sessionStorage.getItem("token");
+        const accountId = sessionStorage.getItem("id")
         const quantity = document.getElementById("quantityAddToCart").value;
 
 

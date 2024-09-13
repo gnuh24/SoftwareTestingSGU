@@ -238,7 +238,7 @@
         }
 
         function loadOrderData(maOrder) {
-            const token = localStorage.getItem("token");
+            const token = sessionStorage.getItem("token");
             $.ajax({
                 url: `http://localhost:8080/Order/MyOrder/${maOrder}`,
                 method: 'GET',

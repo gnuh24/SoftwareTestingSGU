@@ -63,7 +63,7 @@
                                         <label for="category-filter">Loại sản phẩm:</label>
                                         <select id="category-filter">
                                             <!-- Hiển thị menu LoaiSanPham -->
-                                            </select>
+                                        </select>
 
 
                                         <label for="brand-filter">Thương hiệu:</label>
@@ -116,7 +116,7 @@
 
 
         // function getAllSanPham(page, search, minGia, maxGia, trangThai, maLoaiSanPham) {
-        function getAllSanPham(page, search,  trangThai, maLoaiSanPham, brandId) {
+        function getAllSanPham(page, search, trangThai, maLoaiSanPham, brandId) {
             let data = {
                 pageNumber: page,
                 search: search,
@@ -128,7 +128,7 @@
                 data.categoryId = maLoaiSanPham;
             }
 
-            if (brandId !== 0){
+            if (brandId !== 0) {
                 data.brandId = brandId;
             }
 
@@ -139,21 +139,21 @@
                 method: "GET",
                 dataType: "json",
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token')
                 },
                 data: data,
                 success: function(response) {
-                  
+
                     var tableBody = document.getElementById("tableBody");
                     var tableContent = "";
 
-                    if (response.content.length > 0) { 
-                response.content.forEach(function(record) {
-                    var trangThai = record.status ? "Kinh doanh" : "Ngừng kinh doanh";
-                    var buttonText = record.status ? "Khóa" : "Mở khóa";
-                    var buttonClass = record.status ? "block" : "unlock";
-                    var buttonData = record.status ? "block" : "unlock";
-                    var trContent = `
+                    if (response.content.length > 0) {
+                        response.content.forEach(function(record) {
+                            var trangThai = record.status ? "Kinh doanh" : "Ngừng kinh doanh";
+                            var buttonText = record.status ? "Khóa" : "Mở khóa";
+                            var buttonClass = record.status ? "block" : "unlock";
+                            var buttonData = record.status ? "block" : "unlock";
+                            var trContent = `
                     <tr>
                         <td style="text-align: center;">${record.id}</td>
                         <td><img style="height: 80px;" src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${record.image}"></td>
@@ -171,15 +171,15 @@
                             <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.id}, ${record.status})">${buttonText}</button>
                         </td>
                     </tr>`;
-                    tableContent += trContent;
-                });
-            } else {
-                tableContent = `<tr><td style="text-align: center;" colspan="10">Không có sản phẩm nào thỏa yêu cầu</td></tr>`;
-            }
+                            tableContent += trContent;
+                        });
+                    } else {
+                        tableContent = `<tr><td style="text-align: center;" colspan="10">Không có sản phẩm nào thỏa yêu cầu</td></tr>`;
+                    }
 
-            tableBody.innerHTML = tableContent;
+                    tableBody.innerHTML = tableContent;
 
-            createPagination(page, response.totalPages);
+                    createPagination(page, response.totalPages);
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi khi gọi API: ', error);
@@ -205,18 +205,18 @@
                     // Gọi hàm updateTaiKhoan bằng Ajax
                     $.ajax({
                         url: 'http://localhost:8080/Product',
-                        type: 'PATCH', 
-                        processData: false,  // Không xử lý dữ liệu (vì chúng ta đang gửi FormData)
-                        contentType: false,  // Không đặt tiêu đề Content-Type vì FormData tự xử lý
-                        data: formData,  // Dữ liệu cần gửi đi
+                        type: 'PATCH',
+                        processData: false, // Không xử lý dữ liệu (vì chúng ta đang gửi FormData)
+                        contentType: false, // Không đặt tiêu đề Content-Type vì FormData tự xử lý
+                        data: formData, // Dữ liệu cần gửi đi
                         headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
                         },
                         success: function(response) {
                             // Nếu cập nhật thành công, reload bảng
-                                var alertContent = newTrangThai === 0 ? "khóa" : "mở khóa";
-                                Swal.fire('Thành công!', `Bạn đã ${alertContent} thành công !!`, 'success');
-                                filterProducts(currentPage);
+                            var alertContent = newTrangThai === 0 ? "khóa" : "mở khóa";
+                            Swal.fire('Thành công!', `Bạn đã ${alertContent} thành công !!`, 'success');
+                            filterProducts(currentPage);
                         },
                         error: function(xhr, status, error) {
                             console.error('Lỗi khi gọi API: ', error);
@@ -309,7 +309,7 @@
             }
 
             // Gọi hàm lọc sản phẩm với các tham số vừa lấy được
-            getAllSanPham(page, searchText,  stateFilter, categoryFilter, brandFilter);
+            getAllSanPham(page, searchText, stateFilter, categoryFilter, brandFilter);
 
         }
 
@@ -340,7 +340,7 @@
             }
 
 
-            getAllSanPham(currentPage, searchText,  stateFilter, categoryFilter, brandFilter);
+            getAllSanPham(currentPage, searchText, stateFilter, categoryFilter, brandFilter);
 
         });
 
@@ -432,7 +432,6 @@
                 }
             });
         }
-
     </script>
 
 

@@ -272,7 +272,7 @@
             });
             return false; // Dừng việc gửi form nếu productData trống
         }
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         var formData = new FormData();
         var totalPrice = parseInt(totalValue);
         if (isNaN(totalPrice)) {
@@ -408,14 +408,13 @@
 
         localStorage.setItem('selectedProducts', JSON.stringify([...selectedMap.values()]));
 
-        // Tính toán lại tổng giá trị ngay sau khi lưu sản phẩm vào localStorage
         calculateTotalPrice();
     }
 
 
     $(document).on('input', 'input[name="donGia[]"], input[name="soLuong[]"]', function() {
         calculateTotalPrice();
-        saveSelectedProducts(); // Cập nhật thông tin trong localStorage
+        saveSelectedProducts();
     });
 
 
@@ -434,7 +433,6 @@
         // Xóa nội dung hiện tại của bảng
         $('#tableBody').empty();
 
-        // Tải tất cả sản phẩm từ localStorage
         let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
 
         selectedProducts.forEach(function(product) {
@@ -491,7 +489,7 @@
     }
 
     function loaddatasp(page, search) {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
 
         $('#tableBody1').empty(); // Xóa nội dung cũ của bảng
         let ajaxData = {
@@ -581,7 +579,7 @@
 
 
     function loadDataAllWhenUrlHaveId(maPhieu) {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
 
         $.ajax({
             url: 'http://localhost:8080/InventoryReport/' + maPhieu,
@@ -608,7 +606,6 @@
 
                 var productData = response.inventoryReportDetails;
 
-                // Lưu danh sách các sản phẩm vào localStorage
                 var selectedProducts = [];
                 var selectedProducts = productData.map(function(product) {
                     return {
@@ -770,7 +767,7 @@
             });
             return false; // Dừng việc gửi form nếu productData trống
         }
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         var formData = new FormData();
         var formData1 = new FormData();
 
@@ -825,7 +822,7 @@
         var selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
         var selectedProductsOld = JSON.parse(localStorage.getItem('selectedProductsOld')) || [];
         var maPNK = document.getElementById("maPNK");
-        var token = localStorage.getItem("token"); // Đảm bảo lấy token từ localStorage
+        var token = sessionStorage.getItem("token");
 
         // Xử lý tạo mới và cập nhật
         for (let product of selectedProducts) {

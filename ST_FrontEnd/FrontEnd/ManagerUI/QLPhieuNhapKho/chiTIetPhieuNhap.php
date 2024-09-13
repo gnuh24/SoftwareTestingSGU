@@ -242,28 +242,30 @@ if (isset($_GET['MaPhieu'])) {
 
 <script>
     // Function to handle form submission
-function formatCurrency(input) {
-    // Lấy giá trị nhập vào từ trường input
-    let value = input.value;
-    // Loại bỏ các dấu phân tách và ký tự không phải số
-    value = value.replace(/[^\d]/g, '');
-    // Định dạng lại giá trị thành định dạng tiền tệ
-    input.value = Number(value).toLocaleString('en-US');
-}
-function clearFormat(input) {
-    // Loại bỏ các dấu phân tách khi trường nhận trọng tâm
-    let value = input.value;
-    value = value.replace(/[,]/g, '');
-    input.value = value;
-}
-function clearFormat1(value) {
-    // Loại bỏ các dấu phân tách từ giá trị
-    return value.replace(/[,]/g, '');
-}
+    function formatCurrency(input) {
+        // Lấy giá trị nhập vào từ trường input
+        let value = input.value;
+        // Loại bỏ các dấu phân tách và ký tự không phải số
+        value = value.replace(/[^\d]/g, '');
+        // Định dạng lại giá trị thành định dạng tiền tệ
+        input.value = Number(value).toLocaleString('en-US');
+    }
+
+    function clearFormat(input) {
+        // Loại bỏ các dấu phân tách khi trường nhận trọng tâm
+        let value = input.value;
+        value = value.replace(/[,]/g, '');
+        input.value = value;
+    }
+
+    function clearFormat1(value) {
+        // Loại bỏ các dấu phân tách từ giá trị
+        return value.replace(/[,]/g, '');
+    }
 
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
-        var userData = localStorage.getItem("key");
+        var userData = sessionStorage.getItem("key");
         userData = JSON.parse(userData);
         try {
             var trangthai = document.getElementById("status").value;
@@ -341,7 +343,7 @@ function clearFormat1(value) {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var quanLyData = JSON.parse(localStorage.getItem("key"));
+        var quanLyData = JSON.parse(sessionStorage.getItem("key"));
         var inputElement = document.getElementById("maquanly");
         inputElement.innerHTML = '';
         if (quanLyData && !inputElement.value) {
@@ -351,7 +353,7 @@ function clearFormat1(value) {
             loaddatasp();
 
         } catch (error) {
-            
+
         }
         calculateTotalPrice();
         setInterval(calculateTotalPrice, 2000);
@@ -437,6 +439,4 @@ function clearFormat1(value) {
     //         }
     //     });
     // }
-
-
 </script>

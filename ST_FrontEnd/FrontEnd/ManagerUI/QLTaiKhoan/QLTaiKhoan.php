@@ -11,55 +11,54 @@
 </head>
 
 <body>
-<div id="root">
-    <div>
-      <div class="App">
-        <div class="StaffLayout_wrapper__CegPk">
-          <?php require_once "../ManagerHeader.php" ?>
-          <div>
-            <div>
-              <div class="Manager_wrapper__vOYy">
-                <?php require_once "../ManagerMenu.php" ?>
+    <div id="root">
+        <div>
+            <div class="App">
+                <div class="StaffLayout_wrapper__CegPk">
+                    <?php require_once "../ManagerHeader.php" ?>
+                    <div>
+                        <div>
+                            <div class="Manager_wrapper__vOYy">
+                                <?php require_once "../ManagerMenu.php" ?>
 
-                <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
-                  <div class="wrapper">
-                    <div style="
+                                <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
+                                    <div class="wrapper">
+                                        <div style="
                           display: flex;
                           padding-top: 1rem;
                           padding-bottom: 1rem;
                         ">
-                      <h2>Quản lý tài khoản</h2>
-                                         <!-- <a href="FormCreateTaiKhoan.php" id="createAccountButton">Tạo Tài Khoản</a> -->
+                                            <h2>Quản lý tài khoản</h2>
+                                            <!-- <a href="FormCreateTaiKhoan.php" id="createAccountButton">Tạo Tài Khoản</a> -->
+                                        </div>
+                                        <div class="Admin_boxFeature__ECXnm">
+                                            <div style="position: relative;">
+                                                <input class="Admin_input__LtEE-" placeholder="Tìm kiếm tài khoản">
                                             </div>
-                                            <div class="Admin_boxFeature__ECXnm">
-                                                <div style="position: relative;">
-                                                    <input class="Admin_input__LtEE-" placeholder="Tìm kiếm tài khoản">
-                                                </div>
-                                                <select id="selectQuyen" style="height: 3rem; padding: 0.3rem;">
-                                                    <option value="">Trạng thái: tất cả</option>
-                                                    <option value="true">Hoạt động</option>
-                                                    <option value="false">Khóa</option>
-                                                </select>
-                                                <button id="searchButton" style="">Tìm kiếm</button>
-                                            </div>
-                                            <div class="Admin_boxTable__hLXRJ">
-                                                <table class="Table_table__BWPy">
-                                                    <thead class="Table_head__FTUog">
-                                                        <tr>
-                                                            <th class="Table_th__hCkcg">Mã Tài Khoản</th>
-                                                            <th class="Table_th__hCkcg">Email</th>
-                                                            <th class="Table_th__hCkcg">Ngày tạo</th>
-                                                            <th class="Table_th__hCkcg">Trạng thái</th>
-                                                            <th class="Table_th__hCkcg">Quyền</th>
-                                                            <th class="Table_th__hCkcg">Thao tác</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tableBody">
+                                            <select id="selectQuyen" style="height: 3rem; padding: 0.3rem;">
+                                                <option value="">Trạng thái: tất cả</option>
+                                                <option value="true">Hoạt động</option>
+                                                <option value="false">Khóa</option>
+                                            </select>
+                                            <button id="searchButton" style="">Tìm kiếm</button>
+                                        </div>
+                                        <div class="Admin_boxTable__hLXRJ">
+                                            <table class="Table_table__BWPy">
+                                                <thead class="Table_head__FTUog">
+                                                    <tr>
+                                                        <th class="Table_th__hCkcg">Mã Tài Khoản</th>
+                                                        <th class="Table_th__hCkcg">Email</th>
+                                                        <th class="Table_th__hCkcg">Ngày tạo</th>
+                                                        <th class="Table_th__hCkcg">Trạng thái</th>
+                                                        <th class="Table_th__hCkcg">Quyền</th>
+                                                        <th class="Table_th__hCkcg">Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tableBody">
 
-                                                    </tbody>
-                                                </table>
-                                                <div class="pagination"></div>
-                                            </div>
+                                                </tbody>
+                                            </table>
+                                            <div class="pagination"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -70,6 +69,7 @@
             </div>
         </div>
     </div>
+    </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -78,16 +78,16 @@
     var currentPage = 1;
 
     // Lắng nghe sự kiện click trên nút logout
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         var logoutButton = document.getElementById('logoutButton');
         if (logoutButton) {
-            logoutButton.addEventListener('click', function () {
-                localStorage.removeItem('key');
+            logoutButton.addEventListener('click', function() {
+                sessionStorage.removeItem('key');
                 window.location.href = '../../FrontEnd/MemberUI/Login/LoginUI.php';
             });
         }
 
-        
+
         fetchDataAndUpdateTable(currentPage, '', '');
     });
 
@@ -97,38 +97,38 @@
         tableBody.innerHTML = ''; // Xóa nội dung trong tbody
     }
 
- // Hàm getAllTaiKhoan
-function getAllTaiKhoan(page, search, quyen) {
-    $.ajax({ 
-        url: 'http://localhost:8080/Account',
-        type: 'GET',
-        dataType: "json",
-        headers: {
-            // Thêm JWT Token vào Authorization header
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-        },
-        data: {
-            pageNumber: page,
-            search: search,
-            status: quyen
-        },
-        success: function (response) {
-        
-            console.log(response);
+    // Hàm getAllTaiKhoan
+    function getAllTaiKhoan(page, search, quyen) {
+        $.ajax({
+            url: 'http://localhost:8080/Account',
+            type: 'GET',
+            dataType: "json",
+            headers: {
+                // Thêm JWT Token vào Authorization header
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
+            data: {
+                pageNumber: page,
+                search: search,
+                status: quyen
+            },
+            success: function(response) {
 
-            var data = response.content;
-            var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
-            var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
-            // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+                console.log(response);
 
-            if (data.length > 0){
-                data.forEach(function (record, index) {
-                    var trClass = (index % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
-           
-                    // Xác định trạng thái và văn bản của nút dựa trên trạng thái của tài khoản
-                    var buttonText = (record.status === false) ? "Mở khóa" : "Khóa";
-                    var buttonClass = (record.status === false) ? "unlock" : "block";
-                    var trContent = `
+                var data = response.content;
+                var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
+                var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
+                // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+
+                if (data.length > 0) {
+                    data.forEach(function(record, index) {
+                        var trClass = (index % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
+
+                        // Xác định trạng thái và văn bản của nút dựa trên trạng thái của tài khoản
+                        var buttonText = (record.status === false) ? "Mở khóa" : "Khóa";
+                        var buttonClass = (record.status === false) ? "unlock" : "block";
+                        var trContent = `
                         <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php">
                             <tr style="height: 20%"; max-height: 20%;>
                                 <td class="${trClass}" style="width: 130px;">${record.id}</td>
@@ -136,21 +136,21 @@ function getAllTaiKhoan(page, search, quyen) {
                                 <td class="${trClass}">${record.createTime}</td>
                                 <td class="${trClass}">${record.status === false ? "Khóa" : "Hoạt động"}</td>
                                 <td class="${trClass}">${record.role}</td>`;
-                        
-                                if (record.role === "User"){
-                                    trContent += `<td class="${trClass}">
+
+                        if (record.role === "User") {
+                            trContent += `<td class="${trClass}">
                                         <button class="${buttonClass}" onClick="handleLockUnlock(${record.id}, ${record.status})">${buttonText}</button>
                                     </td>`;
-                                }
-                                
+                        }
 
 
-                    trContent += `</tr></form>`;
-                    // Nếu chỉ có ít hơn 5 phần tử và đã duyệt đến phần tử cuối cùng, thêm các hàng trống vào
-                    if (data.length < 5 && index === data.length - 1) {
-                        for (var i = data.length; i < 5; i++) {
-                            var emptyTrClass = (i % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng trống
-                            trContent += `
+
+                        trContent += `</tr></form>`;
+                        // Nếu chỉ có ít hơn 5 phần tử và đã duyệt đến phần tử cuối cùng, thêm các hàng trống vào
+                        if (data.length < 5 && index === data.length - 1) {
+                            for (var i = data.length; i < 5; i++) {
+                                var emptyTrClass = (i % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng trống
+                                trContent += `
                                 <form id="emptyForm" method="post" action="FormUpdateTaiKhoan.php">
                                     <tr style="height: 20%"; max-height: 20%;>
                                         <td class="${emptyTrClass}" style="width: 130px;"></td>
@@ -162,35 +162,33 @@ function getAllTaiKhoan(page, search, quyen) {
                                         <td class="${emptyTrClass}"></td>
                                     </tr>
                                 </form>`;
+                            }
                         }
-                    }
-                    tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
-                });
-            }
-            
-            else{
-                tableContent = `<tr ><td style="text-align: center;" colspan="7">Không có tài khoản nào thỏa yêu cầu</td></tr>`;
-            }
-            
-
-            // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
-            tableBody.innerHTML = tableContent;
+                        tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+                    });
+                } else {
+                    tableContent = `<tr ><td style="text-align: center;" colspan="7">Không có tài khoản nào thỏa yêu cầu</td></tr>`;
+                }
 
 
-            // Tạo phân trang
-            createPagination(page, response.totalPages);
-        },
-        error: function (xhr, status, error) {
-            // Nếu lỗi là do token hết hạn, chuyển hướng đến trang đăng nhập
-            if (xhr.status === 401) {
-              alert('Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.');
-              window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
-            } else {
-              console.error('Lỗi khi gọi API: ', error);
+                // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
+                tableBody.innerHTML = tableContent;
+
+
+                // Tạo phân trang
+                createPagination(page, response.totalPages);
+            },
+            error: function(xhr, status, error) {
+                // Nếu lỗi là do token hết hạn, chuyển hướng đến trang đăng nhập
+                if (xhr.status === 401) {
+                    alert('Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại.');
+                    window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
+                } else {
+                    console.error('Lỗi khi gọi API: ', error);
+                }
             }
-        }
-    });
-}
+        });
+    }
 
 
     // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
@@ -218,34 +216,34 @@ function getAllTaiKhoan(page, search, quyen) {
             // Thiết lập nút phân trang vào paginationContainer
             paginationContainer.innerHTML = paginationHTML;
             // Thêm sự kiện click cho từng nút phân trang
-            paginationContainer.querySelectorAll('.pageButton').forEach(function (button, index) {
-                button.addEventListener('click', function () {
+            paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
+                button.addEventListener('click', function() {
                     // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
                     fetchDataAndUpdateTable(index + 1, searchValue, quyenValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
                 });
             });
-            
+
             // Đánh dấu trang hiện tại
             paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
         }
     }
 
     // Hàm xử lý sự kiện khi select Quyen thay đổi
-    document.querySelector('#selectQuyen').addEventListener('change', function () {
+    document.querySelector('#selectQuyen').addEventListener('change', function() {
         var searchValue = document.querySelector('.Admin_input__LtEE-').value;
         var quyenValue = this.value;
         // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
         fetchDataAndUpdateTable(currentPage, searchValue, quyenValue);
     });
     // Hàm xử lý sự kiện khi nút tìm kiếm được click
-    document.getElementById('searchButton').addEventListener('click', function () {
+    document.getElementById('searchButton').addEventListener('click', function() {
         var searchValue = document.querySelector('.Admin_input__LtEE-').value;
         var quyenValue = document.querySelector('#selectQuyen').value;
         // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
         fetchDataAndUpdateTable(currentPage, searchValue, quyenValue, '');
     });
     // Bắt sự kiện khi người dùng ấn phím Enter trong ô tìm kiếm
-    document.querySelector('.Admin_input__LtEE-').addEventListener('keypress', function (event) {
+    document.querySelector('.Admin_input__LtEE-').addEventListener('keypress', function(event) {
         // Kiểm tra xem phím được ấn có phải là Enter không (mã phím 13)
         if (event.key === 'Enter') {
             // Ngăn chặn hành động mặc định của phím Enter (ví dụ: gửi form)
@@ -262,41 +260,41 @@ function getAllTaiKhoan(page, search, quyen) {
     function handleLockUnlock(maTaiKhoan, trangThai) {
         var newTrangThai = trangThai === false ? true : false;
 
-    Swal.fire({
-        title: `Bạn có muốn ${newTrangThai === false ? 'khóa' : 'mở khóa'} tài khoản ${maTaiKhoan} không?`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Đồng ý',
-        cancelButtonText: 'Hủy'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            var formData = new FormData();
-            formData.append('accountId', maTaiKhoan);
-            formData.append('status', newTrangThai ? true : false);
-            console.log(formData);
-            $.ajax({
-                url: 'http://localhost:8080/Account/ChangeStatus',
-                type: 'PATCH',
-                dataType: 'json',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                },
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
+        Swal.fire({
+            title: `Bạn có muốn ${newTrangThai === false ? 'khóa' : 'mở khóa'} tài khoản ${maTaiKhoan} không?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var formData = new FormData();
+                formData.append('accountId', maTaiKhoan);
+                formData.append('status', newTrangThai ? true : false);
+                console.log(formData);
+                $.ajax({
+                    url: 'http://localhost:8080/Account/ChangeStatus',
+                    type: 'PATCH',
+                    dataType: 'json',
+                    headers: {
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                    },
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
                         var alertContent = newTrangThai ? "mở khóa" : "khóa";
                         Swal.fire('Thành công!', `Bạn đã ${alertContent} thành công !!`, 'success');
                         fetchDataAndUpdateTable(currentPage, "", null);
-                    
-                },
-                error: function (xhr, status, error) {
-                    console.error('Lỗi khi gọi API: ', error);
-                }
-            });
-        }
-    });
-}
 
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Lỗi khi gọi API: ', error);
+                    }
+                });
+            }
+        });
+    }
 </script>
+
 </html>

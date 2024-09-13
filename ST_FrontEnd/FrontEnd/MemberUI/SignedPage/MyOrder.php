@@ -39,8 +39,8 @@
     <?php require_once "../Footer/Footer.php" ?>
     <script>
         function loadOrders() {
-            var customerId = localStorage.getItem("id");
-            var token = localStorage.getItem("token");
+            var customerId = sessionStorage.getItem("id");
+            var token = sessionStorage.getItem("token");
 
             $.ajax({
                 url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
@@ -88,7 +88,7 @@
                                 </tr>
                             </thead>
                             <tbody>`;
-                var token = localStorage.getItem("token");
+                var token = sessionStorage.getItem("token");
                 // AJAX call to get chiTietDonHang
                 $.ajax({
                     url: `http://localhost:8080/Order/MyOrder/${hoaDon.id}`, // Đường dẫn API lấy chi tiết đơn hàng
@@ -164,8 +164,8 @@
         // Hàm xử lý hủy đơn hàng
         function cancelOrder(maDonHang) {
             console.log(maDonHang);
-        // Hiển thị hộp thoại xác thực
-        Swal.fire({
+            // Hiển thị hộp thoại xác thực
+            Swal.fire({
                 title: 'Xác nhận hủy đơn hàng?',
                 text: "Bạn có chắc muốn hủy đơn hàng này?",
                 icon: 'warning',
@@ -184,11 +184,11 @@
                             idStatus: "Huy"
                         },
                         headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem("token")
+                            'Authorization': 'Bearer ' + sessionStorage.getItem("token")
 
                         },
                         success: function(response) {
-                            
+
                             // Hiển thị thông báo và reload trang
                             Swal.fire(
                                 'Hủy đơn hàng thành công!',
@@ -199,16 +199,17 @@
                                 if (result.isConfirmed) {
                                     location.reload(); // Hoặc window.location.reload()
                                 }
-                            });                        },
+                            });
+                        },
                         error: function(xhr, status, error) {
                             console.error('Đã xảy ra lỗi khi hủy đơn hàng.');
                         }
                     });
 
-                    
+
                 }
             });
-           
+
         }
 
         function toOrderDetail(maDonHang) {

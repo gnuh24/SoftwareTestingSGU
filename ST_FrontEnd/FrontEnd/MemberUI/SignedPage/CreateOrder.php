@@ -85,7 +85,7 @@
             // fillUserDataToInputs();
             // fillOrderInfo();
             loadCart();
-            loadUserInfoFromLocalStorage();
+            loadUserInfoFromsessionStorage();
         });
         var listproduct = [];
         var totalpriceall = 0;
@@ -98,8 +98,8 @@
         }
 
         function loadCart() {
-            var token = localStorage.getItem("token"); // Lấy token từ localStorage
-            var maTaiKhoan = localStorage.getItem("id"); // Lấy token từ localStorage
+            var token = sessionStorage.getItem("token");
+            var maTaiKhoan = sessionStorage.getItem("id");
             $.ajax({
                 url: 'http://localhost:8080/CartItem/' + maTaiKhoan, // URL của file PHP API
                 method: 'GET',
@@ -186,9 +186,9 @@
             fillOrderInfo();
         });
 
-        function loadUserInfoFromLocalStorage() {
-            const token = localStorage.getItem("token");
-            var userData = localStorage.getItem("id");
+        function loadUserInfoFromsessionStorage() {
+            const token = sessionStorage.getItem("token");
+            var userData = sessionStorage.getItem("id");
             $.ajax({
                 url: "http://localhost:8080/Account/" + userData,
                 method: "GET",
@@ -225,7 +225,7 @@
             document.getElementById('spanDiaChi1').textContent = diaChi;
         }
         document.getElementById('createOrder').addEventListener('click', function() {
-            const maTaiKhoan = localStorage.getItem("id");
+            const maTaiKhoan = sessionStorage.getItem("id");
             const hoTen = document.getElementById('username').value.trim(); // Lấy giá trị của trường Họ tên
             const soDienThoai = document.getElementById('phonenumber').value.trim(); // Lấy giá trị của trường Số điện thoại
             const diaChi = document.getElementById('address1').value.trim(); // Lấy giá trị của trường Địa chỉ
@@ -271,13 +271,13 @@
 
         function updateInfor() {
             var formData = new FormData();
-            const maTaiKhoan = localStorage.getItem("id");
+            const maTaiKhoan = sessionStorage.getItem("id");
 
             formData.append('accountId', maTaiKhoan);
             formData.append('fullname', document.getElementById('username').value);
             formData.append('phone', document.getElementById('phonenumber').value);
             formData.append('address', document.getElementById('address1').value);
-            const token = localStorage.getItem("token");
+            const token = sessionStorage.getItem("token");
             $.ajax({
                 url: 'http://localhost:8080/Account/UpdateInformation',
                 type: 'PATCH',
@@ -296,8 +296,8 @@
 
 
         function createDonHang() {
-            var token = localStorage.getItem("token");
-            var userData = localStorage.getItem("id");
+            var token = sessionStorage.getItem("token");
+            var userData = sessionStorage.getItem("id");
             var formData = new FormData();
             formData.append('totalPrice', totalpriceall);
             var diaChi = document.getElementById('address').value;

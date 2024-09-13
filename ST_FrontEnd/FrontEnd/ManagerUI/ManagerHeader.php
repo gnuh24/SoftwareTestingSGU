@@ -22,17 +22,14 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Lấy refreshToken từ localStorage
-                const refreshToken = localStorage.getItem("refreshToken");
-
+                const refreshToken = sessionStorage.getItem("refreshToken");
                 if (refreshToken) {
                     // Gọi API logout qua Ajax
                     logout(refreshToken).then(() => {
-                        // Xóa các item trong localStorage sau khi API thành công
-                        localStorage.removeItem("id");
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("refreshToken");
 
+                        sessionStorage.removeItem('id');
+                        sessionStorage.removeItem('token');
+                        sessionStorage.removeItem('refreshToken');
                         // Chuyển hướng về trang đăng nhập
                         window.location.href = "../../MemberUI/Login/LoginUI.php";
                     }).catch(error => {
@@ -66,10 +63,10 @@
                 url: 'http://localhost:8080/Auth/Logout',
                 type: 'POST',
                 data: formData,
-                processData: false,  // Không xử lý dữ liệu (FormData cần giữ nguyên)
-                contentType: false,  // Đặt là false để sử dụng multipart/form-data mặc định
+                processData: false, // Không xử lý dữ liệu (FormData cần giữ nguyên)
+                contentType: false, // Đặt là false để sử dụng multipart/form-data mặc định
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
                 },
                 success: function(response) {
                     // Nếu thành công, resolve promise

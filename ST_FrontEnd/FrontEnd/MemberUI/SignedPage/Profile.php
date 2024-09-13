@@ -48,9 +48,9 @@
         }
 
 
-        function loadUserInfoFromLocalStorage() {
-            const token = localStorage.getItem("token");
-            var userData = localStorage.getItem("id");
+        function loadUserInfoFromsessionStorage() {
+            const token = sessionStorage.getItem("token");
+            var userData = sessionStorage.getItem("id");
             $.ajax({
                 url: "http://localhost:8080/Account/" + userData,
                 method: "GET",
@@ -114,7 +114,7 @@
             });
         }
 
-        window.onload = loadUserInfoFromLocalStorage;
+        window.onload = loadUserInfoFromsessionStorage;
 
 
         function validateForm() {
@@ -148,7 +148,7 @@
             formData.append('birthday', formatDateToDDMMYYYY(birthday));
             formData.append('gender', gender);
             formData.append('address', address);
-            const token = localStorage.getItem("token");
+            const token = sessionStorage.getItem("token");
             var formData1 = new FormData();
             var tokenChange = '';
             $.ajax({
