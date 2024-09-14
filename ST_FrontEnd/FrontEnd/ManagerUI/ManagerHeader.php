@@ -25,22 +25,13 @@
                 const refreshToken = sessionStorage.getItem("refreshToken");
                 if (refreshToken) {
                     // Gọi API logout qua Ajax
-                    logout(refreshToken).then(() => {
 
                         sessionStorage.removeItem('id');
                         sessionStorage.removeItem('token');
                         sessionStorage.removeItem('refreshToken');
                         // Chuyển hướng về trang đăng nhập
                         window.location.href = "../../MemberUI/Login/LoginUI.php";
-                    }).catch(error => {
-                        // Xử lý lỗi (nếu có)
-                        console.error('Lỗi khi gọi API logout:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi',
-                            text: 'Không thể đăng xuất. Vui lòng thử lại sau!',
-                        });
-                    });
+                  
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -52,31 +43,5 @@
         });
     });
 
-    // Hàm gọi API logout sử dụng Ajax với FormData
-    function logout(refreshToken) {
-        return new Promise((resolve, reject) => {
-            // Tạo đối tượng FormData và thêm refreshToken vào
-            const formData = new FormData();
-            formData.append("refreshToken", refreshToken);
 
-            $.ajax({
-                url: 'http://localhost:8080/Auth/Logout',
-                type: 'POST',
-                data: formData,
-                processData: false, // Không xử lý dữ liệu (FormData cần giữ nguyên)
-                contentType: false, // Đặt là false để sử dụng multipart/form-data mặc định
-                headers: {
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
-                },
-                success: function(response) {
-                    // Nếu thành công, resolve promise
-                    resolve(response);
-                },
-                error: function(xhr, status, error) {
-                    // Nếu có lỗi, reject promise
-                    reject(error);
-                }
-            });
-        });
-    }
 </script>
