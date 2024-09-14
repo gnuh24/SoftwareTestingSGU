@@ -120,19 +120,28 @@
                     const quantityMessage = soLuongConLai > 0 ?
                         `Còn ${soLuongConLai} sản phẩm` :
                         `<span style='color: red;'>Sản phẩm đã hết hàng</span>`;
+                     const productImage = product.image ? product.image : 'placeholder-image-url';
+                     const productName = product.productName ? product.productName : 'Tên sản phẩm chưa cập nhật';
+                     const origin = product.origin ? product.origin : 'Xuất xứ chưa cập nhật';
+                     const categoryName = product.category && product.category.categoryName ? product.category.categoryName : 'Loại sản phẩm chưa cập nhật';
+                     const brandName = product.brand && product.brand.brandName ? product.brand.brandName : 'Thương hiệu chưa cập nhật';
+                     const abv = product.abv ? product.abv : 'N/A';
+                     const capacity = product.capacity ? product.capacity : 'N/A';
+                    const description = product.description ? product.description : 'Thông tin chi tiết chưa được cập nhật.';
+                    const price = product.price ?product.price : 'Giá chưa cập nhật';
 
                     let htmlContent = `
                         <div class="product_images__wrapper">
                             <div class="image">
-                                <img src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${product.image}" alt="${product.productName}" class="product_img">
+                                <img src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${productImage}" alt="${product.productName}" class="product_img">
                             </div>
                         </div>
                         <div class="info__wrapper">
                             <div class="title__wrapper">
-                                <h2 class="title__wrapper">${product.productName}</h2>
+                                <h2 class="title__wrapper">${productName}</h2>
                             </div>
                             <div class="price__wrapper">
-                                <p class="price">${formatCurrency(product.price)}</p>
+                                <p class="price">${formatCurrency(price)}</p>
                             </div>
                             <div class="quantity-available">
                                 <p class="title">${quantityMessage}</p>
@@ -142,24 +151,24 @@
                                 <div class="specification__wrapper">
                                     <a href="#" class="origin specification_item">
                                         <i class="fa-solid fa-plane"></i>
-                                        <p>${product.origin}</p>
+                                        <p>${origin}</p>
                                     </a>
                                     <a href="#" class="specification_item">
                                         <i class="fa-solid fa-wine-bottle"></i>
-                                        <p>${product.category.categoryName}</p>
+                                        <p>${categoryName}</p>
                                     </a>
                                     <a href="#" class="origin specification_item">
                                         <i class="fa-solid fa-tag"></i>
-                                        <p>${product.brand.brandName}</p>
+                                        <p>${brandName}</p>
                                     </a>                              
                                 </div>
                                 <div class="size__wrapper">
                                     <p class="title">Nồng độ cồn</p>
-                                    <p>${product.abv}%</p>
+                                    <p>${abv}%</p>
                                 </div>
                                 <div class="size__wrapper">
                                     <p class="title">Dung tích</p>
-                                    <p>${product.capacity}ml</p>
+                                    <p>${capacity}ml</p>
                                 </div>
                                 <div class="quantity__wrapper" style="display: flex; align-items: center;">`;
 
@@ -193,7 +202,7 @@
                     
                     `;
                     htmlContent += `<div class="description text-center"><h1>Thông tin chi tiết</h1>
-                    <div> ${product.description}</div>
+                    <div> ${description}</div>
                     </div>`;
                     $('.product__wrapper').html(htmlContent);
                     // Lắng nghe sự kiện click vào nút "Thêm vào giỏ hàng"
