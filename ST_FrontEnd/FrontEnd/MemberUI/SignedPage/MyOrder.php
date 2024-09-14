@@ -44,11 +44,8 @@
         var token = sessionStorage.getItem("token");
 
         $.ajax({
-            url: 'http://localhost:8080/Order/MyOrder', // Đường dẫn API lấy đơn hàng
+            url: 'http://localhost:8080/Order/MyOrder?orderTime,desc', // Đường dẫn API lấy đơn hàng
             type: 'GET',
-            body: {
-                sort: "orderTime,desc"
-            },
             headers: {
                 'Authorization': 'Bearer ' + token
             },
@@ -123,7 +120,7 @@
                             <p>Tổng giá trị: ${formatMoney(hoaDon.totalPrice)}</p>
                         <button class='order_detail_button' onclick="toOrderDetail('${hoaDon.id}')"> Chi tiết</button>`;
 
-                    if (hoaDon.status !== 'DangGiao' && hoaDon.status !== 'GiaoThanhCong' && hoaDon.status !== 'Huy') {
+                    if (hoaDon.status !== 'DangGiao' && hoaDon.status !== 'GiaoThanhCong' && hoaDon.status !== 'Huy' && hoaDon.status !== 'DaDuyet') {
                         const listSanPham = JSON.stringify(listCTDH);
                         orderHtml += `<button class='cancel_order_button' onclick="cancelOrder('${hoaDon.id}')">Hủy đơn hàng</button>`;
                     }

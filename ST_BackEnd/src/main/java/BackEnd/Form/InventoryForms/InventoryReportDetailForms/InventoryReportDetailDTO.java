@@ -20,5 +20,7 @@ public class InventoryReportDetailDTO {
     private Integer unitPrice;
 
     private Integer total;
+
+    private Integer profit;
 }
 

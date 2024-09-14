@@ -115,7 +115,7 @@ INSERT INTO `UserInformation` 	(`Id`, 		`Email`, 							`Address`, 			`Birthday`
 								(5, 		'admin005@gmail.com', 				'123 Main St', 		'2004-04-01', 		'Mr 005', 			'Male', 		'123-456-7890'),
 								(6, 		'user006@gmail.com', 				'123 Main St', 		'2004-04-01', 		'Mr 006', 			'Male', 		'123-456-7890'),
 								(7, 		'user007@gmail.com', 				'123 Main St', 		'2004-04-01', 		'Mr 007', 			'Male', 		'123-456-7890'),
-								(8, 		'user008mail.com', 					'123 Main St', 		'2004-04-01', 		'Mr 008', 			'Male', 		'123-456-7890'),
+								(8, 		'user008@gmail.com', 					'123 Main St', 		'2004-04-01', 		'Mr 008', 			'Male', 		'123-456-7890'),
 								(9, 		'user009@gmail.com', 				'123 Main St', 		'2004-04-01', 		'Mr 009', 			'Male', 		'123-456-7890'),
 								(10, 		'user010@gmail.com', 				'123 Main St', 		'2004-04-01', 		'Mr 010', 			'Male', 		'123-456-7890');
 

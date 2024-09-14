@@ -97,8 +97,12 @@ public class OrderStatusService implements IOrderStatusService{
                     if (batch == null){
                         batch = batchService.getTheValidBatchBackup(ctdh.getId().getProductId());
                     }
-                    int soLuongConLai = batch.getQuantity() - ctdh.getQuantity();
 
+                    if (batch.getUnitPrice() != ctdh.getUnitPrice()){
+                        throw new NotEnoughInventory("Sản phẩm  " + batch.getProduct().getProductName() +  " hiện đang nằm trong lô hàng không còn được kinh doanh !!");
+                    }
+
+                    int soLuongConLai = batch.getQuantity() - ctdh.getQuantity();
                     if (soLuongConLai >= 0){
                         batch.setQuantity(soLuongConLai);
                     }else{

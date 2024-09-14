@@ -15,7 +15,7 @@
                 </p>
                 <p>
                     <i class="fa-solid fa-envelope me-2"></i>
-                    doanhdaigr5.2004@gmail.com
+                    hungnt.020404@gmail.com
                 </p>
             </div>
 

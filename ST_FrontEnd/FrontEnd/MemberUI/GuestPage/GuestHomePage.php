@@ -151,7 +151,7 @@
                         htmlContent += `
                        <div class="col-md-4 col-sm-6 mb-4">
                             <div class="product-card-content">
-                                <a href="SignedProductDetail.php?maSanPham=${product.id}">
+                                <a href="GuestProductDetail.php?maSanPham=${product.id}">
                                     <img src="https://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${product.image}" alt="" style="height: 300px;">
                                     <div class="product-card-details">
                                         <h4 class="name-product">${product.productName}</h4>

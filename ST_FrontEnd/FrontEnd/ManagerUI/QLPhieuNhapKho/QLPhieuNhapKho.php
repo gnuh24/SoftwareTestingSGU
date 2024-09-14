@@ -125,6 +125,23 @@
       });
     }
 
+    function convertDateFormat(dateString) {
+    // Kiểm tra định dạng đầu vào
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regex.test(dateString)) {
+        throw new Error("Định dạng ngày không hợp lệ. Vui lòng sử dụng 'yyyy-MM-dd'.");
+    }
+
+    // Tách các phần của ngày
+    const parts = dateString.split('-');
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+
+    // Trả về định dạng mới
+    return `${day}/${month}/${year}`;
+}
+
     // Hàm getAllphieunhapkho
     function getAllphieunhapkho(page, dateFrom, dateTo, searchTerm) {
       const token = sessionStorage.getItem("token");
@@ -135,11 +152,11 @@
       };
 
       if (dateFrom) {
-        data.form = dateFrom; // Chỉ thêm vào nếu có dateFrom
+        data.to = convertDateFormat(dateFrom); // Chỉ thêm vào nếu có dateFrom
       }
 
       if (dateTo) {
-        data.to = dateTo; // Chỉ thêm vào nếu có dateTo
+        data.from = convertDateFormat(dateTo); // Chỉ thêm vào nếu có dateTo
       }
 
       if (searchTerm) {
@@ -161,13 +178,6 @@
 
           // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
           data.forEach(function(record) {
-            var ngayNhapKho = record['createTime'];
-
-            // Chuyển đổi ngày nhập kho sang đối tượng Date
-            var date = new Date(ngayNhapKho);
-
-            // Định dạng lại chuỗi ngày giờ
-            var ngayNhapKhoFormatted = date.toLocaleTimeString('vi-VN') + ' ' + date.toLocaleDateString('vi-VN');
 
             var formattedTongGiaTri = formatCurrency(record['totalPrice']);
 
@@ -175,7 +185,7 @@
           <form id="updateForm_${record['id']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['id']}">
             <tr>
               <td class="Table_data" style="width: 130px;">${record['id']}</td>
-              <td class="Table_data">${ngayNhapKhoFormatted}</td>
+              <td class="Table_data">${record['createTime']}</td>
               <td class="Table_data">${record['supplier']}</td>
               <td class="Table_data">${record['supplierPhone']}</td>
               <td class="Table_data">${formattedTongGiaTri}</td>

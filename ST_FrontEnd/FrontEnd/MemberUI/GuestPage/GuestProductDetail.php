@@ -192,15 +192,15 @@
                             </button>`;
                     }
 
-                    htmlContent += `
-                            <button class="btn btn-primary" >
-                                <span>Mua ngay</span>
-                            </button>
-                        </div>
-                    </div>
-                    </div>
+                    // htmlContent += `
+                    //         <button class="btn btn-primary" >
+                    //             <span>Mua ngay</span>
+                    //         </button>
+                    //     </div>
+                    // </div>
+                    // </div>
                     
-                    `;
+                    // `;
                     htmlContent += `<div class="description text-center"><h1>Thông tin chi tiết</h1>
                     <div> ${description}</div>
                     </div>`;

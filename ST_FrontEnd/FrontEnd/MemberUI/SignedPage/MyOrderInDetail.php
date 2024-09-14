@@ -157,27 +157,27 @@
             case 'ChoDuyet':
                 $icon1.css("color", "green");
                 $circleContainer1.css("border-color", "green");
-                $thoiGian1.html(chuyenDoiNgayThang(thoiGianValue));
+                $thoiGian1.html(thoiGianValue);
                 break;
             case 'DaDuyet':
                 $icon2.css("color", "green");
                 $line1.css("color", "green");
                 $circleContainer2.css("border-color", "green");
-                $thoiGian2.html(chuyenDoiNgayThang(thoiGianValue));
+                $thoiGian2.html(thoiGianValue);
 
                 break;
             case 'DangGiao':
                 $icon3.css("color", "green");
                 $line2.css("color", "green");
                 $circleContainer3.css("border-color", "green");
-                $thoiGian3.html(chuyenDoiNgayThang(thoiGianValue));
+                $thoiGian3.html(thoiGianValue);
 
                 break;
             case 'GiaoThanhCong':
                 $icon4.css("color", "green");
                 $line3.css("color", "green");
                 $circleContainer4.css("border-color", "green");
-                $thoiGian4.html(chuyenDoiNgayThang(thoiGianValue));
+                $thoiGian4.html(thoiGianValue);
 
                 break;
             case 'Huy':
@@ -200,7 +200,7 @@
                 $icon5.css("color", "rgb(146, 26, 26)");
                 $line4.css("color", "rgb(146, 26, 26)");
                 $circleContainer5.css("border-color", "rgb(146, 26, 26)");
-                $thoiGian5.html(chuyenDoiNgayThang(thoiGianValue));
+                $thoiGian5.html(thoiGianValue);
 
                 break;
             default:
@@ -213,29 +213,6 @@
             style: 'currency',
             currency: 'VND'
         }).format(value);
-    }
-
-    function chuyenDoiNgayThang(input) {
-        // Tạo một đối tượng Date từ chuỗi đầu vào
-        var date = new Date(input);
-
-        // Lấy các thành phần của ngày tháng
-        var gio = date.getHours();
-        var phut = date.getMinutes();
-        var giay = date.getSeconds();
-        var ngay = date.getDate();
-        var thang = date.getMonth() + 1; // Vì tháng trong JavaScript bắt đầu từ 0
-        var nam = date.getFullYear();
-
-        // Đảm bảo rằng các giá trị có dạng hai chữ số (ví dụ: 01 thay vì 1)
-        gio = gio < 10 ? '0' + gio : gio;
-        phut = phut < 10 ? '0' + phut : phut;
-        giay = giay < 10 ? '0' + giay : giay;
-        ngay = ngay < 10 ? '0' + ngay : ngay;
-        thang = thang < 10 ? '0' + thang : thang;
-
-        // Trả về chuỗi đã định dạng
-        return gio + ':' + phut + ':' + giay + ' ' + ngay + '/' + thang + '/' + nam;
     }
 
     function loadOrderData(maOrder) {

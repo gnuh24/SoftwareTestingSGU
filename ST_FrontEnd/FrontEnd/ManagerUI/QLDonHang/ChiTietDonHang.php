@@ -132,9 +132,6 @@
                 document.getElementById("hoten").innerHTML = `<span>Họ tên:</span> ${data.userInformation.fullname}`;
                 document.getElementById("diachigiaohang").innerHTML = `<span>Địa chỉ: </span>${data.userInformation.address}`;
                 document.getElementById("sodienthoai").innerHTML = `<span>Số điện thoại: </span>${data.userInformation.phoneNumber}`;
-                document.getElementById("ngaysinh").innerHTML = `<span>Ngày sinh: </span>${data.userInformation.birthday}`; // Added birthday
-                document.getElementById("gioitinh").innerHTML = `<span>Giới tính: </span>${data.userInformation.gender}`; // Added gender
-                document.getElementById("tenphuongthuc").innerHTML = `Chưa có thông tin<br>`;
                 document.getElementById("note").innerText = data.note; // Added note
                 document.getElementById("totalPrice").innerText = number_format_vnd(data.totalPrice);
                 document.getElementById("orderTime").innerHTML = `<span>Thời gian đặt: </span>${data.orderTime}`; // Added order time

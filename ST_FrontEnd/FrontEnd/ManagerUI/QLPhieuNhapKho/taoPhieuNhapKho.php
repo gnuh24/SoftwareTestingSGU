@@ -394,7 +394,7 @@
             } else {
                 formData.append(`inventoryReportDetailCreateFormList[${index}].productName`, item.productName);
             }
-            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, item.unitPrice);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, isNaN(Number(item.unitPrice)) ? 0 : Number(item.unitPrice));
             formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, item.quantity);
             formData.append(`inventoryReportDetailCreateFormList[${index}].total`, item.total);
             formData.append(`inventoryReportDetailCreateFormList[${index}].profit`, item.profit);
