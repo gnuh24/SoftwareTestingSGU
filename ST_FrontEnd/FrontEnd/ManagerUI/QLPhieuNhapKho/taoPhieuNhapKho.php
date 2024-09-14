@@ -202,6 +202,11 @@
 
 
 <script>
+    function isNewProduct(productId) {
+        return productId && productId.startsWith('new-');
+    }
+
+
     $(document).on('change', '.product_checkbox', function() {
         saveSelectedProducts(); // Lưu trạng thái của các sản phẩm đã chọn
 
@@ -213,7 +218,7 @@
         selectedProducts.forEach(function(product, index) {
             var selectedProductHTML = `
         <tr style="text-align: center;" data-product-id="${product.id}">
-            <td style="padding: 0.5rem;" name="MaSanPham[]">${product.id}</td>
+            <td style="padding: 0.5rem;" name="MaSanPham[]">${!isNewProduct(product.id) ? product.id : ''}</td>
             <td style="padding: 0.5rem;">${product.name}</td>
             <td style="padding: 0.5rem;">
                 <input type="text" name="donGia[]" id="donGia${product.id}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${product.donGia}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
@@ -236,10 +241,7 @@
     });
 
     function handleNew() {
-        // Lấy phần tử input bằng id
         var inputElement = document.getElementById('sanPhamMoi');
-
-        // Lấy giá trị của input
         var inputValue = inputElement.value.trim();
 
         if (inputValue === '') {
@@ -249,11 +251,11 @@
 
         // Tạo đối tượng sản phẩm mới
         var newProduct = {
-            id: '', // ID rỗng, sẽ được tạo bởi backend
+            id: 'new-' + Date.now(), // Cấp ID tạm thời duy nhất
             name: inputValue,
-            donGia: '1', // Giá mặc định nếu không có giá
-            soLuong: '1', // Số lượng mặc định nếu không có số lượng
-            loiNhuan: '1' // Lợi nhuận mặc định nếu không có lợi nhuận
+            donGia: '1',
+            soLuong: '1',
+            loiNhuan: '1'
         };
 
         // Lấy danh sách sản phẩm hiện tại từ localStorage
@@ -271,34 +273,35 @@
         // Thêm sản phẩm mới vào bảng
         selectedProducts.forEach(function(product, index) {
             var selectedProductHTML = `
-        <tr style="text-align: center;" data-product-id="${product.id || 'Chưa có ID'}">
-            <td style="padding: 0.5rem;" name="MaSanPham[]">${product.id || 'Chưa có ID'}</td>
-            <td style="padding: 0.5rem;">${product.name}</td>
-            <td style="padding: 0.5rem;">
-                <input type="text" name="donGia[]" id="donGia${product.id}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${product.donGia}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
-            </td>
-            <td style="padding: 0.5rem;">
-                <input type="text" name="soLuong[]" id="soLuong${product.id}" value="${product.soLuong}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
-            </td>
-            <td style="padding: 0.5rem;">
-                <input type="text" name="loiNhuan[]" id="loiNhuan${product.id}" value="${product.loiNhuan}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
-            </td>
-            <td style="padding: 0.5rem;">
-                <button class="delete-btn" data-index="${index}" style="color: red; font-weight: 700; background: none; border: none; cursor: pointer;">X</button>
-            </td>
-        </tr>`;
+            <tr style="text-align: center;" data-product-id="${product.id}">
+                <td style="padding: 0.5rem;" name="MaSanPham[]">${!isNewProduct(product.id) ? product.id : ''}</td>
+                <td style="padding: 0.5rem;">${product.name}</td>
+                <td style="padding: 0.5rem;">
+                    <input type="text" name="donGia[]" id="donGia${product.id}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${product.donGia}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                </td>
+                <td style="padding: 0.5rem;">
+                    <input type="text" name="soLuong[]" id="soLuong${product.id}" value="${product.soLuong}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                </td>
+                <td style="padding: 0.5rem;">
+                    <input type="text" name="loiNhuan[]" id="loiNhuan${product.id}" value="${product.loiNhuan}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                </td>
+                <td style="padding: 0.5rem;">
+                    <button class="delete-btn" data-index="${index}" style="color: red; font-weight: 700; background: none; border: none; cursor: pointer;">X</button>
+                </td>
+            </tr>`;
             $('#tableBody').append(selectedProductHTML);
         });
 
         // Gọi ngay tính tổng sau khi thêm sản phẩm vào bảng
-        calculateTotalPrice(); // Tính toán lại tổng giá trị ngay sau khi thêm sản phẩm
+        calculateTotalPrice();
 
         // Xóa giá trị của input và ẩn modal
         inputElement.value = '';
         var modal = document.querySelector('.modal_overlay1');
         if (modal) {
-            modal.style.display = 'none'; // Ẩn modal khi trang được tải
+            modal.style.display = 'none';
         }
+        saveSelectedProducts();
     }
 
 
@@ -385,6 +388,7 @@
         formData.append('supplierPhone', sodienthoainhacungcap);
 
         productData.forEach((item, index) => {
+            console.log(item)
             if (item.idProductId) {
                 formData.append(`inventoryReportDetailCreateFormList[${index}].idProductId`, item.idProductId);
             } else {
@@ -422,19 +426,19 @@
         });
     }
 
-
-
-
     function saveSelectedProducts() {
-        // Lấy danh sách sản phẩm hiện tại từ localStorage
+        // Lấy các sản phẩm đã được lưu từ localStorage
         let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+
+        // Tạo Map từ danh sách các sản phẩm đã lưu trong localStorage
         let selectedMap = new Map(selectedProducts.map(product => [product.id, product]));
 
-        $('.product_checkbox').each(function() {
-            let productId = $(this).attr('id');
-            let productName = $(this).closest('tr').find('td:eq(1)').text().trim();
+        // Duyệt qua tất cả các checkbox sản phẩm trên giao diện
+        $('input[type="checkbox"]').each(function() {
+            let productId = $(this).attr('id'); // ID của sản phẩm trong bảng
+            let productName = $(this).closest('tr').find('td:eq(1)').text().trim(); // Tên sản phẩm
 
-            // Lấy giá và số lượng hiện tại của sản phẩm
+            // Lấy giá trị đơn giá, số lượng, lợi nhuận từ các ô input tương ứng
             let donGiaElement = document.getElementById(`donGia${productId}`);
             let soLuongElement = document.getElementById(`soLuong${productId}`);
             let loiNhuanElement = document.getElementById(`loiNhuan${productId}`);
@@ -443,54 +447,56 @@
             let loiNhuan = loiNhuanElement ? loiNhuanElement.value : '1';
 
             if ($(this).prop('checked')) {
-                if (!productId || productId === '') {
-                    // Xử lý sản phẩm mới không có ID
-                    let existingProduct = Array.from(selectedMap.values()).find(p => p.name === productName);
-                    if (existingProduct) {
-                        // Cập nhật thông tin của sản phẩm đã tồn tại dựa trên tên sản phẩm
-                        existingProduct.donGia = donGia;
-                        existingProduct.soLuong = soLuong;
-                        existingProduct.loiNhuan = loiNhuan;
-                    } else {
-                        // Thêm sản phẩm mới vào danh sách
-                        selectedMap.set(Date.now(), {
-                            id: '', // ID tạm thời cho sản phẩm mới
-                            name: productName,
-                            donGia: donGia,
-                            soLuong: soLuong,
-                            loiNhuan: loiNhuan
-                        });
-                    }
+                // Nếu sản phẩm đã được chọn, cập nhật hoặc thêm vào Map
+                if (selectedMap.has(productId)) {
+                    let product = selectedMap.get(productId);
+                    product.donGia = donGia;
+                    product.soLuong = soLuong;
+                    product.loiNhuan = loiNhuan;
                 } else {
-                    // Cập nhật thông tin sản phẩm đã có ID
-                    if (selectedMap.has(productId)) {
-                        let product = selectedMap.get(productId);
-                        product.donGia = donGia;
-                        product.soLuong = soLuong;
-                        product.loiNhuan = loiNhuan;
-                    } else {
-                        selectedMap.set(productId, {
-                            id: productId,
-                            name: productName,
-                            donGia: donGia,
-                            soLuong: soLuong,
-                            loiNhuan: loiNhuan
-                        });
-                    }
+                    // Thêm sản phẩm mới với ID đã tồn tại trong checkbox
+                    selectedMap.set(productId, {
+                        id: productId,
+                        name: productName,
+                        donGia: donGia,
+                        soLuong: soLuong,
+                        loiNhuan: loiNhuan
+                    });
                 }
             } else {
-                // Xóa sản phẩm khỏi danh sách nếu checkbox không được chọn
-                selectedMap.delete(productId);
+                // Nếu sản phẩm không được chọn, vẫn giữ lại trong Map, không xóa
+                if (selectedMap.has(productId)) {
+                    let product = selectedMap.get(productId);
+                    product.donGia = donGia;
+                    product.soLuong = soLuong;
+                    product.loiNhuan = loiNhuan;
+                }
             }
         });
 
-        // Lưu danh sách sản phẩm đã cập nhật vào localStorage
+        // Xử lý các sản phẩm không có checkbox nhưng đã tồn tại trong localStorage (cập nhật từ bảng)
+        selectedMap.forEach((product, productId) => {
+            if (!$(`#${productId}`).length) {
+                // Nếu sản phẩm không có checkbox (không có trong giao diện), vẫn cập nhật thông tin
+                let donGiaElement = document.getElementById(`donGia${productId}`);
+                let soLuongElement = document.getElementById(`soLuong${productId}`);
+                let loiNhuanElement = document.getElementById(`loiNhuan${productId}`);
+                let donGia = donGiaElement ? clearCurrencyFormat(donGiaElement.value) : product.donGia;
+                let soLuong = soLuongElement ? soLuongElement.value : product.soLuong;
+                let loiNhuan = loiNhuanElement ? loiNhuanElement.value : product.loiNhuan;
+
+                product.donGia = donGia;
+                product.soLuong = soLuong;
+                product.loiNhuan = loiNhuan;
+            }
+        });
+
+        // Lưu lại danh sách sản phẩm đã cập nhật vào localStorage
         localStorage.setItem('selectedProducts', JSON.stringify([...selectedMap.values()]));
 
-        // Tính toán tổng giá trị sau khi cập nhật
+        // Tính toán lại tổng giá trị
         calculateTotalPrice();
     }
-
 
 
 
