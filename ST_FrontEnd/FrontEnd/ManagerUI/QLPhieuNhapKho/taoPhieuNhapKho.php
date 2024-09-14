@@ -74,18 +74,19 @@
                                     class="form-control"
                                     id="manhacungcap"
                                     placeholder="Nhập tên nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0px" />
+                                    style="width: 35%;padding: 10px 0px" />
                                 <input
                                     type="text"
                                     class="form-control"
                                     id="sodienthoainhacungcap"
                                     placeholder="Nhập số điện thoại nhà cung cấp"
-                                    style="width: 40%;padding: 10px 0;" />
-                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" <?php if (isset($_GET['MaPhieu'])) echo 'onclick="handleSubmitChange()"';
-                                                                                                                                                                                                                                    else echo 'onclick="handleSubmit()"'; ?>>
-                                    <?php if (isset($_GET['MaPhieu'])) echo 'Xác nhận';
-                                    else echo 'Tạo phiếu nhập' ?>
-                                </button>
+                                    style="width: 35%;padding: 10px 0;" />
+                                <?php if (!isset($_GET['MaPhieu'])) echo '
+                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="setShowModal1(true)">
+                                    Tạo sản phẩm mới</button>
+                                <button style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
+                                    Tạo phiếu nhập</button>';
+                                ?>
                             </div>
 
 
@@ -99,6 +100,9 @@
                                                 <th style="padding: 0.5rem;">Tên Sản Phẩm</th>
                                                 <th style="padding: 0.5rem;">Đơn giá</th>
                                                 <th style="padding: 0.5rem;">Số lượng</th>
+                                                <th style="padding: 0.5rem;">Lợi nhuận</th>
+                                                <th style="padding: 0.5rem;">Thao tác</th>
+
                                             </tr>
                                         </thead>
                                         <tbody id="tableBody">
@@ -114,9 +118,6 @@
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
                                         <input id="totalvalue" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="" disabled="true" />
                                     </label>
-
-                                    <div id="statusContainer"></div>
-
                                 </div>
                             </div>
                         </div>
@@ -157,6 +158,42 @@
                 </div>
             </div>
             <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+    <div class="modal_overlay1" style="<?php
+                                        if (isset($_GET['MaPhieu'])) {
+                                            echo 'display:none';
+                                        };
+                                        ?>">
+        <div class="modal_content">
+            <!-- Đầu modal_content -->
+            <span class="close_btn">
+                <h3>Tạo mới Sản Phẩm</h3>
+                <i onclick="setShowModal1(false)">X</i>
+            </span>
+            <div style="margin-top: 1rem;">
+                <div class="table_wrapper">
+                    <table class="product_table">
+                        <thead>
+                            <tr style="background-color: rgb(40, 40, 40); color: white;">
+                                <th style="padding: 0.5rem;width: 477px;">Tên Sản Phẩm</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                    <div class="input-container">
+                        <label for="sanPhamMoi" style="display: block; margin-bottom: 0.5rem;">Nhập tên sản phẩm mới:</label>
+                        <input type="text" id="sanPhamMoi" class="input-text" placeholder="Nhập tên sản phẩm mới">
+                    </div>
+
+                    <div class="button-container">
+                        <button class="create-product-button" onclick="handleNew()">
+                            Tạo sản phẩm mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     </div>
@@ -165,73 +202,121 @@
 
 
 <script>
-    function formatCurrency(input) {
-        let value = input.value;
-        value = value.replace(/[^\d]/g, ''); // Loại bỏ ký tự không phải số
-        input.value = Number(value).toLocaleString('en-US'); // Định dạng tiền tệ
-    }
+    $(document).on('change', '.product_checkbox', function() {
+        saveSelectedProducts(); // Lưu trạng thái của các sản phẩm đã chọn
 
-    function formatCurrency1(input) {
-        let value = parseFloat(input); // Chuyển đổi đầu vào thành số
-        if (!isNaN(value)) {
-            // Định dạng tiền tệ Việt Nam
-            return value.toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            });
-        } else {
-            console.error('Input must be a number.');
-            return '';
+        // Xóa nội dung hiện tại của bảng
+        $('#tableBody').empty();
+
+        let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+
+        selectedProducts.forEach(function(product, index) {
+            var selectedProductHTML = `
+        <tr style="text-align: center;" data-product-id="${product.id}">
+            <td style="padding: 0.5rem;" name="MaSanPham[]">${product.id}</td>
+            <td style="padding: 0.5rem;">${product.name}</td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="donGia[]" id="donGia${product.id}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${product.donGia}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="soLuong[]" id="soLuong${product.id}" value="${product.soLuong}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="loiNhuan[]" id="loiNhuan${product.id}" value="${product.loiNhuan}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <button class="delete-btn" data-index="${index}" style="color: red; font-weight: 700; background: none; border: none; cursor: pointer;">X</button>
+            </td>
+        </tr>`;
+            $('#tableBody').append(selectedProductHTML);
+        });
+
+        // Gọi ngay tính tổng sau khi thêm sản phẩm vào bảng
+        calculateTotalPrice(); // Tính toán lại tổng giá trị ngay sau khi thêm sản phẩm
+    });
+
+    function handleNew() {
+        // Lấy phần tử input bằng id
+        var inputElement = document.getElementById('sanPhamMoi');
+
+        // Lấy giá trị của input
+        var inputValue = inputElement.value.trim();
+
+        if (inputValue === '') {
+            alert('Vui lòng nhập tên sản phẩm.');
+            return;
+        }
+
+        // Tạo đối tượng sản phẩm mới
+        var newProduct = {
+            id: '', // ID rỗng, sẽ được tạo bởi backend
+            name: inputValue,
+            donGia: '1', // Giá mặc định nếu không có giá
+            soLuong: '1', // Số lượng mặc định nếu không có số lượng
+            loiNhuan: '1' // Lợi nhuận mặc định nếu không có lợi nhuận
+        };
+
+        // Lấy danh sách sản phẩm hiện tại từ localStorage
+        var selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
+
+        // Thêm sản phẩm mới vào danh sách
+        selectedProducts.push(newProduct);
+
+        // Lưu danh sách sản phẩm đã cập nhật vào localStorage
+        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+
+        // Xóa nội dung bảng hiện tại
+        $('#tableBody').empty();
+
+        // Thêm sản phẩm mới vào bảng
+        selectedProducts.forEach(function(product, index) {
+            var selectedProductHTML = `
+        <tr style="text-align: center;" data-product-id="${product.id || 'Chưa có ID'}">
+            <td style="padding: 0.5rem;" name="MaSanPham[]">${product.id || 'Chưa có ID'}</td>
+            <td style="padding: 0.5rem;">${product.name}</td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="donGia[]" id="donGia${product.id}" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="${product.donGia}" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="soLuong[]" id="soLuong${product.id}" value="${product.soLuong}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="loiNhuan[]" id="loiNhuan${product.id}" value="${product.loiNhuan}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <button class="delete-btn" data-index="${index}" style="color: red; font-weight: 700; background: none; border: none; cursor: pointer;">X</button>
+            </td>
+        </tr>`;
+            $('#tableBody').append(selectedProductHTML);
+        });
+
+        // Gọi ngay tính tổng sau khi thêm sản phẩm vào bảng
+        calculateTotalPrice(); // Tính toán lại tổng giá trị ngay sau khi thêm sản phẩm
+
+        // Xóa giá trị của input và ẩn modal
+        inputElement.value = '';
+        var modal = document.querySelector('.modal_overlay1');
+        if (modal) {
+            modal.style.display = 'none'; // Ẩn modal khi trang được tải
         }
     }
 
 
-
-    function clearFormat(input) {
-        let value = input.value;
-        value = value.replace(/[,]/g, ''); // Loại bỏ dấu phân cách hàng nghìn
-        input.value = value;
-    }
-
-    function validatePhoneNumber(sodienthoainhacungcap) {
-        // Xóa các ký tự không phải số như khoảng trắng hoặc dấu gạch ngang
-        let phoneNumber = sodienthoainhacungcap.replace(/\D/g, '');
-
-        // Kiểm tra độ dài của số điện thoại (ví dụ, 10-11 chữ số cho số tại Việt Nam)
-        if (phoneNumber.length < 10 || phoneNumber.length > 11) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Số điện thoại phải từ 10 đến 11 chữ số.',
-            });
-            return false;
+    document.addEventListener('DOMContentLoaded', function() {
+        var modal = document.querySelector('.modal_overlay1');
+        if (modal) {
+            modal.style.display = 'none'; // Ẩn modal khi trang được tải
         }
+    });
 
-        // Kiểm tra xem số điện thoại chỉ chứa các chữ số
-        if (!/^\d+$/.test(phoneNumber)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Số điện thoại không hợp lệ. Chỉ bao gồm chữ số.',
-            });
-            return false;
-        }
-
-        return true; // Nếu số điện thoại hợp lệ
-    }
-
-    function clearCurrencyFormat(value) {
-        return parseInt(value.replace(/[^\d]/g, ''), 10); // Loại bỏ tất cả các ký tự không phải số và chuyển đổi thành số nguyên
-    }
 
 
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
-        var trangthai = document.getElementById("status");
-        var maPNK = document.getElementById("maPNK");
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
         var productData = [];
+
         if (maNhaCungCap === '') {
             Swal.fire({
                 icon: 'error',
@@ -240,31 +325,44 @@
             });
             return; // Dừng hàm nếu nhà cung cấp chưa được chọn
         }
+
         if (sodienthoainhacungcap === '' || !validatePhoneNumber(sodienthoainhacungcap)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
                 text: 'Số điện thoại nhà cung cấp không hợp lệ',
             });
-            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+            return; // Dừng hàm nếu số điện thoại không hợp lệ
         }
+
         $('#tableBody tr').each(function() {
             var maSanPham = $(this).find('td:nth-child(1)').text().trim();
             var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
             var donGia = $(this).find('td:nth-child(3) input').val().trim();
-            var dongia = donGia;
             var soLuong = $(this).find('td:nth-child(4) input').val().trim();
-
-            var totalItemValue = parseFloat(dongia) * parseInt(soLuong);
+            var loiNhuan = $(this).find('td:nth-child(5) input').val().trim();
 
             var productItem = {
-                'idProductId': maSanPham,
-                'unitPrice': dongia,
-                'quantity': soLuong,
-                'total': totalItemValue
+                productName: tenSanPham,
+                unitPrice: donGia,
+                quantity: soLuong,
+                profit: loiNhuan
             };
+
+            if (maSanPham && maSanPham !== 'Chưa có ID') {
+                // Sản phẩm đã tồn tại
+                productItem.idProductId = maSanPham;
+                var totalItemValue = parseFloat(donGia) * parseInt(soLuong);
+                productItem.total = totalItemValue;
+            } else {
+                // Sản phẩm mới
+                var totalItemValue = parseFloat(donGia) * parseInt(soLuong);
+                productItem.total = totalItemValue;
+            }
+
             productData.push(productItem);
         });
+
         if (productData.length === 0) {
             Swal.fire({
                 icon: 'error',
@@ -273,6 +371,7 @@
             });
             return false; // Dừng việc gửi form nếu productData trống
         }
+
         const token = sessionStorage.getItem("token");
         var formData = new FormData();
         var totalPrice = parseInt(totalValue);
@@ -280,27 +379,23 @@
             console.error("Invalid totalPrice");
             return;
         }
-        formData.append('totalPrice', totalPrice);
 
+        formData.append('totalPrice', totalPrice);
         formData.append('supplier', maNhaCungCap);
         formData.append('supplierPhone', sodienthoainhacungcap);
 
         productData.forEach((item, index) => {
-            var idProductId = parseInt(item.idProductId);
-            var unitPrice = parseInt(item.unitPrice);
-            var quantity = parseInt(item.quantity);
-            var total = parseInt(item.total);
-
-            if (isNaN(idProductId) || isNaN(unitPrice) || isNaN(quantity) || isNaN(total)) {
-                console.error(`Invalid data for product ${index}`);
-                return;
+            if (item.idProductId) {
+                formData.append(`inventoryReportDetailCreateFormList[${index}].idProductId`, item.idProductId);
+            } else {
+                formData.append(`inventoryReportDetailCreateFormList[${index}].productName`, item.productName);
             }
-
-            formData.append(`inventoryReportDetailCreateFormList[${index}].idProductId`, idProductId);
-            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, unitPrice);
-            formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, quantity);
-            formData.append(`inventoryReportDetailCreateFormList[${index}].total`, total);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, item.unitPrice);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, item.quantity);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].total`, item.total);
+            formData.append(`inventoryReportDetailCreateFormList[${index}].profit`, item.profit);
         });
+
         $.ajax({
             type: 'POST',
             url: 'http://localhost:8080/InventoryReport',
@@ -317,8 +412,6 @@
                     text: 'Tạo phiếu nhập kho thành công',
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
-                        localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
                         window.location.href = 'QLPhieuNhapKho.php';
                     }
                 });
@@ -331,48 +424,9 @@
 
 
 
-    function setShowModal(show) {
-        var modalOverlay = document.querySelector('.modal_overlay');
-        modalOverlay.style.display = show ? '' : 'none';
-    }
-
-    function clearSelectedProducts() {
-        localStorage.removeItem('selectedProducts');
-    }
-
-    function calculateTotalPrice() {
-        var totalPrice = 0; // Biến lưu tổng giá trị
-        var tableRows = document.querySelectorAll('#tableBody tr'); // Lấy tất cả các dòng trong bảng
-
-        // Duyệt qua từng dòng để tính tổng
-        tableRows.forEach(function(row) {
-            var quantityCell = row.querySelector('input[name="soLuong[]"]'); // Ô số lượng
-            var priceCell = row.querySelector('input[name="donGia[]"]'); // Ô đơn giá
-
-            // Kiểm tra nếu các ô tồn tại và có giá trị hợp lệ
-            if (quantityCell && priceCell) {
-                var quantity = parseInt(quantityCell.value) || 0; // Chuyển đổi số lượng thành số, nếu không hợp lệ thì mặc định là 0
-                var price = parseFloat(priceCell.value.replace(/,/g, '')) || 0; // Chuyển đổi giá thành số, loại bỏ dấu phẩy nếu có, nếu không hợp lệ thì mặc định là 0
-
-                // Tính giá trị cho dòng này và cộng vào tổng
-                totalPrice += quantity * price;
-            }
-        });
-
-        // Định dạng lại tổng giá trị thành chuỗi tiền tệ
-        var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
-
-        // Cập nhật vào ô hiển thị tổng giá trị
-        var totalPriceElement = document.getElementById('totalvalue');
-        if (totalPriceElement) {
-            totalPriceElement.value = formattedTongGiaTri; // Gán giá trị đã định dạng vào ô tổng giá trị
-        }
-    }
 
     function saveSelectedProducts() {
+        // Lấy danh sách sản phẩm hiện tại từ localStorage
         let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
         let selectedMap = new Map(selectedProducts.map(product => [product.id, product]));
 
@@ -383,37 +437,64 @@
             // Lấy giá và số lượng hiện tại của sản phẩm
             let donGiaElement = document.getElementById(`donGia${productId}`);
             let soLuongElement = document.getElementById(`soLuong${productId}`);
-
-            // Nếu phần tử tồn tại, lấy giá trị, nếu không, đặt giá trị mặc định là "1"
+            let loiNhuanElement = document.getElementById(`loiNhuan${productId}`);
             let donGia = donGiaElement ? clearCurrencyFormat(donGiaElement.value) : "1";
             let soLuong = soLuongElement ? soLuongElement.value : "1";
+            let loiNhuan = loiNhuanElement ? loiNhuanElement.value : '1';
 
             if ($(this).prop('checked')) {
-                if (!selectedMap.has(productId)) {
-                    selectedMap.set(productId, {
-                        id: productId,
-                        name: productName,
-                        donGia: donGia,
-                        soLuong: soLuong
-                    });
+                if (!productId || productId === '') {
+                    // Xử lý sản phẩm mới không có ID
+                    let existingProduct = Array.from(selectedMap.values()).find(p => p.name === productName);
+                    if (existingProduct) {
+                        // Cập nhật thông tin của sản phẩm đã tồn tại dựa trên tên sản phẩm
+                        existingProduct.donGia = donGia;
+                        existingProduct.soLuong = soLuong;
+                        existingProduct.loiNhuan = loiNhuan;
+                    } else {
+                        // Thêm sản phẩm mới vào danh sách
+                        selectedMap.set(Date.now(), {
+                            id: '', // ID tạm thời cho sản phẩm mới
+                            name: productName,
+                            donGia: donGia,
+                            soLuong: soLuong,
+                            loiNhuan: loiNhuan
+                        });
+                    }
                 } else {
-                    // Cập nhật thông tin giá và số lượng nếu sản phẩm đã có trong danh sách
-                    let product = selectedMap.get(productId);
-                    product.donGia = donGia;
-                    product.soLuong = soLuong;
+                    // Cập nhật thông tin sản phẩm đã có ID
+                    if (selectedMap.has(productId)) {
+                        let product = selectedMap.get(productId);
+                        product.donGia = donGia;
+                        product.soLuong = soLuong;
+                        product.loiNhuan = loiNhuan;
+                    } else {
+                        selectedMap.set(productId, {
+                            id: productId,
+                            name: productName,
+                            donGia: donGia,
+                            soLuong: soLuong,
+                            loiNhuan: loiNhuan
+                        });
+                    }
                 }
             } else {
+                // Xóa sản phẩm khỏi danh sách nếu checkbox không được chọn
                 selectedMap.delete(productId);
             }
         });
 
+        // Lưu danh sách sản phẩm đã cập nhật vào localStorage
         localStorage.setItem('selectedProducts', JSON.stringify([...selectedMap.values()]));
 
+        // Tính toán tổng giá trị sau khi cập nhật
         calculateTotalPrice();
     }
 
 
-    $(document).on('input', 'input[name="donGia[]"], input[name="soLuong[]"]', function() {
+
+
+    $(document).on('input', 'input[name="donGia[]"], input[name="soLuong[]"], input[name="loiNhuan[]"]', function() {
         calculateTotalPrice();
         saveSelectedProducts();
     });
@@ -428,17 +509,27 @@
         });
     }
 
-    $(document).on('change', '.product_checkbox', function() {
-        saveSelectedProducts(); // Lưu trạng thái của các sản phẩm đã chọn
 
-        // Xóa nội dung hiện tại của bảng
-        $('#tableBody').empty();
+
+
+    $(document).on('click', '.delete-btn', function() {
+        let index = $(this).data('index');
 
         let selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
 
-        selectedProducts.forEach(function(product) {
+        // Xóa sản phẩm theo chỉ số (index) khỏi danh sách
+        selectedProducts.splice(index, 1);
+
+        // Cập nhật lại localStorage với danh sách đã được cập nhật
+        localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
+
+        // Làm mới bảng hiển thị
+        $('#tableBody').empty();
+        loadSelectedProducts();
+        // Hiển thị lại sản phẩm còn lại
+        selectedProducts.forEach(function(product, index) {
             var selectedProductHTML = `
-        <tr style="text-align: center;">
+        <tr style="text-align: center;" data-product-id="${product.id}">
             <td style="padding: 0.5rem;" name="MaSanPham[]">${product.id}</td>
             <td style="padding: 0.5rem;">${product.name}</td>
             <td style="padding: 0.5rem;">
@@ -447,15 +538,19 @@
             <td style="padding: 0.5rem;">
                 <input type="text" name="soLuong[]" id="soLuong${product.id}" value="${product.soLuong}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
             </td>
+            <td style="padding: 0.5rem;">
+                <input type="text" name="loiNhuan[]" id="loiNhuan${product.id}" value="${product.loiNhuan}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+            </td>
+            <td style="padding: 0.5rem;">
+                <button class="delete-btn" data-index="${index}" style="color: red; font-weight: 700; background: none; border: none; cursor: pointer;">X</button>
+            </td>
         </tr>`;
             $('#tableBody').append(selectedProductHTML);
         });
 
-        // Gọi ngay tính tổng sau khi thêm sản phẩm vào bảng
-        calculateTotalPrice(); // Tính toán lại tổng giá trị ngay sau khi thêm sản phẩm
+        // Tính toán lại tổng giá trị sau khi xóa sản phẩm
+        calculateTotalPrice();
     });
-
-
 
     function validateDonGia(input) {
         var donGia = parseFloat(input.value);
@@ -573,7 +668,6 @@
         localStorage.removeItem('selectedProducts');
         if (!checkMaPhieuInUrl()) {
             loadSelectedProducts();
-
             loaddatasp(1, ''); // Gọi hàm với trang đầu tiên và không có tìm kiếm mặc định
         }
     });
@@ -613,13 +707,12 @@
                         id: product.productId.toString(),
                         name: product.productName,
                         donGia: product.quantity,
-                        soLuong: product.unitPrice
+                        soLuong: product.unitPrice,
+                        loiNhuan: product.profit
+
                     };
                 });
                 localStorage.setItem('selectedProducts', JSON.stringify(selectedProducts));
-                localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
-
-                localStorage.setItem('status', response.inventoryReportStatuses.slice(-1)[0].status)
                 // Cập nhật bảng sản phẩm
                 var tableBody = document.getElementById("tableBody");
                 tableBody.innerHTML = ""; // Xóa nội dung cũ của bảng
@@ -634,6 +727,9 @@
                     <td style="padding: 0.5rem;">
                         <input type="text" name="soLuong[]" id="soLuong${product.productId}" value="${product.quantity}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
                     </td>
+                      <td style="padding: 0.5rem;">
+                        <input type="text" name="loiNhuan[]" id="loiNhuan${product.productId}" value="${product.profit}" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;">
+                    </td>
                 </tr>`;
                     tableBody.insertAdjacentHTML('beforeend', selectedProductHTML);
                 });
@@ -641,44 +737,14 @@
                 // Tải thêm dữ liệu và tạo phân trang nếu cần
                 loaddatasp(1, '');
                 loadSelectedProducts(); // Khôi phục trạng thái các sản phẩm đã chọn
-                var trangthai = response.inventoryReportStatuses.slice(-1)[0].status;
-                let selectHTML = '';
-                if (trangthai === 'DaNhapKho') {
-                    selectHTML = `
-            <select id="status" disabled="true">
-                <option value="ChoNhapKho">Chờ nhập kho</option>
-                <option value="DaNhapKho" selected>Đã nhập kho</option>
-                <option value="Huy">Hủy</option>
-            </select>
-        `;
-                } else if (trangthai === 'ChoNhapKho') {
-                    selectHTML = `
-            <select id="status">
-                <option value="ChoNhapKho" selected>Chờ nhập kho</option>
-                <option value="DaNhapKho">Đã nhập kho</option>
-                <option value="Huy">Hủy</option>
-            </select>
-        `;
-                } else {
-                    selectHTML = `
-            <select id="status" disabled="true">
-                <option value="ChoNhapKho">Chờ nhập kho</option>
-                <option value="DaNhapKho">Đã nhập kho</option>
-                <option value="Huy" selected>Hủy</option>
-            </select>
-        `;
-                }
 
-                // Append the select element to the div with id 'statusContainer'
-                document.getElementById('statusContainer').innerHTML = selectHTML;
-                if (trangthai === 'DaNhapKho' || trangthai === 'Huy') {
-                    document.querySelectorAll('input[name="donGia[]"], input[name="soLuong[]"]').forEach(function(input) {
-                        input.disabled = true;
-                    });
-                    document.getElementById('manhacungcap').disabled = true;
-                    document.getElementById('sodienthoainhacungcap').disabled = true;
-                    document.getElementById('addsp').style.display = 'none';
-                }
+                document.querySelectorAll('input[name="donGia[]"], input[name="soLuong[]"],input[name="loiNhuan[]"]').forEach(function(input) {
+                    input.disabled = true;
+                });
+                document.getElementById('manhacungcap').disabled = true;
+                document.getElementById('sodienthoainhacungcap').disabled = true;
+                document.getElementById('addsp').style.display = 'none';
+
             },
             error: function(xhr, status, error) {
                 console.error('Lỗi khi gọi API: ', error);
@@ -699,31 +765,10 @@
         }
     }
 
-    function handleSubmitChange() {
-        const status = localStorage.getItem("status");
-        if (status === 'Huy' || status === "DaNhapKho") {
-            localStorage.removeItem('selectedProducts');
-            localStorage.removeItem('selectedProductsOld');
-
-            window.location.href = 'QLPhieuNhapKho.php';
-        } else {
-            try {
-                xuLyPNK();
-                localStorage.removeItem('selectedProducts');
-                localStorage.removeItem('selectedProductsOld');
-                window.location.href = 'QLPhieuNhapKho.php';
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-
-    }
 
     function xuLyPNK() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
-        var trangthai = document.getElementById("status");
         var maPNK = document.getElementById("maPNK");
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
         var productData = [];
@@ -749,6 +794,7 @@
             var donGia = $(this).find('td:nth-child(3) input').val().trim();
             var dongia = donGia;
             var soLuong = $(this).find('td:nth-child(4) input').val().trim();
+            var loiNhuan = $(this).find('td:nth-child(5) input').val().trim();
 
             var totalItemValue = parseFloat(dongia) * parseInt(soLuong);
 
@@ -756,7 +802,8 @@
                 'idProductId': maSanPham,
                 'unitPrice': dongia,
                 'quantity': soLuong,
-                'total': totalItemValue
+                'total': totalItemValue,
+                'profit': loiNhuan
             };
             productData.push(productItem);
         });
@@ -770,8 +817,6 @@
         }
         const token = sessionStorage.getItem("token");
         var formData = new FormData();
-        var formData1 = new FormData();
-
         var totalPrice = parseInt(totalValue);
         if (isNaN(totalPrice)) {
             console.error("Invalid totalPrice");
@@ -797,121 +842,106 @@
                 console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
             }
         });
-        if (trangthai.value !== "ChoNhapKho") {
-            var formData2 = new FormData()
-            formData2.append('idStatus', trangthai.value);
-            formData2.append('inventoryReportId', maPNK.value)
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost:8080/InventoryReportStatus',
-                data: formData2,
-                contentType: false, // Không gửi tiêu đề Content-Type
-                processData: false, // Không xử lý dữ liệu
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {},
-                error: function(xhr, status, error) {
-                    console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
-                }
+
+    }
+
+    function formatCurrency(input) {
+        let value = input.value;
+        value = value.replace(/[^\d]/g, ''); // Loại bỏ ký tự không phải số
+        input.value = Number(value).toLocaleString('en-US'); // Định dạng tiền tệ
+    }
+
+    function formatCurrency1(input) {
+        let value = parseFloat(input); // Chuyển đổi đầu vào thành số
+        if (!isNaN(value)) {
+            // Định dạng tiền tệ Việt Nam
+            return value.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
             });
+        } else {
+            console.error('Input must be a number.');
+            return '';
         }
-        xuLyDetail()
     }
 
-    function xuLyDetail() {
-        var selectedProducts = JSON.parse(localStorage.getItem('selectedProducts')) || [];
-        var selectedProductsOld = JSON.parse(localStorage.getItem('selectedProductsOld')) || [];
-        var maPNK = document.getElementById("maPNK");
-        var token = sessionStorage.getItem("token");
-
-        // Xử lý tạo mới và cập nhật
-        for (let product of selectedProducts) {
-            let oldProduct = selectedProductsOld.find(p => p.id === product.id);
-
-            // Tạo mới nếu sản phẩm không tồn tại trong selectedProductsOld
-            if (!oldProduct) {
-                var formData = new FormData();
-                formData.append('total', product.soLuong * product.donGia);
-                formData.append('unitPrice', product.donGia);
-                formData.append('quantity', product.soLuong);
-                formData.append('idProductId', product.id);
-                formData.append('idInventoryReportId', maPNK.value);
-                for (let [key, value] of formData.entries()) {
-                    console.log(`${key}: ${value}`);
-                }
-                $.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:8080/InventoryReportDetail',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    success: function(response) {
-                        console.log('Sản phẩm mới đã được tạo thành công');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Đã xảy ra lỗi khi tạo sản phẩm mới.');
-                    }
-                });
-            } else {
-                // Cập nhật nếu giá trị đã thay đổi
-                if (oldProduct.donGia !== product.donGia || oldProduct.soLuong !== product.soLuong) {
-                    var formData = new FormData();
-                    formData.append('total', product.soLuong * product.donGia);
-                    formData.append('unitPrice', product.donGia);
-                    formData.append('quantity', product.soLuong);
-                    formData.append('idProductId', product.id);
-                    formData.append('idInventoryReportId', maPNK.value);
-
-                    $.ajax({
-                        type: 'PATCH',
-                        url: 'http://localhost:8080/InventoryReportDetail',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        },
-                        success: function(response) {},
-                        error: function(xhr, status, error) {
-                            console.error('Đã xảy ra lỗi khi cập nhật sản phẩm.');
-                        }
-                    });
-                }
-            }
-        }
-
-        // Xử lý xóa
-        for (let oldProduct of selectedProductsOld) {
-            if (!selectedProducts.find(p => p.id === oldProduct.id)) {
-                var formData = new FormData();
-                formData.append('idProductId', oldProduct.id);
-                formData.append('idInventoryReportId', maPNK.value);
-
-                $.ajax({
-                    type: 'DELETE',
-                    url: 'http://localhost:8080/InventoryReportDetail',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    success: function(response) {},
-                    error: function(xhr, status, error) {
-                        console.error('Đã xảy ra lỗi khi xóa sản phẩm.');
-                    }
-                });
-            }
-        }
-
-        // Cập nhật selectedProductsOld với selectedProducts hiện tại
-        localStorage.setItem('selectedProductsOld', JSON.stringify(selectedProducts));
+    function clearFormat(input) {
+        let value = input.value;
+        value = value.replace(/[,]/g, ''); // Loại bỏ dấu phân cách hàng nghìn
+        input.value = value;
     }
 
+    function validatePhoneNumber(sodienthoainhacungcap) {
+        let phoneNumber = sodienthoainhacungcap.replace(/\D/g, '');
+        if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại phải từ 10 đến 11 chữ số.',
+            });
+            return false;
+        }
+        if (!/^\d+$/.test(phoneNumber)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Số điện thoại không hợp lệ. Chỉ bao gồm chữ số.',
+            });
+            return false;
+        }
+
+        return true; // Nếu số điện thoại hợp lệ
+    }
+
+    function clearCurrencyFormat(value) {
+        return parseInt(value.replace(/[^\d]/g, ''), 10); // Loại bỏ tất cả các ký tự không phải số và chuyển đổi thành số nguyên
+    }
+
+    function setShowModal(show) {
+        var modalOverlay = document.querySelector('.modal_overlay');
+        modalOverlay.style.display = show ? '' : 'none';
+    }
+
+    function setShowModal1(show) {
+        var modalOverlay = document.querySelector('.modal_overlay1');
+        modalOverlay.style.display = show ? '' : 'none';
+    }
+
+    function clearSelectedProducts() {
+        localStorage.removeItem('selectedProducts');
+    }
+
+    function calculateTotalPrice() {
+        var totalPrice = 0; // Biến lưu tổng giá trị
+        var tableRows = document.querySelectorAll('#tableBody tr'); // Lấy tất cả các dòng trong bảng
+
+        // Duyệt qua từng dòng để tính tổng
+        tableRows.forEach(function(row) {
+            var quantityCell = row.querySelector('input[name="soLuong[]"]'); // Ô số lượng
+            var priceCell = row.querySelector('input[name="donGia[]"]'); // Ô đơn giá
+
+            // Kiểm tra nếu các ô tồn tại và có giá trị hợp lệ
+            if (quantityCell && priceCell) {
+                var quantity = parseInt(quantityCell.value) || 0; // Chuyển đổi số lượng thành số, nếu không hợp lệ thì mặc định là 0
+                var price = parseFloat(priceCell.value.replace(/,/g, '')) || 0; // Chuyển đổi giá thành số, loại bỏ dấu phẩy nếu có, nếu không hợp lệ thì mặc định là 0
+
+                // Tính giá trị cho dòng này và cộng vào tổng
+                totalPrice += quantity * price;
+            }
+        });
+
+        // Định dạng lại tổng giá trị thành chuỗi tiền tệ
+        var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+
+        // Cập nhật vào ô hiển thị tổng giá trị
+        var totalPriceElement = document.getElementById('totalvalue');
+        if (totalPriceElement) {
+            totalPriceElement.value = formattedTongGiaTri; // Gán giá trị đã định dạng vào ô tổng giá trị
+        }
+    }
 
     // Gọi hàm khi trang được tải
     window.onload = checkMaPhieuInUrl;

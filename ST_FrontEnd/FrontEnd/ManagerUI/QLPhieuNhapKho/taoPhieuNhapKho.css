@@ -54,7 +54,63 @@
     animation: fadeIn 0.3s ease-in-out;
     overflow: auto; /* Kích hoạt cuộn nếu nội dung vượt quá kích thước của modal_overlay */
 }
+.modal_overlay1 {
+    display: flex ;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* Đặt độ rộng là 100% */
+    height: 100%;
+    /* Đặt độ cao là 100% */
+    background: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-in-out;
+    overflow: auto;
+    /* Kích hoạt cuộn nếu nội dung vượt quá kích thước của modal_overlay */
+}
+/* Căn giữa nút */
+.button-container {
+    text-align: center;
+    margin-top: 1rem;
+    /* Tạo khoảng cách phía trên */
+}
 
+/* Style cho nút tạo sản phẩm mới */
+.create-product-button {
+    font-family: Arial;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    background-color: rgb(65, 64, 64);
+    padding: 1rem;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    border: none;
+    /* Xóa border mặc định của button nếu cần */
+}
+
+/* Style cho input text */
+.input-container {
+    margin-bottom: 1rem;
+    /* Tạo khoảng cách phía dưới */
+    text-align: center;
+    /* Căn giữa nội dung bên trong */
+}
+
+.input-text {
+    font-family: Arial;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    border: 1px solid rgb(200, 200, 200);
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    /* Đảm bảo padding và border không làm tăng chiều rộng */
+}   
 .modal_content {
     background: #fff;
     padding: 20px;
@@ -70,8 +126,6 @@
     max-height: 60vh; /* Kích thước tối đa cho bảng sản phẩm */
     overflow-y: auto; /* Kích hoạt cuộn dọc nếu có quá nhiều sản phẩm */
 }
-
-
 /* Adjust the styles of the close button as needed */
 .close_btn {
     display: flex;
