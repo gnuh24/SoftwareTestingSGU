@@ -102,6 +102,9 @@ public class ProductService implements IProductService {
             oldProduct.setAbv(form.getAbv());
         }
         if (form.getDescription() != null) {
+//            if (form.getDescription().equals("")){
+//                oldProduct.setDescription("Không có mô tả nào cho sản phẩm trên");
+//            }
             oldProduct.setDescription(form.getDescription());
         }
         if (form.getBrandId() != null) {

@@ -43,7 +43,7 @@ public class Product {
     private Integer abv;
 
     @Column(name = "Description")
-    private String description;
+    private String description = "Không có mô tả nào cho sản phẩm trên";
 
     @ManyToOne
     @JoinColumn(name = "BrandId", nullable = false)

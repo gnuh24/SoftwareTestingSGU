@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../QLTaiKhoan/UserUpdate.css" />
     <link rel="stylesheet" href="../QLTaiKhoan/oneForAll.css" />
+    <style>
+        .batch-item{
+            background-color: white;
+            border: 2px solid black;
+            margin-top: 25px;
+            padding: 5px;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -72,27 +80,32 @@
                                                         <input id="nongDoCon" type="text" class="input" name="nongDoCon" style="width: 40rem" />
                                                         <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
-                                                        <p class="text">Giá (VND)</p>
-                                                        <input id="gia" class="input" name="gia" style="width: 40rem" />
-                                                        <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
-
+                                                       
                                                         <p class="text">Trạng thái</p>
                                                         <input id="status" class="input" name="status" style="width: 40rem" readonly />
 
                                                         <p class="text">Thời gian tạo</p>
                                                         <input id="createTime" class="input" name="createTime" style="width: 40rem" readonly />
 
-                                                        <p class="text">Số lượng</p>
-                                                        <input id="quantity" class="input" name="quantity" style="width: 40rem" readonly />
-
+                                                       
                                                         <p class="text">Mô tả sản phẩm</p>
                                                         <textarea id="moTa" class="input" name="moTa" style="width: 40rem; height: 8rem;"></textarea>
                                                     </div>
+
+
+                                                    
+
 
                                                     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                                                         <p class="text">Ảnh minh họa</p>
                                                         <img id="xuatAnh" style="width: 350px; height: 400px;" alt="">
                                                         <input id="anhMinhHoa" type="file" name="anhMinhHoa" accept="image/*">
+                                                    
+                                                        <div id="batch" style="padding-left: 1rem; margin-left: 25px;">
+
+
+                                                        </div>
+                                                    
                                                     </div>
                                                 </div>
                                             </div>
@@ -138,38 +151,10 @@
         let thuongHieu = document.getElementById("thuongHieu");
         let theTich = document.getElementById("theTich");
         let nongDoCon = document.getElementById("nongDoCon");
-        let gia = document.getElementById("gia");
         let anhMinhHoa = document.getElementById("anhMinhHoa");
+        
+        let moTa = document.getElementById("moTa");
 
-        if (!tenSanPham.value.trim()) {
-            showErrorAlert('Lỗi!', 'Tên sản phẩm không được để trống');
-            tenSanPham.focus();
-            return;
-        }
-
-        if (loaiSanPham.value === '') {
-            showErrorAlert('Lỗi!', 'Vui lòng chọn loại sản phẩm');
-            loaiSanPham.focus();
-            return;
-        }
-
-        if (!xuatXu.value.trim()) {
-            showErrorAlert('Lỗi!', 'Xuất xứ không được để trống');
-            xuatXu.focus();
-            return;
-        }
-
-        if (!thuongHieu.value.trim()) {
-            showErrorAlert('Lỗi!', 'Thương hiệu không được để trống');
-            thuongHieu.focus();
-            return;
-        }
-
-        if (!theTich.value.trim()) {
-            showErrorAlert('Lỗi!', 'Thể tích không được để trống');
-            theTich.focus();
-            return;
-        }
 
         if (parseFloat(theTich.value) <= 0 || isNaN(parseFloat(theTich.value))) {
             showErrorAlert('Lỗi!', 'Thể tích phải là số dương');
@@ -177,11 +162,6 @@
             return;
         }
 
-        if (!nongDoCon.value.trim()) {
-            showErrorAlert('Lỗi!', 'Nồng độ cồn không được để trống');
-            nongDoCon.focus();
-            return;
-        }
 
         if (parseFloat(nongDoCon.value) < 0 || parseFloat(nongDoCon.value) > 100 || isNaN(parseFloat(nongDoCon.value))) {
             showErrorAlert('Lỗi!', 'Nồng độ cồn phải là số dương và có giá trị từ 0 đến 100');
@@ -189,33 +169,21 @@
             return;
         }
 
-        if (!gia.value.trim()) {
-            showErrorAlert('Lỗi!', 'Giá không được để trống');
-            gia.focus();
-            return;
-        }
-
-        if (parseFloat(gia.value) <= 0 || isNaN(parseFloat(gia.value))) {
-            showErrorAlert('Lỗi!', 'Giá phải là số dương');
-            gia.focus();
-            return;
-        }
 
         // Nếu mọi kiểm tra hợp lệ, gọi hàm updateSanPham
         updateSanPham(
             <?php echo $_GET['maSanPham'] ?>,
-            tenSanPham.value,
             anhMinhHoa.files[0],
-            gia.value,
             xuatXu.value,
             theTich.value,
             nongDoCon.value,
             thuongHieu.value,
-            loaiSanPham.value
+            loaiSanPham.value,
+            moTa.value
         );
 
         //Sau khi tạo xong chuyển về trang QLSanPham
-        showSuccessAlert('Thành công!', 'Tạo sản phẩm mới thành công !!', 'QLSanPham.php');
+        showSuccessAlert('Thành công!', 'Cập nhật sản phẩm thành công !!', 'QLSanPham.php');
     });
 
     function fetchProductDetails(productId) {
@@ -234,20 +202,44 @@
                 $('#loaiSanPham').val(data.category.id); // Sử dụng ID của loại sản phẩm
                 $('#theTich').val(data.capacity);
                 $('#nongDoCon').val(data.abv);
-                $('#gia').val(data.price);
                 $('#status').val(data.status ? 'Đang bán' : 'Ngừng bán'); // Trạng thái
                 $('#createTime').val(data.createTime); // Thời gian tạo
                 $('#quantity').val(data.quantity); // Số lượng
                 $('#moTa').val(data.description); // Mô tả
 
+                console.log(data);
+
                 // Cập nhật hình ảnh
                 $('#xuatAnh').attr('src', 'http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/' + data.image);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
+
+                // Xử lý phần batches
+                const batchesContainer = $('#batch');
+                batchesContainer.empty(); // Clear the current content in the #batch div
+
+                if (data.batches && data.batches.length > 0) {
+                    // Loop through each batch and add it to the #batch div
+                        data.batches.forEach((batch, index) => {
+                            const batchHTML = `
+                                <div class="batch-item">
+                                    <h4>Lô số ${index + 1}</h4>
+                                    <p>Đơn giá: ${batch.price} VND</p>
+                                    <p>Số lượng: ${batch.quantity}</p>
+                                    <p>Ngày nhập: ${batch.receivingTime}</p>
+                                </div>
+                            `;
+                            batchesContainer.append(batchHTML); // Append each batch to the #batch div
+                        });
+                    } else {
+                        // If no batches are available, show a message
+                        batchesContainer.append('<p>No batches available</p>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
         });
     }
+
 
 
 
@@ -314,16 +306,14 @@
 
 
 
-    function updateSanPham(id, tenSanPham, anhMinhHoa, gia, xuatXu, theTich, nongDoCon, thuongHieu, maLoaiSanPham, moTa) {
+    function updateSanPham(id,  anhMinhHoa, xuatXu, theTich, nongDoCon, thuongHieu, maLoaiSanPham, moTa) {
         var formData = new FormData();
         formData.append("id", id); // ID là bắt buộc cho việc cập nhật
-        formData.append("productName", tenSanPham);
         formData.append("categoryId", Number(maLoaiSanPham)); // Ép kiểu số nguyên cho categoryId
         formData.append("origin", xuatXu);
         formData.append("brandId", Number(thuongHieu)); // Ép kiểu số nguyên cho brandId
         formData.append("capacity", theTich);
         formData.append("abv", nongDoCon);
-        formData.append("price", gia);
         formData.append("description", moTa);
 
         // Thêm file ảnh nếu có
