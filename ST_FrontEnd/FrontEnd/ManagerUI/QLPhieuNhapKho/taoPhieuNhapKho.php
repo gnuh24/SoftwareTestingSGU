@@ -312,12 +312,21 @@
         }
     });
 
-
+    function convertFormattedNumber(formattedString) {
+        // Bỏ dấu chấm để chuyển đổi sang số nguyên
+        const numberString = formattedString.replace(/\./g, '');
+        
+        // Chuyển đổi chuỗi thành số
+        const number = parseInt(numberString, 10);
+        
+        return number;
+    }
 
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
+        totalValue =  convertFormattedNumber(totalValue);
         var productData = [];
 
         if (maNhaCungCap === '') {
@@ -342,6 +351,7 @@
             var maSanPham = $(this).find('td:nth-child(1)').text().trim();
             var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
             var donGia = $(this).find('td:nth-child(3) input').val().trim();
+            donGia = clearCurrencyFormat(donGia);
             var soLuong = $(this).find('td:nth-child(4) input').val().trim();
             var loiNhuan = $(this).find('td:nth-child(5) input').val().trim();
 
@@ -352,7 +362,7 @@
                 profit: loiNhuan
             };
 
-            if (maSanPham && maSanPham !== 'Chưa có ID') {
+            if (maSanPham && !isNewProduct(maSanPham)) {
                 // Sản phẩm đã tồn tại
                 productItem.idProductId = maSanPham;
                 var totalItemValue = parseFloat(donGia) * parseInt(soLuong);
@@ -378,7 +388,6 @@
         const token = sessionStorage.getItem("token");
         var formData = new FormData();
         var totalPrice = parseInt(totalValue);
-
         if (isNaN(totalPrice)) {
             console.error("Invalid totalPrice");
             return;
@@ -389,18 +398,19 @@
         formData.append('supplierPhone', sodienthoainhacungcap);
 
         productData.forEach((item, index) => {
-            console.log(item)
             if (item.idProductId) {
                 formData.append(`inventoryReportDetailCreateFormList[${index}].idProductId`, item.idProductId);
             } else {
                 formData.append(`inventoryReportDetailCreateFormList[${index}].productName`, item.productName);
             }
-            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, parseInt(item.unitPrice) );
+            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, item.unitPrice);
             formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, item.quantity);
             formData.append(`inventoryReportDetailCreateFormList[${index}].total`, item.total);
             formData.append(`inventoryReportDetailCreateFormList[${index}].profit`, item.profit);
         });
-
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
         $.ajax({
             type: 'POST',
             url: 'http://localhost:8080/InventoryReport',
@@ -901,7 +911,8 @@
     }
 
     function clearCurrencyFormat(value) {
-        return parseInt(value.replace(/[^\d]/g, ''), 10); // Loại bỏ tất cả các ký tự không phải số và chuyển đổi thành số nguyên
+        // Remove all non-numeric characters except for the decimal point
+        return value.replace(/[^0-9.]/g, '');
     }
 
     function setShowModal(show) {
