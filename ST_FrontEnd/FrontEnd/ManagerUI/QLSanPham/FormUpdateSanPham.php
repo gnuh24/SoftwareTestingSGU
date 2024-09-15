@@ -52,7 +52,7 @@
                                                     <div style="padding-left: 1rem; margin-left: 25px;">
 
                                                         <p class="text">Tên sản phẩm</p>
-                                                        <input id="tenSanPham" class="input" type="text" name="tenSanPham" style="width: 40rem" />
+                                                        <input disabled id="tenSanPham" class="input" type="text" name="tenSanPham" style="width: 40rem" />
                                                         <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
 
 
@@ -82,10 +82,10 @@
 
                                                        
                                                         <p class="text">Trạng thái</p>
-                                                        <input id="status" class="input" name="status" style="width: 40rem" readonly />
+                                                        <input disabled id="status" class="input" name="status" style="width: 40rem" readonly />
 
                                                         <p class="text">Thời gian tạo</p>
-                                                        <input id="createTime" class="input" name="createTime" style="width: 40rem" readonly />
+                                                        <input disabled id="createTime" class="input" name="createTime" style="width: 40rem" readonly />
 
                                                        
                                                         <p class="text">Mô tả sản phẩm</p>
