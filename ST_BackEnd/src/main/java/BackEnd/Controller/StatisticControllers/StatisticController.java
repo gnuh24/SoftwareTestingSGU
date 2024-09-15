@@ -32,7 +32,7 @@ public class StatisticController {
 //        String minDateString = minDate != null ? sdf.format(minDate) : null;
 //        String maxDateString = maxDate != null ? sdf.format(maxDate) : null;
 
-        return statisticService.getShoeSales(minDate, maxDate, limit, brandId, shoeTypeId);
+        return statisticService.getShoeSales(minDate, maxDate, limit);
     }
 
     @GetMapping("/BestSellerBySize")

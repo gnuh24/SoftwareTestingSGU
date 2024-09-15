@@ -17,8 +17,8 @@ public class StatisticService implements IStatisticService{
     private IOrderRepository orderRepository;
 
     @Override
-    public List<ProductSalesSummary> getShoeSales(String minDate, String maxDate, Integer limit, Integer brandId, Integer shoeTypeId) {
-        return orderRepository.findProductSales(minDate, maxDate, limit, brandId, shoeTypeId);
+    public List<ProductSalesSummary> getShoeSales(String minDate, String maxDate, Integer limit) {
+        return orderRepository.findProductSales(minDate, maxDate, limit);
     }
 
 

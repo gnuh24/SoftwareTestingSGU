@@ -24,28 +24,22 @@ public interface IOrderRepository extends JpaRepository<Order, String>, JpaSpeci
     Boolean isOrderBelongToThisId(@Param("accountId") Integer accountId,
                                   @Param("orderId") String orderId);
 
-    @Query(value = "SELECT s.Id AS productId, " +
-        "s.ProductName AS productName, " +
-        "COUNT(od.Quantity) AS quantity, " +
-        "SUM(od.Total) AS total " +
+    @Query(value = "SELECT od.`ProductId` AS productId, p.`ProductName` AS productName, " +
+        "SUM(od.`Quantity`) AS quantity, SUM(od.`Total`) AS total " +
         "FROM `Order` o " +
-        "JOIN `OrderDetail` od ON o.Id = od.OrderId " +
-        "JOIN `Product` s ON od.ProductId = s.Id " +
-        "JOIN `OrderStatus` os ON os.OrderId = o.Id " +
-        "JOIN `Brand` b ON s.BrandId = b.Id " +
-        "JOIN `Category` st ON s.CategoryId = st.Id " +
-        "WHERE os.Status = 'GiaoThanhCong' " +
-        "AND DATE(os.UpdateTime) BETWEEN COALESCE(:minDate, '2022-01-01') AND COALESCE(:maxDate, CURRENT_DATE()) " +
-        "AND (:brandId IS NULL OR b.Id = :brandId) " +
-        "AND (:categoryId IS NULL OR st.Id = :categoryId) " +
-        "GROUP BY s.Id, s.ProductName " +
-        "ORDER BY total DESC, quantity DESC " +
+        "JOIN `OrderDetail` od ON o.`Id` = od.`OrderId` " +
+        "JOIN `OrderStatus` os ON o.`Id` = os.`OrderId` " +
+        "JOIN `Product` p ON p.`Id` = od.`ProductId` " +
+        "WHERE os.`Status` = 'GiaoThanhCong' " +
+        "AND DATE(os.UpdateTime) BETWEEN COALESCE(:minDate, '2010-01-01') AND COALESCE(:maxDate, CURRENT_DATE()) " +
+        "GROUP BY od.`ProductId`, p.`ProductName` " +
+        "ORDER BY quantity DESC, total DESC " +
         "LIMIT :limit", nativeQuery = true)
+
     List<ProductSalesSummary> findProductSales(@Param("minDate") String minDate,
                                                @Param("maxDate") String maxDate,
-                                               @Param("limit") Integer limit,
-                                               @Param("brandId") Integer brandId,
-                                               @Param("categoryId") Integer categoryId);
+                                               @Param("limit") Integer limit);
+
 
     @Query(value = "SELECT s.ShoeId AS shoeId, s.ShoeName AS shoeName, od.Size AS size, " +
         "COUNT(od.Quantity) AS quantity, SUM(od.Total) AS total " +

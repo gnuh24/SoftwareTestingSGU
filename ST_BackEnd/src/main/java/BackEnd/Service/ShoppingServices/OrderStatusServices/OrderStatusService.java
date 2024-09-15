@@ -97,8 +97,7 @@ public class OrderStatusService implements IOrderStatusService{
                     if (batch == null){
                         batch = batchService.getTheValidBatchBackup(ctdh.getId().getProductId());
                     }
-
-                    if (batch.getUnitPrice() != ctdh.getUnitPrice()){
+                    if (batch.getUnitPrice() - ctdh.getUnitPrice() != 0){
                         throw new NotEnoughInventory("Sản phẩm  " + batch.getProduct().getProductName() +  " hiện đang nằm trong lô hàng không còn được kinh doanh !!");
                     }
 
