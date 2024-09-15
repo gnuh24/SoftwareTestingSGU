@@ -378,6 +378,7 @@
         const token = sessionStorage.getItem("token");
         var formData = new FormData();
         var totalPrice = parseInt(totalValue);
+
         if (isNaN(totalPrice)) {
             console.error("Invalid totalPrice");
             return;
@@ -394,7 +395,7 @@
             } else {
                 formData.append(`inventoryReportDetailCreateFormList[${index}].productName`, item.productName);
             }
-            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, isNaN(Number(item.unitPrice)) ? 0 : Number(item.unitPrice));
+            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, parseInt(item.unitPrice) );
             formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, item.quantity);
             formData.append(`inventoryReportDetailCreateFormList[${index}].total`, item.total);
             formData.append(`inventoryReportDetailCreateFormList[${index}].profit`, item.profit);
