@@ -104,7 +104,7 @@
     document
         .getElementById("poster")
         .addEventListener("click", function() {
-            window.location.href = 'SignedProduct.php?';
+            window.location.href = 'SignedProduct.php';
         });
 
 

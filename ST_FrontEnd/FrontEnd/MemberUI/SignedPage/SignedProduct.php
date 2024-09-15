@@ -123,7 +123,8 @@
         function filterProducts(page) {
             // Lấy giá trị từ thanh tìm kiếm (hoặc từ URL nếu có)
             var searchParams = new URLSearchParams(window.location.search);
-            var searchText = '<?php echo $_GET["searchFromAnotherPage"]; ?>' || document.getElementById("searchSanPham").value || "";
+            var searchText = '<?php echo isset($_GET["searchFromAnotherPage"]) ? $_GET["searchFromAnotherPage"] : ""; ?>' ||
+                document.getElementById("searchSanPham").value || "";
             // Lấy giá trị từ thanh lọc giá
             // var priceFilter = document.getElementById("price-filter").value;
             // var minPrice, maxPrice;
@@ -160,7 +161,7 @@
             }
 
             // Gọi hàm lọc sản phẩm với các tham số vừa lấy được
-            getAllSanPham(page, searchText,  brandFilter, categoryFilter);
+            getAllSanPham(page, searchText, brandFilter, categoryFilter);
             // getAllSanPham(page, searchText, minPrice, maxPrice, brandFilter, categoryFilter);
 
         }
