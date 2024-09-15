@@ -123,8 +123,7 @@
         function filterProducts(page) {
             // Lấy giá trị từ thanh tìm kiếm (hoặc từ URL nếu có)
             var searchParams = new URLSearchParams(window.location.search);
-            var searchText = searchParams.get('search') || document.getElementById("searchSanPham").value || " ";
-
+            var searchText = '<?php echo $_GET["searchFromAnotherPage"]; ?>' || document.getElementById("searchSanPham").value || "";
             // Lấy giá trị từ thanh lọc giá
             // var priceFilter = document.getElementById("price-filter").value;
             // var minPrice, maxPrice;
@@ -225,6 +224,9 @@
         });
 
         function getAllSanPham(page, search, brandId, categoryId) {
+
+
+
             // Gọi API để lấy dữ liệu sản phẩm
             $.ajax({
                 url: "http://localhost:8080/Product/CommonUser",
@@ -233,9 +235,14 @@
                 data: (function() {
                     var requestData = {
                         pageNumber: page,
-                        search: ' <?php echo $_GET['searchFromAnotherPage'] ?>',
                         pageSize: 12
                     };
+
+
+                    // Nếu brandId khác 0, thêm vào requestData
+                    if (search !== "") {
+                        requestData.search = search;
+                    }
 
 
 

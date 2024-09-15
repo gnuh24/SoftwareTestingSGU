@@ -24,7 +24,7 @@ public interface IBatchRepository extends JpaRepository<Batch, Integer> {
 
     @Query(value = "SELECT * FROM `Batch`\n" +
                     "WHERE `ReceivingTime` = (\n" +
-                    "\tSELECT MIN(`ReceivingTime`) FROM `Batch`\n" +
+                    "\tSELECT MAX(`ReceivingTime`) FROM `Batch`\n" +
                     "    WHERE `ProductId` = :productId\n" +
                     ")\n" +
                     "AND `ProductId` = :productId", nativeQuery = true)
