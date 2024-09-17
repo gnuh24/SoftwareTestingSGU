@@ -312,15 +312,11 @@
         }
     });
 
-    function clearCurrencyFormat(value) {
-        // Remove all non-numeric characters (including commas, dots, and spaces)
-        return value.replace(/[^0-9]/g, '');
-    }
-
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
+        totalValue = convertFormattedNumber(totalValue);
         var productData = [];
 
         if (maNhaCungCap === '') {
@@ -903,7 +899,6 @@
 
         return true; // Nếu số điện thoại hợp lệ
     }
-
 
     function setShowModal(show) {
         var modalOverlay = document.querySelector('.modal_overlay');
