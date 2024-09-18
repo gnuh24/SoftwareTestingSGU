@@ -125,15 +125,15 @@
                     const quantityMessage = soLuongConLai > 0 ?
                         `Còn ${soLuongConLai} sản phẩm` :
                         `<span style='color: red;'>Sản phẩm đã hết hàng</span>`;
-                        const productImage = product.image ? product.image : 'placeholder-image-url';
-                     const productName = product.productName ? product.productName : 'Tên sản phẩm chưa cập nhật';
-                     const origin = product.origin ? product.origin : 'Xuất xứ chưa cập nhật';
-                     const categoryName = product.category && product.category.categoryName ? product.category.categoryName : 'Loại sản phẩm chưa cập nhật';
-                     const brandName = product.brand && product.brand.brandName ? product.brand.brandName : 'Thương hiệu chưa cập nhật';
-                     const abv = product.abv ? product.abv : 'N/A';
-                     const capacity = product.capacity ? product.capacity : 'N/A';
+                    const productImage = product.image ? product.image : 'placeholder-image-url';
+                    const productName = product.productName ? product.productName : 'Tên sản phẩm chưa cập nhật';
+                    const origin = product.origin ? product.origin : 'Xuất xứ chưa cập nhật';
+                    const categoryName = product.category && product.category.categoryName ? product.category.categoryName : 'Loại sản phẩm chưa cập nhật';
+                    const brandName = product.brand && product.brand.brandName ? product.brand.brandName : 'Thương hiệu chưa cập nhật';
+                    const abv = product.abv ? product.abv : 'N/A';
+                    const capacity = product.capacity ? product.capacity : 'N/A';
                     const description = product.description ? product.description : 'Thông tin chi tiết chưa được cập nhật.';
-                    const price = product.price ?product.price : 'Giá chưa cập nhật';
+                    const price = product.price ? product.price : 'Giá chưa cập nhật';
 
 
                     let htmlContent = `
@@ -155,18 +155,18 @@
                             <div class="divider" style="border-bottom: 1px solid #ccc; margin: 20px 0;"></div>
                             <div class="detail_info__wrapper">
                                 <div class="specification__wrapper">
-                                    <a href="#" class="origin specification_item">
+                                    <span class="origin specification_item">
                                         <i class="fa-solid fa-plane"></i>
                                         <p>${origin}</p>
-                                    </a>
-                                    <a href="#" class="specification_item">
+                                    </span>
+                                    <span class="specification_item">
                                         <i class="fa-solid fa-wine-bottle"></i>
                                         <p>${categoryName}</p>
-                                    </a>
-                                    <a href="#" class="origin specification_item">
+                                    </span>
+                                    <span class="origin specification_item">
                                         <i class="fa-solid fa-tag"></i>
                                         <p>${brandName}</p>
-                                    </a>                              
+                                    </span>                              
                                 </div>
                                 <div class="size__wrapper">
                                     <p class="title">Nồng độ cồn</p>

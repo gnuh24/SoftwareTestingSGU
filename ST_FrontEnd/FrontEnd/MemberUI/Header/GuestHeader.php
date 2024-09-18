@@ -117,7 +117,7 @@
         </div>
 
         <div id="Home-login" class="col-6 col-md-2 text-end text-center">
-            <button class="btn btn-light text-danger" style="color:rgb(146, 26, 26) !important;">Login</button>
+            <button class="btn btn-light text-danger" style="color:rgb(146, 26, 26) !important;font-weight:bold;">Login</button>
         </div>
 
     </div>

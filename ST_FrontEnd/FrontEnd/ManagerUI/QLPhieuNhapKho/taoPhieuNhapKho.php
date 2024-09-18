@@ -312,21 +312,11 @@
         }
     });
 
-    function convertFormattedNumber(formattedString) {
-        // Bỏ dấu chấm để chuyển đổi sang số nguyên
-        const numberString = formattedString.replace(/\./g, '');
-        
-        // Chuyển đổi chuỗi thành số
-        const number = parseInt(numberString, 10);
-        
-        return number;
-    }
-
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
-        totalValue =  convertFormattedNumber(totalValue);
+        totalValue = convertFormattedNumber(totalValue);
         var productData = [];
 
         if (maNhaCungCap === '') {
@@ -393,7 +383,7 @@
             return;
         }
 
-        formData.append('totalPrice', totalPrice);
+        formData.append('totalPrice', totalValue);
         formData.append('supplier', maNhaCungCap);
         formData.append('supplierPhone', sodienthoainhacungcap);
 
@@ -908,11 +898,6 @@
         }
 
         return true; // Nếu số điện thoại hợp lệ
-    }
-
-    function clearCurrencyFormat(value) {
-        // Remove all non-numeric characters except for the decimal point
-        return value.replace(/[^0-9.]/g, '');
     }
 
     function setShowModal(show) {
