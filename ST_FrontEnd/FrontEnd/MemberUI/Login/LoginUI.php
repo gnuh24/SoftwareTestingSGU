@@ -177,7 +177,20 @@
             data: formData, // Gửi FormData
             processData: false, // Ngăn jQuery tự động xử lý dữ liệu
             contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
+            beforeSend: function() {
+                // Hiện thông báo "Đang xử lý"
+                Swal.fire({
+                    title: 'Đang xử lý...',
+                    text: 'Vui lòng chờ trong giây lát.',
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+            },
             success: function(response) {
+                // Đóng thông báo "Đang xử lý"
+                Swal.close();
+
                 // Kiểm tra xem phản hồi có thành công hay không
                 Swal.fire({
                     title: response.message,
@@ -185,10 +198,11 @@
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
-                return;
-
             },
             error: function(xhr, status, error) {
+                // Đóng thông báo "Đang xử lý"
+                Swal.close();
+
                 console.error('Lỗi:', error);
                 Swal.fire({
                     title: 'Lỗi!',
@@ -198,6 +212,7 @@
                 });
             }
         });
+
 
     });
 
