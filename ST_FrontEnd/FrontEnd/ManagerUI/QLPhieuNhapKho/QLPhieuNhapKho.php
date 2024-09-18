@@ -235,10 +235,31 @@
       paginationContainer.innerHTML = '';
 
       if (totalPages > 1) {
-        // Tạo nút cho từng trang và thêm vào chuỗi HTML
         var paginationHTML = '';
-        for (var i = 1; i <= totalPages; i++) {
+
+        // Số trang tối đa hiển thị
+        var maxPagesToShow = 5;
+        var startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        var endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        // Điều chỉnh startPage nếu endPage đạt giới hạn
+        if (endPage - startPage < maxPagesToShow - 1) {
+          startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        // Thêm nút "Trang đầu"
+        if (currentPage > 1) {
+          paginationHTML += '<button class="pageButton" data-page="1"><<</button>';
+        }
+
+        // Tạo các nút trang
+        for (var i = startPage; i <= endPage; i++) {
           paginationHTML += '<button class="pageButton" data-page="' + i + '">' + i + '</button>';
+        }
+
+        // Thêm nút "Trang cuối"
+        if (currentPage < totalPages) {
+          paginationHTML += '<button class="pageButton" data-page="' + totalPages + '">>></button>';
         }
 
         // Thiết lập nút phân trang vào paginationContainer
@@ -247,9 +268,7 @@
         // Thêm sự kiện click cho từng nút phân trang
         paginationContainer.querySelectorAll('.pageButton').forEach(function(button) {
           button.addEventListener('click', function() {
-            // Lấy số trang từ thuộc tính data-page của nút được nhấn
             var pageNumber = parseInt(this.getAttribute('data-page'));
-            // Gọi hàm fetchDataAndUpdateTable với số trang mới và các giá trị input
             fetchDataAndUpdateTable(pageNumber, dateFrom, dateTo, searchTerm);
           });
         });
@@ -258,6 +277,7 @@
         paginationContainer.querySelector('.pageButton[data-page="' + currentPage + '"]').classList.add('active');
       }
     }
+
 
     // Sự kiện DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {

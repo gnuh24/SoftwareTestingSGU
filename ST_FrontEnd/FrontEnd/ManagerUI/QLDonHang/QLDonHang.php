@@ -278,25 +278,45 @@
     function renderPagination(totalPages, currentPage) {
         var pagination = document.getElementById("pagination");
         var html = '';
+        // First button
+        if (currentPage > 1) {
+            html += '<button class="pageButton" onclick="loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai)"><<</button>';
+        }
 
         // Previous button
         if (currentPage > 1) {
             html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage - 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Trước</button>';
         }
 
+
+        // Calculate start and end page
+        var maxPagesToShow = 5;
+        var startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        var endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        // Adjust startPage if endPage is at the limit
+        if (endPage - startPage < maxPagesToShow - 1) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
         // Page numbers
-        for (var i = 1; i <= totalPages; i++) {
+        for (var i = startPage; i <= endPage; i++) {
             if (i === currentPage) {
                 html += '<button class="pageButton active">' + i + '</button>';
             } else {
                 html += '<button class="pageButton" onclick="loadDataToTable(' + i + ', udminNgayTao, udmaxNgayTao, udtrangThai)">' + i + '</button>';
             }
         }
-
         // Next button
         if (currentPage < totalPages) {
             html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage + 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Sau</button>';
         }
+        // Last button
+        if (currentPage < totalPages) {
+            html += '<button class="pageButton" onclick="loadDataToTable(' + totalPages + ', udminNgayTao, udmaxNgayTao, udtrangThai)">>></button>';
+        }
+
+
 
         pagination.innerHTML = html;
     }
