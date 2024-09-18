@@ -772,6 +772,9 @@
         }
     }
 
+    function clearCurrencyFormat(currencyString) {
+        return currencyString.replace(/[^\d]/g, '');
+    }
 
     function xuLyPNK() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
