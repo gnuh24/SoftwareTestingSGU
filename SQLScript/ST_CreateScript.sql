@@ -143,15 +143,6 @@ CREATE TABLE IF NOT EXISTS `InventoryReport` (
     `TotalPrice`	INT UNSIGNED		NOT NULL
 );
 
--- DROP TABLE IF EXISTS `InventoryReportStatus`;
--- CREATE TABLE IF NOT EXISTS `InventoryReportStatus` (
---     `InventoryReportId`           	INT UNSIGNED                            NOT NULL,
---     `Status`        				ENUM("ChoNhapKho", "DaNhapKho",  "Huy") NOT NULL,
---     `UpdateTime`    				DATETIME                                NOT NULL,
---     PRIMARY KEY (`InventoryReportId`, `Status`),
---     FOREIGN KEY (`InventoryReportId`) REFERENCES `InventoryReport`(`Id`)
--- );
-
 DROP TABLE IF EXISTS `InventoryReportDetail`;
 CREATE TABLE IF NOT EXISTS `InventoryReportDetail` (
     `InventoryReportId`       	INT UNSIGNED       	NOT NULL,
