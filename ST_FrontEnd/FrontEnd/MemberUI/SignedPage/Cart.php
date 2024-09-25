@@ -134,8 +134,7 @@
                     'Authorization': `Bearer ${token}`
                 },
                 success: function(response) {
-                    $('#' + productId).remove();
-                    $('.priceTotal').text(formatMoney(response.totalAmount));
+                    fetchCartItems();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -186,7 +185,8 @@
                     totalAmount += item.total;
                 });
 
-                $('.listCart').html(cartHTML);
+                $('.listCart').empty(); // Xóa nội dung hiện tại
+                $('.listCart').html(cartHTML); // Cập nhật nội dung mới
                 $('.priceTotal').text(formatMoney(totalAmount));
 
                 if (response.length === 0) {
