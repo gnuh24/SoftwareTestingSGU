@@ -81,7 +81,7 @@
                               <th class="Table_th__hCkcg">Mã Phiếu</th>
                               <th class="Table_th__hCkcg">Ngày Nhập Kho</th>
                               <th class="Table_th__hCkcg">Tên Nhà Cung Cấp</th>
-                              <th class="Table_th__hCkcg">Tên Người Quản Lý</th>
+                              <th class="Table_th__hCkcg">Số điện thoại Nhà Cung cấp</th>
                               <th class="Table_th__hCkcg"> Tổng Giá Trị</th>
                               <th class="Table_th__hCkcg">Thao Tác</th>
                             </tr>
