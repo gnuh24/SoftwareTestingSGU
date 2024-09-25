@@ -130,6 +130,9 @@
                     accountId: maTaiKhoan,
                     productId: productId
                 },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 success: function(response) {
                     $('#' + productId).remove();
                     $('.priceTotal').text(formatMoney(response.totalAmount));
