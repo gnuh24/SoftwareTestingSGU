@@ -316,7 +316,6 @@
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
-        totalValue = convertFormattedNumber(totalValue);
         var productData = [];
 
         if (maNhaCungCap === '') {
