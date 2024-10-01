@@ -1,3 +1,15 @@
+<script>
+    window.onload = function() {
+        // Lấy dữ liệu từ sessionStorage
+        const sessionData = sessionStorage.getItem("token");
+
+        // Kiểm tra xem dữ liệu có tồn tại không
+        if (!sessionData) {
+            // Nếu không tồn tại, chuyển hướng về trang đăng nhập
+            window.location.href = "../Login/LoginUI.php";
+        }
+    };
+</script>
 <style>
     /* Base Styles */
     #Home-img {
@@ -261,12 +273,12 @@
 
                 if (refreshToken) {
                     // Gọi API logout qua Ajax
-                        sessionStorage.removeItem("key");
-                        sessionStorage.removeItem("refreshToken");
+                    sessionStorage.removeItem("key");
+                    sessionStorage.removeItem("refreshToken");
 
-                        // Chuyển hướng về trang chủ khách
-                        window.location.href = "../GuestPage/GuestHomePage.php";
-            
+                    // Chuyển hướng về trang chủ khách
+                    window.location.href = "../GuestPage/GuestHomePage.php";
+
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -277,6 +289,4 @@
             }
         });
     }
-
-
 </script>
