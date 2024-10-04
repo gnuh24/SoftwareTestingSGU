@@ -29,6 +29,9 @@
 
 <script>
     $(document).ready(function() {
+        // Focus vào trường email khi trang vừa được tải
+        $('#adminEmail').focus();
+
         $('#adminLoginButton').click(function(e) {
             e.preventDefault(); // Ngăn hành động mặc định của nút submit
 
@@ -43,6 +46,10 @@
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
+                // Focus lại trường email nếu email bị để trống
+                if (!email) {
+                    $('#adminEmail').focus();
+                }
                 return;
             }
 
@@ -66,6 +73,7 @@
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
+                        $('#adminEmail').focus(); // Focus lại vào trường email sau khi đăng nhập thất bại
                     } else {
                         sessionStorage.setItem('id', response.id);
                         sessionStorage.setItem('token', response.token);
@@ -89,6 +97,7 @@
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
+                    $('#adminEmail').focus(); // Focus lại vào trường email nếu có lỗi từ server
                 }
             });
         });

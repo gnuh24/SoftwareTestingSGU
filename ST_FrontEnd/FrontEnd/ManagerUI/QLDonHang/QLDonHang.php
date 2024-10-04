@@ -89,23 +89,61 @@
     var udtrangThai = "";
 
     $(document).ready(function() {
+        // Khởi tạo giá trị cho các biến
+        var udminNgayTao = null;
+        var udmaxNgayTao = null;
+        var udtrangThai = null;
+
+        // Tải dữ liệu ban đầu
         loadDataToTable(udPage, null, null, null);
 
+        // Xử lý thay đổi ngày bắt đầu
         $("#dateStart").on("change", function() {
             udminNgayTao = $(this).val();
+            // Kiểm tra nếu ngày kết thúc đã được chọn
+            if (udmaxNgayTao && udminNgayTao > udmaxNgayTao) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ngày không hợp lệ',
+                    text: 'Ngày bắt đầu không thể lớn hơn ngày kết thúc!'
+                });
+                $(this).val(''); // Đặt lại giá trị ngày bắt đầu
+                udminNgayTao = null; // Reset biến ngày bắt đầu
+                return; // Ngăn không cho hàm tiếp tục
+            }
             loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
         });
 
+        // Xử lý thay đổi ngày kết thúc
         $("#dateEnd").on("change", function() {
             udmaxNgayTao = $(this).val();
+            // Kiểm tra nếu ngày bắt đầu đã được chọn
+            if (udminNgayTao && udmaxNgayTao < udminNgayTao) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ngày không hợp lệ',
+                    text: 'Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!'
+                });
+                $(this).val(''); // Đặt lại giá trị ngày kết thúc
+                udmaxNgayTao = null; // Reset biến ngày kết thúc
+                return; // Ngăn không cho hàm tiếp tục
+            }
             loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
         });
 
+        // Xử lý thay đổi trạng thái
         $("#TrangThai").on("change", function() {
             udtrangThai = $(this).val();
             loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
         });
+
+        // Gọi lại hàm loadDataToTable khi có thay đổi ở bất kỳ trường nào
+        $("#dateStart, #dateEnd, #TrangThai").on("change", function() {
+            loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai);
+        });
     });
+
+
 
     function clearTable() {
         var tableBody = document.getElementById("tableBody");
@@ -241,14 +279,46 @@
         }
     }
 
+    function convertDateFormat(dateString) {
+        // Kiểm tra định dạng đầu vào
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) {
+            throw new Error("Định dạng ngày không hợp lệ. Vui lòng sử dụng 'yyyy-MM-dd'.");
+        }
+
+        // Tách các phần của ngày
+        const parts = dateString.split('-');
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+
+        // Trả về định dạng mới
+        return `${day}/${month}/${year}`;
+    }
+
     function loadDataToTable(page, minNgayTao, maxNgayTao, trangThai) {
         clearTable();
+        console.log(page, minNgayTao, maxNgayTao, trangThai);
 
-        if (!minNgayTao) {
-            minNgayTao = null;
+        // Tạo đối tượng chứa các tham số
+        var data = {
+            pageNumber: page,
+            // sort: "orderTime,desc" // Bỏ chú thích nếu bạn cần phân loại
+        };
+
+        // Chỉ thêm các tham số không null
+        if (minNgayTao) {
+            minNgayTao = convertDateFormat(minNgayTao);
+            data.from = minNgayTao;
         }
-        if (!maxNgayTao) {
-            maxNgayTao = null;
+
+        if (maxNgayTao) {
+            maxNgayTao = convertDateFormat(maxNgayTao);
+            data.to = maxNgayTao;
+        }
+
+        if (trangThai) {
+            data.status = trangThai;
         }
 
         $.ajax({
@@ -257,37 +327,38 @@
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
             },
-            data: {
-                pageNumber: page,
-                sort: "orderTime,desc",
-                from: minNgayTao,
-                to: maxNgayTao,
-                status: trangThai,
-            },
+            data: data, // Sử dụng đối tượng data
             success: function(response) {
                 renderTableBody(response);
-                renderPagination(response.totalPages, page);
+
+                // Kiểm tra số lượng đơn hàng
+                if (response.totalElements > 0) {
+                    renderPagination(response.totalPages, page);
+                    $('#pagination').show(); // Hiển thị phân trang
+                } else {
+                    $('#pagination').hide(); // Ẩn phân trang
+                }
             },
             error: function(error) {
                 console.error('Error:', error);
             }
         });
-
     }
+
 
     function renderPagination(totalPages, currentPage) {
         var pagination = document.getElementById("pagination");
         var html = '';
+
         // First button
         if (currentPage > 1) {
-            html += '<button class="pageButton" onclick="loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai)"><<</button>';
+            html += '<button class="pageButton" onclick="loadDataToTable(1, udminNgayTao, udmaxNgayTao, udtrangThai)" aria-label="Trang đầu tiên"><<</button>';
         }
 
         // Previous button
         if (currentPage > 1) {
-            html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage - 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Trước</button>';
+            html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage - 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)" aria-label="Trang trước">Trước</button>';
         }
-
 
         // Calculate start and end page
         var maxPagesToShow = 5;
@@ -302,21 +373,21 @@
         // Page numbers
         for (var i = startPage; i <= endPage; i++) {
             if (i === currentPage) {
-                html += '<button class="pageButton active">' + i + '</button>';
+                html += '<button class="pageButton active" aria-current="page">' + i + '</button>';
             } else {
                 html += '<button class="pageButton" onclick="loadDataToTable(' + i + ', udminNgayTao, udmaxNgayTao, udtrangThai)">' + i + '</button>';
             }
         }
+
         // Next button
         if (currentPage < totalPages) {
-            html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage + 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)">Sau</button>';
+            html += '<button class="pageButton" onclick="loadDataToTable(' + (currentPage + 1) + ', udminNgayTao, udmaxNgayTao, udtrangThai)" aria-label="Trang tiếp theo">Sau</button>';
         }
+
         // Last button
         if (currentPage < totalPages) {
-            html += '<button class="pageButton" onclick="loadDataToTable(' + totalPages + ', udminNgayTao, udmaxNgayTao, udtrangThai)">>></button>';
+            html += '<button class="pageButton" onclick="loadDataToTable(' + totalPages + ', udminNgayTao, udmaxNgayTao, udtrangThai)" aria-label="Trang cuối cùng">>></button>';
         }
-
-
 
         pagination.innerHTML = html;
     }

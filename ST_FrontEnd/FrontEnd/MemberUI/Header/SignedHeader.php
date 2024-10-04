@@ -6,7 +6,7 @@
         // Kiểm tra xem dữ liệu có tồn tại không
         if (!sessionData) {
             // Nếu không tồn tại, chuyển hướng về trang đăng nhập
-            window.location.href = "../Login/LoginUI.php";
+            window.location.href = "../GuestPage/GuestHomePage.php";
         }
     };
 </script>

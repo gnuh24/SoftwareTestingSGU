@@ -47,11 +47,10 @@
                       </div>
                       <div class="boxFeature">
 
-                        <!-- Từ ngày -->
                         <div>
                           <label>
                             <span style="font-size: 1.3rem; font-weight: 700">Từ Ngày :</span>
-                            <input class="input datesearch" name="toDate" style="width: 20rem" type="date" />
+                            <input class="input datesearch" id="fromDate" name="fromDate" style="width: 20rem" type="date" />
                           </label>
                         </div>
 
@@ -59,9 +58,10 @@
                         <div>
                           <label>
                             <span style="font-size: 1.3rem; font-weight: 700">Đến Ngày :</span>
-                            <input class="input datesearch" name="fromDate" style="width: 20rem" type="date" />
+                            <input class="input datesearch" id="toDate" name="toDate" style="width: 20rem" type="date" />
                           </label>
                         </div>
+
 
                         <!-- Tìm kiếm -->
                         <div>
@@ -281,6 +281,26 @@
 
     // Sự kiện DOMContentLoaded
     document.addEventListener('DOMContentLoaded', function() {
+      var fromDateInput = document.getElementById('fromDate');
+      var toDateInput = document.getElementById('toDate');
+
+      // Hàm kiểm tra và ràng buộc ngày
+      function validateDates() {
+        var fromDate = new Date(fromDateInput.value);
+        var toDate = new Date(toDateInput.value);
+
+        if (fromDateInput.value && toDateInput.value) {
+          // Nếu "Từ Ngày" lớn hơn "Đến Ngày", hiển thị cảnh báo và reset trường "Từ Ngày"
+          if (fromDate > toDate) {
+            alert('"Từ Ngày" không thể lớn hơn "Đến Ngày". Vui lòng chọn lại.');
+            fromDateInput.value = ''; // Hoặc có thể xóa giá trị của "Từ Ngày" hoặc "Đến Ngày"
+          }
+        }
+      }
+
+      // Lắng nghe sự kiện khi người dùng chọn ngày
+      fromDateInput.addEventListener('change', validateDates);
+      toDateInput.addEventListener('change', validateDates);
       var dateFromInput = document.querySelector('input[type="date"][name="fromDate"]');
       var dateToInput = document.querySelector('input[type="date"][name="toDate"]');
       var searchInput = document.querySelector('input[type="text"][name="search"]');

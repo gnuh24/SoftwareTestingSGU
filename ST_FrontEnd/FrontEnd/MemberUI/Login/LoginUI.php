@@ -66,6 +66,39 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('container');
+        const emailSignUp = document.getElementById('email'); // Ô email của form đăng ký
+        const emailLogin = document.getElementById('tenDangNhapLogin'); // Ô email của form đăng nhập
+        const registerBtn = document.getElementById('register'); // Nút chuyển sang form đăng ký
+        const loginBtn = document.getElementById('login'); // Nút chuyển sang form đăng nhập
+
+        // Focus vào ô email khi trang vừa tải
+        if (container.classList.contains('active')) {
+            emailSignUp.focus(); // Focus vào email của form đăng ký nếu đang ở form đăng ký
+        } else {
+            emailLogin.focus(); // Focus vào email của form đăng nhập nếu đang ở form đăng nhập
+        }
+
+        // Thêm sự kiện khi người dùng nhấn vào nút Đăng ký
+        registerBtn.addEventListener('click', () => {
+            container.classList.add('active');
+            setTimeout(() => {
+                emailSignUp.focus(); // Focus vào email của form đăng ký sau khi chuyển form
+            }, 300); // Đợi một khoảng thời gian ngắn để đảm bảo form đã chuyển đổi hoàn toàn
+        });
+
+        // Thêm sự kiện khi người dùng nhấn vào nút Đăng nhập
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove('active');
+            setTimeout(() => {
+                emailLogin.focus(); // Focus vào email của form đăng nhập sau khi chuyển form
+            }, 300); // Đợi một khoảng thời gian ngắn để đảm bảo form đã chuyển đổi hoàn toàn
+        });
+    });
+
+
+
     //Script xử lý Registation
     const container = document.getElementById("container");
     const registerBtn = document.getElementById("register");
@@ -88,7 +121,6 @@
         let xacNhanMatKhau = document.getElementById("xacNhanMatKhau");
         let email = document.getElementById("email");
 
-
         if (!matKhau.value.trim()) {
             Swal.fire({
                 title: 'Lỗi!',
@@ -97,7 +129,18 @@
                 confirmButtonText: 'OK'
             });
             matKhau.focus();
-            event.preventDefault();
+            return;
+        }
+
+        // Kiểm tra độ dài mật khẩu
+        if (matKhau.value.length < 8) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Mật khẩu phải có ít nhất 8 ký tự',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            matKhau.focus();
             return;
         }
 
@@ -109,7 +152,6 @@
                 confirmButtonText: 'OK'
             });
             xacNhanMatKhau.focus();
-            event.preventDefault();
             return;
         }
         if (matKhau.value !== xacNhanMatKhau.value) {
@@ -120,7 +162,6 @@
                 confirmButtonText: 'OK'
             });
             xacNhanMatKhau.focus();
-            event.preventDefault();
             return;
         }
 
@@ -132,7 +173,6 @@
                 confirmButtonText: 'OK'
             });
             email.focus();
-            event.preventDefault();
             return;
         }
 
@@ -145,9 +185,9 @@
                 confirmButtonText: 'OK'
             });
             email.focus();
-            event.preventDefault();
             return;
         }
+
         try {
             const emailExists = await checkEmail(email.value); // đợi kết quả
             if (emailExists === true) {
@@ -168,9 +208,11 @@
                 confirmButtonText: 'OK'
             });
         }
+
         var formData = new FormData();
         formData.append('email', email.value.trim());
         formData.append('password', matKhau.value);
+
         $.ajax({
             url: 'http://localhost:8080/Auth/Registration',
             type: 'POST',
@@ -212,9 +254,8 @@
                 });
             }
         });
-
-
     });
+
 
     function isValidEmail(email) {
         // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
@@ -239,13 +280,7 @@
             });
         });
     }
-</script>
 
-
-
-
-
-<script>
     const loginButton = document.getElementById("signInButton");
     const tenDangNhap = document.getElementById("tenDangNhapLogin");
     const matKhau = document.getElementById("passwordLogin");
@@ -275,7 +310,19 @@
         checkTaiKhoan(tenDangNhap.value, matKhau.value)
     });
 
+    // Lắng nghe sự kiện nhấn phím Enter trong các form
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
+            // Kiểm tra xem người dùng đang ở form nào dựa trên class của container
+            if (container.classList.contains('active')) {
+                signUpButton.click(); // Gọi sự kiện đăng ký nếu đang ở form đăng ký
+            } else {
+                loginButton.click(); // Gọi sự kiện đăng nhập nếu đang ở form đăng nhập
+            }
+        }
+    });
 
     // Hàm xử lý kiểm tra tài khoản
     function checkTaiKhoan(email, password) {

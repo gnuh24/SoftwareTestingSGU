@@ -23,7 +23,7 @@
     <!-- Thanh lọc menu -->
     <div id="filter-menu" class="container-fluid bg-white p-3 rounded mb-4">
         <div class="row d-flex justify-content-around" style="width:80%">
-            <!-- <div class="col-12 col-md-3 mb-2 mb-md-0">
+            <div class="col-12 col-md-3 mb-2 mb-md-0">
                 <label for="price-filter" class="form-label fw-bold">Giá:</label>
                 <select id="price-filter" class="form-select form-select-sm bg-danger text-white">
                     <option value="">Tất cả</option>
@@ -31,7 +31,7 @@
                     <option value="medium">Từ 1 đến 3 triệu</option>
                     <option value="high">Trên 3 triệu</option>
                 </select>
-            </div> -->
+            </div>
 
             <div class="col-12 col-md-3 mb-2 mb-md-0">
                 <label for="brand-filter" class="form-label  fw-bold">Thương hiệu :</label>
@@ -74,7 +74,7 @@
         document.getElementById("reset-button").addEventListener("click", function() {
             // Reset tất cả các thanh lọc về giá trị mặc định
             document.getElementById("searchSanPham").value = "";
-            // document.getElementById("price-filter").value = "";
+            document.getElementById("price-filter").value = "";
             document.getElementById("brand-filter").value = "";
             document.getElementById("category-filter").value = "";
             currentPage = 1;
@@ -98,13 +98,13 @@
         }
 
 
-        // // Lắng nghe sự kiện change cho thanh lọc giá
-        // document.getElementById("price-filter").addEventListener("change", function() {
-        //     currentPage = 1;
+        // Lắng nghe sự kiện change cho thanh lọc giá
+        document.getElementById("price-filter").addEventListener("change", function() {
+            currentPage = 1;
 
-        //     // Gọi lại hàm lọc sản phẩm khi giá trị thay đổi
-        //     filterProducts(currentPage);
-        // });
+            // Gọi lại hàm lọc sản phẩm khi giá trị thay đổi
+            filterProducts(currentPage);
+        });
 
         document.getElementById("brand-filter").addEventListener("change", function() {
             currentPage = 1;
@@ -126,27 +126,27 @@
             var searchText = '<?php echo isset($_GET["searchFromAnotherPage"]) ? $_GET["searchFromAnotherPage"] : ""; ?>' ||
                 document.getElementById("searchSanPham").value || "";
             // Lấy giá trị từ thanh lọc giá
-            // var priceFilter = document.getElementById("price-filter").value;
-            // var minPrice, maxPrice;
-            // // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
-            // switch (priceFilter) {
-            //     case "low":
-            //         minPrice = 0;
-            //         maxPrice = 1000000;
-            //         break;
-            //     case "medium":
-            //         minPrice = 1000000;
-            //         maxPrice = 3000000;
-            //         break;
-            //     case "high":
-            //         minPrice = 3000000;
-            //         maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
-            //         break;
-            //     default:
-            //         minPrice = 0;
-            //         maxPrice = 1000000000; // Không giới hạn
-            //         break;
-            // }
+            var priceFilter = document.getElementById("price-filter").value;
+            var minPrice, maxPrice;
+            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
+            switch (priceFilter) {
+                case "low":
+                    minPrice = 0;
+                    maxPrice = 1000000;
+                    break;
+                case "medium":
+                    minPrice = 1000000;
+                    maxPrice = 3000000;
+                    break;
+                case "high":
+                    minPrice = 3000000;
+                    maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
+                    break;
+                default:
+                    minPrice = 0;
+                    maxPrice = 1000000000; // Không giới hạn
+                    break;
+            }
 
             // Lấy giá trị từ thanh lọc thương hiệu
             var brandFilter = document.getElementById("brand-filter").value;
@@ -161,8 +161,7 @@
             }
 
             // Gọi hàm lọc sản phẩm với các tham số vừa lấy được
-            getAllSanPham(page, searchText, brandFilter, categoryFilter);
-            // getAllSanPham(page, searchText, minPrice, maxPrice, brandFilter, categoryFilter);
+            getAllSanPham(page, searchText, minPrice, maxPrice, brandFilter, categoryFilter);
 
         }
 
@@ -173,29 +172,29 @@
 
             // Lấy giá trị từ thanh tìm kiếm
             var searchText = document.getElementById("searchSanPham").value;
-            // // Lấy giá trị từ thanh lọc giá
-            // var priceFilter = document.getElementById("price-filter").value;
-            // var minPrice, maxPrice;
+            // Lấy giá trị từ thanh lọc giá
+            var priceFilter = document.getElementById("price-filter").value;
+            var minPrice, maxPrice;
 
-            // // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
-            // switch (priceFilter) {
-            //     case "low":
-            //         minPrice = 0;
-            //         maxPrice = 1000000;
-            //         break;
-            //     case "medium":
-            //         minPrice = 1000000;
-            //         maxPrice = 3000000;
-            //         break;
-            //     case "high":
-            //         minPrice = 3000000;
-            //         maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
-            //         break;
-            //     default:
-            //         minPrice = 0;
-            //         maxPrice = 1000000000; // Không giới hạn
-            //         break;
-            // }
+            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
+            switch (priceFilter) {
+                case "low":
+                    minPrice = 0;
+                    maxPrice = 1000000;
+                    break;
+                case "medium":
+                    minPrice = 1000000;
+                    maxPrice = 3000000;
+                    break;
+                case "high":
+                    minPrice = 3000000;
+                    maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
+                    break;
+                default:
+                    minPrice = 0;
+                    maxPrice = 1000000000; // Không giới hạn
+                    break;
+            }
 
 
             var brandFilter = document.getElementById("brand-filter").value;
@@ -224,28 +223,25 @@
 
         });
 
-        function getAllSanPham(page, search, brandId, categoryId) {
-
-
-
+        function getAllSanPham(page, search, minGia, maxGia, brandId, categoryId) {
             // Gọi API để lấy dữ liệu sản phẩm
+            console.log(page, search, minGia, maxGia, brandId, categoryId)
             $.ajax({
                 url: "http://localhost:8080/Product/CommonUser",
                 method: "GET",
                 dataType: "json",
                 data: (function() {
                     var requestData = {
-                        pageNumber: page,
-                        pageSize: 12
+                        page: page,
+                        minPrice: minGia,
+                        maxPrice: maxGia,
+                        pageSize: 12,
                     };
 
-
-                    // Nếu brandId khác 0, thêm vào requestData
-                    if (search !== "") {
+                    // Nếu search có giá trị, thêm vào requestData
+                    if (search && search.trim() !== "") {
                         requestData.search = search;
                     }
-
-
 
                     // Nếu brandId khác 0, thêm vào requestData
                     if (brandId !== 0) {
@@ -267,17 +263,17 @@
                         // Duyệt qua từng sản phẩm và tạo nội dung HTML tương ứng
                         $.each(response.content, function(index, product) {
                             htmlContent += ` 
-                                    <form id="productForm_${product.id}" method="post" action="SignedProductDetail.php?maSanPham=${product.id}">
+                                    <form id="productForm_${product.id}" method="post" action="GuestProductDetail.php?maSanPham=${product.id}">
                                         <div class="row">
-                                            <a href="SignedProductDetail.php?maSanPham=${product.id}" class="text-center" style="display: block;">
+                                            <a href="GuestProductDetail.php?maSanPham=${product.id}" class="text-center" style="display: block;">
                                                 <img src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${product.image}" alt="" style="height: 300px;">
                                                 <div class="product-card-content">
                                                     <div class="price">
                                                         <h4 class="name-product">${product.productName}</h4>
                                                         <p class="price-tea">${formatCurrency(product.price)}</p>
                                                     </div>
-                                                    <div class="buy-btn-container" >
-                                                        Mua ngay
+                                                    <div class="buy-btn-container">
+                                                        MUA NGAY
                                                     </div>
                                                 </div>
                                             </a>

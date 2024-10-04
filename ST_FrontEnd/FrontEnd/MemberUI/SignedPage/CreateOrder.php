@@ -37,8 +37,10 @@
                                 </div>
                                 <div class='input__wrapper'>
                                     <label for='phonenumber'>Số điện thoại: </label>
-                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' />
+                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' pattern="^(0|\+84)[0-9]{9}$" required />
+                                    <small class="text-danger" id="phoneError" style="display:none;">Số điện thoại không hợp lệ. Vui lòng nhập lại.</small>
                                 </div>
+
                                 <div class='input__wrapper'>
                                     <label for='address'>Ghi chú:</label>
                                     <input type='text' name='address' id='address' placeholder='Nhập ghi chú' />
@@ -232,7 +234,13 @@
         const soDienThoai = document.getElementById('phonenumber').value.trim(); // Lấy giá trị của trường Số điện thoại
         const diaChi = document.getElementById('address1').value.trim(); // Lấy giá trị của trường Địa chỉ
         const ghiChu = document.getElementById('address').value.trim(); // Lấy giá trị của trường Ghi chú
-
+        const phonePattern = /^(0|\+84)[0-9]{9}$/;
+        if (!phonePattern.test(soDienThoai)) {
+            document.getElementById('phoneError').style.display = 'block';
+            return; // Ngăn không cho hàm tiếp tục
+        } else {
+            document.getElementById('phoneError').style.display = 'none'; // Ẩn thông báo lỗi nếu số điện thoại hợp lệ
+        }
         // Kiểm tra nếu bất kỳ trường nào bị trống
         if (!hoTen || !soDienThoai || !diaChi) {
             Swal.fire({
