@@ -143,6 +143,57 @@
             return false;
         }
 
+        // Kiểm tra họ và tên: 3 - 100 kí tự, không chứa kí tự đặc biệt
+        var nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƠợỜỚỠỚợỳỵỷỹỲỴỶỸ\s]{3,100}$/u;
+        if (!nameRegex.test(fullname)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Họ và tên không hợp lệ!',
+                text: 'Họ và tên phải từ 3 đến 100 ký tự, không chứa ký tự đặc biệt.',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
+        // Kiểm tra địa chỉ: 10 - 100 kí tự, không chứa kí tự đặc biệt
+        var addressRegex = /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƠợỜỚỠỚợỳỵỷỹỲỴỶỸ\s,.-]{10,100}$/u;
+        if (!addressRegex.test(address)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Địa chỉ không hợp lệ!',
+                text: 'Địa chỉ phải từ 10 đến 100 ký tự và không chứa ký tự đặc biệt.',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
+        // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lệ)
+        var phoneRegex = /^[0-9]{10,11}$/;
+        if (!phoneRegex.test(phone)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Số điện thoại không hợp lệ!',
+                text: 'Vui lòng nhập số điện thoại gồm 10 đến 11 chữ số.',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
+        // Kiểm tra năm sinh (không lớn hơn năm hiện tại và không nhỏ hơn năm hiện tại trừ đi 18)
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        var birthYear = new Date(birthday).getFullYear();
+
+        if (birthYear > currentYear || currentYear - birthYear < 18) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi năm sinh!',
+                text: 'Năm sinh không hợp lệ. Bạn phải từ 18 tuổi trở lên và năm sinh không thể lớn hơn năm hiện tại.',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
         // Thêm các thông tin bắt buộc vào formData
         formData.append('accountId', accountId);
         formData.append('fullname', fullname);
@@ -151,8 +202,7 @@
         formData.append('gender', gender);
         formData.append('address', address);
         const token = sessionStorage.getItem("token");
-        var formData1 = new FormData();
-        var tokenChange = '';
+
         $.ajax({
             url: 'http://localhost:8080/Account/UpdateInformation',
             type: 'PATCH',
@@ -182,6 +232,8 @@
 
         return false; // Ngăn chặn form gửi theo cách truyền thống
     }
+
+
 
     function formatDateToDDMMYYYY(dateString) {
         // Tách chuỗi theo dấu gạch ngang "-"

@@ -1,3 +1,16 @@
+<script>
+    window.onload = function() {
+        // Lấy dữ liệu từ sessionStorage
+        const sessionData = sessionStorage.getItem("token");
+
+        // Kiểm tra xem dữ liệu có tồn tại không
+        if (!sessionData) {
+            // Nếu không tồn tại, chuyển hướng về trang đăng nhập
+            window.location.href = "../../MemberUI/Login/AdminLoginUI.php";
+        }
+    };
+</script>
+
 <div class="StaffHeader_wrapper__IQw-U">
     <p class="StaffHeader_title__QxjW4">Dekanta</p>
     <button id="logoutButton" class="StaffHeader_signOut__i2pcu">
@@ -26,12 +39,12 @@
                 if (refreshToken) {
                     // Gọi API logout qua Ajax
 
-                        sessionStorage.removeItem('id');
-                        sessionStorage.removeItem('token');
-                        sessionStorage.removeItem('refreshToken');
-                        // Chuyển hướng về trang đăng nhập
-                        window.location.href = "../../MemberUI/Login/LoginUI.php";
-                  
+                    sessionStorage.removeItem('id');
+                    sessionStorage.removeItem('token');
+                    sessionStorage.removeItem('refreshToken');
+                    // Chuyển hướng về trang đăng nhập
+                    window.location.href = "../../MemberUI/Login/AdminLoginUI.php";
+
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -42,6 +55,4 @@
             }
         });
     });
-
-
 </script>

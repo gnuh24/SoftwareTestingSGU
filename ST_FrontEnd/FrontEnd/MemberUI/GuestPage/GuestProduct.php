@@ -164,8 +164,8 @@
     function filterProducts(page) {
         // Lấy giá trị từ thanh tìm kiếm (hoặc từ URL nếu có)
         var searchParams = new URLSearchParams(window.location.search);
-        var searchText = searchParams.get('search') || document.getElementById("searchSanPham").value || " ";
-
+        var searchText = '<?php echo isset($_GET["searchFromAnotherPage"]) ? $_GET["searchFromAnotherPage"] : ""; ?>' ||
+            document.getElementById("searchSanPham").value || "";
         // Lấy giá trị từ thanh lọc giá
         var priceFilter = document.getElementById("price-filter").value;
         var minPrice, maxPrice;
@@ -188,6 +188,7 @@
                 maxPrice = 1000000000; // Không giới hạn
                 break;
         }
+
         // Lấy giá trị từ thanh lọc thương hiệu
         var brandFilter = document.getElementById("brand-filter").value;
         if (brandFilter == "") {
@@ -202,6 +203,7 @@
 
         // Gọi hàm lọc sản phẩm với các tham số vừa lấy được
         getAllSanPham(page, searchText, minPrice, maxPrice, brandFilter, categoryFilter);
+
     }
 
 
@@ -225,7 +227,7 @@
             dataType: "json",
             data: (function() {
                 var requestData = {
-                    page: page,
+                    pageNumber: page,
                     minPrice: minGia,
                     maxPrice: maxGia,
                     pageSize: 12,

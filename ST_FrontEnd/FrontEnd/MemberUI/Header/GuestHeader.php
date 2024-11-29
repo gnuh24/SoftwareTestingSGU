@@ -136,10 +136,11 @@
     });
 
     // Sự kiện tìm kiếm search 
-    document.getElementById("filter-button").addEventListener("click", (event) => {
+    document.getElementById("filter-button").addEventListener("click", function(event) {
         event.preventDefault();
         const form = document.getElementById("search");
         const searchValue = document.getElementById("searchSanPham").value;
+        console.log(searchValue);
         if (searchValue != "") {
             form.action = `GuestProduct.php?searchFromAnotherPage=${searchValue}`;
             form.submit();
@@ -151,6 +152,5 @@
                 confirmButtonText: 'OK'
             });
         }
-
     });
 </script>

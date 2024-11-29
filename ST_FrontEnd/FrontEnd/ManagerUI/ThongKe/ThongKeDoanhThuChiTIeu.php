@@ -74,18 +74,42 @@
     </div>
 </body>
 <script>
-    const resetButton = document.getElementById("resetButton");
-    const thongKeButton = document.getElementById("thongKeButton");
     const from = document.getElementById("from");
     const to = document.getElementById("to");
-    const limit = document.getElementById('topProductsSelect'); // Đổi tên biến ở đây
+    const limit = document.getElementById('topProductsSelect');
+    const resetButton = document.getElementById("resetButton");
+    const thongKeButton = document.getElementById("thongKeButton");
+
+    from.addEventListener("change", validateDates);
+    to.addEventListener("change", validateDates);
+
+    function validateDates() {
+        var currentDate = new Date();
+        var fromValue = from.value !== "" ? from.value : "2010-01-01";
+        var toValue = to.value !== "" ? to.value : formattedDate;
+
+        var fromDate = new Date(fromValue);
+        var toDate = new Date(toValue);
+
+        if (fromDate > currentDate) {
+            alert("Ngày bắt đầu không được lớn hơn ngày hiện tại.");
+            from.value = ""; // Reset ô nhập liệu
+            return;
+        }
+
+        if (toDate < fromDate) {
+            alert("Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
+            to.value = ""; // Reset ô nhập liệu
+            return;
+        }
+    }
 
     thongKeButton.addEventListener("click", () => {
         let fromValue = from.value !== "" ? from.value : "2010-01-01";
         let toValue = to.value !== "" ? to.value : formattedDate;
-        let topCount = limit.value; // Đổi tên biến ở đây
+        let topCount = limit.value;
 
-        thongKeSanPhamBanChay(fromValue, toValue, topCount); // Gọi hàm để lấy dữ liệu sản phẩm
+        thongKeSanPhamBanChay(fromValue, toValue, topCount);
     });
 
     resetButton.addEventListener("click", () => {
@@ -104,17 +128,16 @@
 
     function thongKeSanPhamBanChay(from, to, topCount) {
         $.ajax({
-            url: 'http://localhost:8080/Statistic/BestSeller', // Cập nhật URL API
+            url: 'http://localhost:8080/Statistic/BestSeller',
             type: 'GET',
             dataType: "json",
             data: {
                 minDate: from,
                 maxDate: to,
                 limit: topCount,
-
             },
             headers: {
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token') // Thay 'yourTokenKey' bằng khóa lưu token của bạn
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
             },
             success: function(response) {
                 var tableBody = document.querySelector("#sanPhamBanChayTable tbody");
@@ -123,11 +146,11 @@
                 response.forEach(item => {
                     var row = document.createElement("tr");
                     row.innerHTML = `
-                        <td>${item.productId}</td>
-                        <td>${item.productName}</td>
-                        <td>${item.quantity}</td>
-                        <td>${item.total}</td>
-                    `;
+                    <td>${item.productId}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.total}</td>
+                `;
                     tableBody.appendChild(row);
                 });
             },

@@ -362,6 +362,33 @@
             }
         });
     }
+    from.addEventListener("change", validateDates);
+    to.addEventListener("change", validateDates);
+
+    function validateDates() {
+        // Lấy ngày hiện tại
+        var currentDate = new Date();
+        var fromValue = from.value !== "" ? from.value : "2010-01-01";
+        var toValue = to.value !== "" ? to.value : formattedDate;
+
+        // Chuyển đổi từ chuỗi sang đối tượng Date
+        var fromDate = new Date(fromValue);
+        var toDate = new Date(toValue);
+
+        // Kiểm tra xem ngày bắt đầu có lớn hơn ngày hiện tại không
+        if (fromDate > currentDate) {
+            alert("Ngày bắt đầu không được lớn hơn ngày hiện tại.");
+            from.value = ""; // Reset lại ô nhập liệu
+            return; // Ngừng thực hiện nếu không hợp lệ
+        }
+
+        // Kiểm tra xem ngày kết thúc có lớn hơn ngày bắt đầu không
+        if (toDate < fromDate) {
+            alert("Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
+            to.value = ""; // Reset lại ô nhập liệu
+            return; // Ngừng thực hiện nếu không hợp lệ
+        }
+    }
 </script>
 
 </html>

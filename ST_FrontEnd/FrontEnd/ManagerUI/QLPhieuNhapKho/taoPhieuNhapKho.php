@@ -15,39 +15,11 @@
     <div id="root">
         <div class="App">
             <div class="StaffLayout_wrapper__CegPk">
-                <div class="StaffHeader_wrapper__IQw-U">
-                    <p class="StaffHeader_title__QxjW4">Dekanta</p>
-                    <button class="StaffHeader_signOut__i2pcu">
-                        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right-from-bracket" class="svg-inline--fa fa-arrow-right-from-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 2rem; height: 2rem; color: white">
-                            <path fill="currentColor" d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"></path>
-                        </svg>
-                    </button>
-                </div>
+                <?php require_once "../ManagerHeader.php" ?>
+
                 <div class="Manager_wrapper__vOYy">
-                    <div class="Sidebar_sideBar__CC4MK">
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
-                        </a>
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
-                        </a>
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
-                        </a>
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
-                        </a>
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
-                        </a>
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
-                        </a>
-                        </a>
-                        <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
-                            <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
-                        </a>
-                    </div>
+                    <?php require_once "../ManagerMenu.php" ?>
+
 
                     <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
                         <div class="wrapper">
@@ -316,7 +288,6 @@
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var sodienthoainhacungcap = document.getElementById('sodienthoainhacungcap').value;
         var totalValue = clearCurrencyFormat(document.getElementById('totalvalue').value);
-        totalValue = convertFormattedNumber(totalValue);
         var productData = [];
 
         if (maNhaCungCap === '') {
@@ -325,8 +296,20 @@
                 title: 'Lỗi',
                 text: 'Vui lòng điền tên nhà cung cấp',
             });
-            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+            return;
         }
+
+        // Kiểm tra độ dài và ký tự đặc biệt
+        var supplierNameRegex = /^[a-zA-Z0-9\s]{3,100}$/;
+        if (!supplierNameRegex.test(maNhaCungCap)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Tên nhà cung cấp phải từ 3 đến 100 ký tự và không chứa ký tự đặc biệt.',
+            });
+            return;
+        }
+
 
         if (sodienthoainhacungcap === '' || !validatePhoneNumber(sodienthoainhacungcap)) {
             Swal.fire({
@@ -334,9 +317,10 @@
                 title: 'Lỗi',
                 text: 'Số điện thoại nhà cung cấp không hợp lệ',
             });
-            return; // Dừng hàm nếu số điện thoại không hợp lệ
+            return;
         }
 
+        // Lấy dữ liệu sản phẩm từ bảng
         $('#tableBody tr').each(function() {
             var maSanPham = $(this).find('td:nth-child(1)').text().trim();
             var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
@@ -355,58 +339,48 @@
             if (maSanPham && !isNewProduct(maSanPham)) {
                 // Sản phẩm đã tồn tại
                 productItem.idProductId = maSanPham;
-                var totalItemValue = parseFloat(donGia) * parseInt(soLuong);
-                productItem.total = totalItemValue;
-            } else {
-                // Sản phẩm mới
-                var totalItemValue = parseFloat(donGia) * parseInt(soLuong);
-                productItem.total = totalItemValue;
             }
+
+            // Tính tổng giá trị cho sản phẩm
+            var totalItemValue = parseFloat(donGia) * parseInt(soLuong);
+            productItem.total = totalItemValue;
 
             productData.push(productItem);
         });
 
+        // Kiểm tra xem có sản phẩm nào không
         if (productData.length === 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
                 text: 'Vui lòng thêm ít nhất một sản phẩm.',
             });
-            return false; // Dừng việc gửi form nếu productData trống
+            return false;
         }
 
         const token = sessionStorage.getItem("token");
-        var formData = new FormData();
+
+        // Tạo đối tượng dữ liệu để gửi
+        var dataToSend = {
+            totalPrice: totalValue,
+            supplier: maNhaCungCap,
+            supplierPhone: sodienthoainhacungcap,
+            inventoryReportDetailCreateFormList: productData
+        };
+
+        // Kiểm tra giá trị totalPrice
         var totalPrice = parseInt(totalValue);
         if (isNaN(totalPrice)) {
             console.error("Invalid totalPrice");
             return;
         }
 
-        formData.append('totalPrice', totalValue);
-        formData.append('supplier', maNhaCungCap);
-        formData.append('supplierPhone', sodienthoainhacungcap);
-
-        productData.forEach((item, index) => {
-            if (item.idProductId) {
-                formData.append(`inventoryReportDetailCreateFormList[${index}].idProductId`, item.idProductId);
-            } else {
-                formData.append(`inventoryReportDetailCreateFormList[${index}].productName`, item.productName);
-            }
-            formData.append(`inventoryReportDetailCreateFormList[${index}].unitPrice`, item.unitPrice);
-            formData.append(`inventoryReportDetailCreateFormList[${index}].quantity`, item.quantity);
-            formData.append(`inventoryReportDetailCreateFormList[${index}].total`, item.total);
-            formData.append(`inventoryReportDetailCreateFormList[${index}].profit`, item.profit);
-        });
-        for (let [key, value] of formData.entries()) {
-            console.log(key + ': ' + value);
-        }
+        // Gửi yêu cầu AJAX
         $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8080/InventoryReport',
-            data: formData,
-            contentType: false, // Không gửi tiêu đề Content-Type
-            processData: false, // Không xử lý dữ liệu
+            type: 'PATCH', // Sử dụng PATCH thay vì POST
+            url: 'http://localhost:8080/InventoryReport', // Cập nhật URL nếu cần
+            contentType: 'application/json', // Thiết lập kiểu nội dung là JSON
+            data: JSON.stringify(dataToSend), // Chuyển đối tượng thành chuỗi JSON
             headers: {
                 'Authorization': 'Bearer ' + token
             },
@@ -414,7 +388,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'Thành công',
-                    text: 'Tạo phiếu nhập kho thành công',
+                    text: 'Cập nhật phiếu nhập kho thành công',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = 'QLPhieuNhapKho.php';
@@ -422,7 +396,7 @@
                 });
             },
             error: function(xhr, status, error) {
-                console.error('Đã xảy ra lỗi khi gửi yêu cầu.');
+                console.error('Đã xảy ra lỗi khi gửi yêu cầu.', error);
             }
         });
     }
@@ -772,6 +746,9 @@
         }
     }
 
+    function clearCurrencyFormat(currencyString) {
+        return currencyString.replace(/[^\d]/g, '');
+    }
 
     function xuLyPNK() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
@@ -879,26 +856,22 @@
     }
 
     function validatePhoneNumber(sodienthoainhacungcap) {
+        // Loại bỏ các ký tự không phải số
         let phoneNumber = sodienthoainhacungcap.replace(/\D/g, '');
-        if (phoneNumber.length < 10 || phoneNumber.length > 11) {
+
+        // Kiểm tra độ dài và bắt đầu bằng số 0
+        if (!/^0\d{9,10}$/.test(phoneNumber)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
-                text: 'Số điện thoại phải từ 10 đến 11 chữ số.',
-            });
-            return false;
-        }
-        if (!/^\d+$/.test(phoneNumber)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Số điện thoại không hợp lệ. Chỉ bao gồm chữ số.',
+                text: 'Số điện thoại phải bắt đầu bằng số 0 và có từ 10 đến 11 chữ số.',
             });
             return false;
         }
 
         return true; // Nếu số điện thoại hợp lệ
     }
+
 
     function setShowModal(show) {
         var modalOverlay = document.querySelector('.modal_overlay');

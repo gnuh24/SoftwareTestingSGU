@@ -82,20 +82,35 @@
 </body>
 
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryNamePara = urlParams.get('categoryName');
     document.getElementById("updateLoaiSanPham_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
         let Id = document.getElementById("Id");
         let Category = document.getElementById("CategoryName");
+        let trimmedCategoryName = Category.value.trim();
 
-        if (!CategoryName.value.trim()) {
+        // Kiểm tra độ dài tên loại sản phẩm
+        if (trimmedCategoryName.length < 3 || trimmedCategoryName.length > 100) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
-                text: 'Tên loại sản phẩm không được để trống',
+                text: 'Tên loại sản phẩm phải từ 3 đến 100 ký tự',
             });
-            TenNCC.focus();
-            event.preventDefault();
+            categoryName.focus();
+            return;
+        }
+
+        // Kiểm tra tên loại sản phẩm chỉ chứa chữ
+        const namePattern = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẰẲẴẶẤẦẨẪẬẮẰẴẸẺẼỀỀỂưăằẳẵặấầẩẫậắằẵẹẻẽềềể]+(?:\s[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẰẲẴẶẤẦẨẪẬẮẰẴẸẺẼỀỀỂưăằẳẵặấầẩẫậắằẵẹẻẽềềể]+)*$/u;
+        if (!namePattern.test(trimmedCategoryName)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm chỉ được chứa chữ và khoảng trắng',
+            });
+            categoryName.focus();
             return;
         }
         if (isTenLoaiSanPhamExists(CategoryName.value.trim())) {
@@ -127,6 +142,8 @@
 
     function isTenLoaiSanPhamExists(value) {
         let exists = false;
+        if (value == categoryNamePara)
+            return exists;
         $.ajax({
             url: 'http://localhost:8080/Category',
             type: 'GET',
@@ -136,11 +153,7 @@
                 CategoryName: value
             },
             success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
+                exists = !data.empty;
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);

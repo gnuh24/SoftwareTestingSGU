@@ -100,39 +100,57 @@
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
         let brandName = document.getElementById("brandName");
-        // let Email = document.getElementById("Email");
-        // let SoDienThoai = document.getElementById("SoDienThoai");
+        let trimmedBrandName = brandName.value.trim();
 
-        if (!brandName.value.trim()) {
+        // Kiểm tra tên thương hiệu không được để trống
+        if (!trimmedBrandName) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên thương hiệu không được để trống',
             });
             brandName.focus();
-            event.preventDefault();
             return;
         }
 
+        // Kiểm tra độ dài tên thương hiệu từ 3 đến 100 ký tự
+        if (trimmedBrandName.length < 3 || trimmedBrandName.length > 100) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên thương hiệu phải từ 3 đến 100 ký tự',
+            });
+            brandName.focus();
+            return;
+        }
 
-        //Kiểm tra tên thương hiệu
-        if (isTenNhaCungCapExists(brandName.value.trim())) {
+        // Kiểm tra tên thương hiệu chỉ chứa chữ và không có ký tự đặc biệt
+        const namePattern = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẰẲẴẶẤẦẨẪẬẮẰẴẸẺẼỀỀỂưăằẳẵặấầẩẫậắằẵẹẻẽềềể]+(?:\s[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẰẲẴẶẤẦẨẪẬẮẰẴẸẺẼỀỀỂưăằẳẵặấầẩẫậắằẵẹẻẽềềể]+)*$/u;
+        if (!namePattern.test(trimmedBrandName)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên thương hiệu chỉ được chứa chữ và khoảng trắng',
+            });
+            brandName.focus();
+            return;
+        }
+
+        // Kiểm tra tên thương hiệu đã tồn tại
+        if (isTenNhaCungCapExists(trimmedBrandName)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên thương hiệu đã tồn tại',
             });
             brandName.focus();
-            event.preventDefault();
             return;
         }
-        let isCreateNhaCungCapComplete = createNhaCungCap(
-            brandName.value,
-            // Email.value,
-            // SoDienThoai.value
-        );
 
-        //Sau khi tạo xong chuyển về trang QLNhaCungCap
+        // Tạo thông tin thương hiệu
+        let isCreateNhaCungCapComplete = createNhaCungCap(trimmedBrandName);
+
+        // Sau khi tạo xong, chuyển về trang QLNhaCungCap
         Swal.fire({
             icon: 'success',
             title: 'Thành công!',
@@ -140,8 +158,8 @@
         }).then(() => {
             window.location.href = 'QLNhaCungCap.php';
         });
-
     });
+
 
     function isTenNhaCungCapExists(value) {
         let exists = false;
@@ -155,15 +173,10 @@
             },
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                action: "isExists",
-                brandName: value
+                search: value
             },
             success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
+                exists = !data.empty;
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);

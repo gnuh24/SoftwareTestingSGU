@@ -130,9 +130,11 @@
                     accountId: maTaiKhoan,
                     productId: productId
                 },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
                 success: function(response) {
-                    $('#' + productId).remove();
-                    $('.priceTotal').text(formatMoney(response.totalAmount));
+                    fetchCartItems();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -183,7 +185,8 @@
                     totalAmount += item.total;
                 });
 
-                $('.listCart').html(cartHTML);
+                $('.listCart').empty(); // Xóa nội dung hiện tại
+                $('.listCart').html(cartHTML); // Cập nhật nội dung mới
                 $('.priceTotal').text(formatMoney(totalAmount));
 
                 if (response.length === 0) {
@@ -212,26 +215,49 @@
         var unitPriceElem = document.getElementById(`unitPrice_${productId}`);
         var unitPrice = parseInt(unitPriceElem ? unitPriceElem.innerText.replace(/[^0-9]/g, '') : 0);
 
-        var totalPrice = unitPrice * quantity;
-
-        var form = new FormData();
-        form.append("accountId", maTaiKhoan);
-        form.append("productId", productId);
-        form.append("unitPrice", unitPrice);
-        form.append('quantity', quantity);
-        form.append('total', totalPrice);
+        // Lấy thông tin tồn kho
         $.ajax({
-            url: `http://localhost:8080/CartItem`,
-            type: 'PATCH',
-            dataType: 'json',
-            headers: {
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
-            data: form,
-            processData: false,
-            contentType: false,
+            url: `http://localhost:8080/Product/CommonUser/` + productId,
+            method: "GET",
+            dataType: "json",
             success: function(response) {
-                fetchCartItems();
+                var tonkho = response.quantity;
+                // Kiểm tra số lượng yêu cầu có vượt quá tồn kho không
+                if (quantity > tonkho) {
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Số lượng sản phẩm không được vượt quá tồn kho.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    var totalPrice = unitPrice * quantity;
+
+                    var form = new FormData();
+                    form.append("accountId", maTaiKhoan);
+                    form.append("productId", productId);
+                    form.append("unitPrice", unitPrice);
+                    form.append('quantity', quantity);
+                    form.append('total', totalPrice);
+
+                    $.ajax({
+                        url: `http://localhost:8080/CartItem`,
+                        type: 'PATCH',
+                        dataType: 'json',
+                        headers: {
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                        },
+                        data: form,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            fetchCartItems();
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                }
             },
             error: function(xhr, status, error) {
                 console.error(error);

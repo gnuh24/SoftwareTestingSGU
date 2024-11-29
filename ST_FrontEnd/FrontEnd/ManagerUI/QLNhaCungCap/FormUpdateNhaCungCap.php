@@ -82,24 +82,75 @@
 
 
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const NCCNamePara = urlParams.get('brandName');
     document.getElementById("updateSupplier_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
         let brandId = document.getElementById("brandId");
         let brandName = document.getElementById("brandName");
+        let trimmedBrandName = brandName.value.trim();
 
-        if (!brandName.value.trim()) {
+        // Kiểm tra tên thương hiệu không được để trống
+        if (!trimmedBrandName) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên thương hiệu không được để trống',
             });
             brandName.focus();
-            event.preventDefault();
+            return;
+        }
+
+        // Kiểm tra độ dài tên thương hiệu từ 3 đến 100 ký tự
+        if (trimmedBrandName.length < 3 || trimmedBrandName.length > 100) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên thương hiệu phải từ 3 đến 100 ký tự',
+            });
+            brandName.focus();
+            return;
+        }
+        // Kiểm tra tên thương hiệu đã tồn tại
+        if (isTenNhaCungCapExists(trimmedBrandName)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên thương hiệu đã tồn tại',
+            });
+            brandName.focus();
             return;
         }
         updateNhaCungCap(brandId.value, brandName.value)
     })
+
+    function isTenNhaCungCapExists(value) {
+        let exists = false;
+
+        var token = sessionStorage.getItem('token');
+        if (value == NCCNamePara)
+            return exists
+        $.ajax({
+            url: 'http://localhost:8080/Brand',
+            type: 'GET',
+            dataType: "json",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
+            data: {
+                search: value
+            },
+            success: function(data) {
+                exists = !data.empty;
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + xhr.status + ' - ' + error);
+            }
+        });
+        return exists;
+    }
 
     function updateNhaCungCap(brandId, brandName) {
         var token = sessionStorage.getItem('token');

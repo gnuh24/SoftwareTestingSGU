@@ -67,7 +67,7 @@
     <section>
         <div class="text-center mb-4">
             <div class="title_section">
-                <h2 class="text-danger">Chi tiết sản phẩm</h2>
+                <h2 class="text-danger" style="color:rgb(146, 26, 26) !important">Chi tiết sản phẩm</h2>
             </div>
         </div>
     </section>
@@ -185,22 +185,16 @@
                     htmlContent += `</div>
                             <div class="button__wrapper">`;
 
-                    if (soLuongConLai > 0) {
-                        htmlContent += `
+
+                    htmlContent += `
                             <button class="btn btn-secondary" >
-                                <span>Thêm vào giỏ hàng</span>
-                            </button>`;
-                    }
+                                <span>Mua ngay</span>
+                            </button>
+                        </div>
+                    </div>
+                    </div>
 
-                    // htmlContent += `
-                    //         <button class="btn btn-primary" >
-                    //             <span>Mua ngay</span>
-                    //         </button>
-                    //     </div>
-                    // </div>
-                    // </div>
-
-                    // `;
+                    `;
                     htmlContent += `<div class="description text-center"><h1>Thông tin chi tiết</h1>
                     <div> ${description}</div>
                     </div>`;

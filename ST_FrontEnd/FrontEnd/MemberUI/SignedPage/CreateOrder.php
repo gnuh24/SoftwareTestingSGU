@@ -37,8 +37,10 @@
                                 </div>
                                 <div class='input__wrapper'>
                                     <label for='phonenumber'>Số điện thoại: </label>
-                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' />
+                                    <input type='text' name='phonenumber' id='phonenumber' placeholder='Nhập số điện thoại' pattern="^(0|\+84)[0-9]{9}$" required />
+                                    <small class="text-danger" id="phoneError" style="display:none;">Số điện thoại không hợp lệ. Vui lòng nhập lại.</small>
                                 </div>
+
                                 <div class='input__wrapper'>
                                     <label for='address'>Ghi chú:</label>
                                     <input type='text' name='address' id='address' placeholder='Nhập ghi chú' />
@@ -233,6 +235,40 @@
         const diaChi = document.getElementById('address1').value.trim(); // Lấy giá trị của trường Địa chỉ
         const ghiChu = document.getElementById('address').value.trim(); // Lấy giá trị của trường Ghi chú
 
+        const phonePattern = /^(0|\+84)[0-9]{9}$/;
+        const namePattern = /^.{3,100}$/; // Ràng buộc họ tên từ 3 đến 100 ký tự
+        const addressPattern = /^.{10,100}$/; // Ràng buộc địa chỉ từ 10 đến 100 ký tự
+
+        // Kiểm tra số điện thoại
+        if (!phonePattern.test(soDienThoai)) {
+            document.getElementById('phoneError').style.display = 'block';
+            return; // Ngăn không cho hàm tiếp tục
+        } else {
+            document.getElementById('phoneError').style.display = 'none'; // Ẩn thông báo lỗi nếu số điện thoại hợp lệ
+        }
+
+        // Kiểm tra họ tên
+        if (!namePattern.test(hoTen)) {
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Họ tên phải từ 3 đến 100 ký tự.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return; // Ngăn không cho hàm tiếp tục
+        }
+
+        // Kiểm tra địa chỉ
+        if (!addressPattern.test(diaChi)) {
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Địa chỉ phải từ 10 đến 100 ký tự.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return; // Ngăn không cho hàm tiếp tục
+        }
+
         // Kiểm tra nếu bất kỳ trường nào bị trống
         if (!hoTen || !soDienThoai || !diaChi) {
             Swal.fire({
@@ -270,6 +306,7 @@
             }
         });
     });
+
 
     function updateInfor() {
         var formData = new FormData();
