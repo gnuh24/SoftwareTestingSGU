@@ -16,9 +16,9 @@ public interface ICategoryService {
 
     Category getCategoryById(Integer id);
 
-    Category createCategory(CategoryCreateForm form);
+    Category createCategory(CategoryCreateForm form) throws Exception;
 
-    Category updateCategory(CategoryUpdateForm form);
+    Category updateCategory(CategoryUpdateForm form) throws Exception;
 
     void deleteCategory(Integer categoryId);
 

@@ -49,14 +49,29 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
-    public Category createCategory(CategoryCreateForm form) {
+    public Category createCategory(CategoryCreateForm form) throws Exception {
+
+        if (categoryRepository.existsByCategoryName(form.getCategoryName())){
+            throw new Exception(form.getCategoryName() + " đã tồn tại, xin vui lòng chọn tên khác !!" );
+        }
+
         Category entity = modelMapper.map(form, Category.class);
         return categoryRepository.save(entity);
     }
 
     @Override
     @Transactional
-    public Category updateCategory(CategoryUpdateForm form) {
+    public Category updateCategory(CategoryUpdateForm form) throws Exception {
+
+        Category oldEntity = categoryRepository.findById(form.getId()).orElse(null) ;
+        if (oldEntity == null){
+            throw new Exception("ID: " +  form.getId() + " không tồn tại !!" );
+        }
+
+        if (categoryRepository.existsByCategoryName(form.getCategoryName())){
+            throw new Exception(form.getCategoryName() + " đã tồn tại, xin vui lòng chọn tên khác !!" );
+        }
+
         Category entity = modelMapper.map(form, Category.class);
         return categoryRepository.save(entity);
     }

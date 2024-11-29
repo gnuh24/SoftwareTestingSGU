@@ -1,6 +1,6 @@
 package BackEnd.Configure.ErrorResponse.RestException;
 
-    import java.io.IOException;
+import java.io.IOException;
     import java.util.HashMap;
     import java.util.Map;
 
@@ -46,7 +46,7 @@ public class  RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse response = new ErrorResponse(message, detailMessage, null, code, moreInformation);
 
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 
