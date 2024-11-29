@@ -217,8 +217,8 @@
             url: 'http://localhost:8080/Auth/Registration',
             type: 'POST',
             data: formData, // Gửi FormData
-            processData: false, // Ngăn jQuery tự động xử lý dữ liệu
-            contentType: false, // Đảm bảo tiêu đề nội dung là multipart/form-data
+            processData: false,
+            contentType: false,
             beforeSend: function() {
                 // Hiện thông báo "Đang xử lý"
                 Swal.fire({

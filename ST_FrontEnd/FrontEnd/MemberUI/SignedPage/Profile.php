@@ -143,6 +143,30 @@
             return false;
         }
 
+        // Kiểm tra họ và tên: 3 - 100 kí tự, không chứa kí tự đặc biệt
+        var nameRegex = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƠợỜỚỠỚợỳỵỷỹỲỴỶỸ\s]{3,100}$/u;
+        if (!nameRegex.test(fullname)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Họ và tên không hợp lệ!',
+                text: 'Họ và tên phải từ 3 đến 100 ký tự, không chứa ký tự đặc biệt.',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
+        // Kiểm tra địa chỉ: 10 - 100 kí tự, không chứa kí tự đặc biệt
+        var addressRegex = /^[a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯƠợỜỚỠỚợỳỵỷỹỲỴỶỸ\s,.-]{10,100}$/u;
+        if (!addressRegex.test(address)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Địa chỉ không hợp lệ!',
+                text: 'Địa chỉ phải từ 10 đến 100 ký tự và không chứa ký tự đặc biệt.',
+                confirmButtonText: 'OK'
+            });
+            return false;
+        }
+
         // Kiểm tra số điện thoại (chỉ chứa số và độ dài hợp lệ)
         var phoneRegex = /^[0-9]{10,11}$/;
         if (!phoneRegex.test(phone)) {
@@ -208,6 +232,7 @@
 
         return false; // Ngăn chặn form gửi theo cách truyền thống
     }
+
 
 
     function formatDateToDDMMYYYY(dateString) {

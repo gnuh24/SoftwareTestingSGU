@@ -232,7 +232,7 @@
                 dataType: "json",
                 data: (function() {
                     var requestData = {
-                        page: page,
+                        pageNumber: page,
                         minPrice: minGia,
                         maxPrice: maxGia,
                         pageSize: 12,
@@ -263,9 +263,9 @@
                         // Duyệt qua từng sản phẩm và tạo nội dung HTML tương ứng
                         $.each(response.content, function(index, product) {
                             htmlContent += ` 
-                                    <form id="productForm_${product.id}" method="post" action="GuestProductDetail.php?maSanPham=${product.id}">
+                                    <form id="productForm_${product.id}" method="post" action="SignedProductDetail.php?maSanPham=${product.id}">
                                         <div class="row">
-                                            <a href="GuestProductDetail.php?maSanPham=${product.id}" class="text-center" style="display: block;">
+                                            <a href="SignedProductDetail.php?maSanPham=${product.id}" class="text-center" style="display: block;">
                                                 <img src="http://res.cloudinary.com/djhoea2bo/image/upload/v1711511636/${product.image}" alt="" style="height: 300px;">
                                                 <div class="product-card-content">
                                                     <div class="price">

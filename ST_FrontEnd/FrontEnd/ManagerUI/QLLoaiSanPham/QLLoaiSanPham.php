@@ -110,7 +110,7 @@
         'Authorization': 'Bearer ' + token
       },
       data: {
-        page: page,
+        pageNumber: page,
         search: search
       },
       success: function(response) {

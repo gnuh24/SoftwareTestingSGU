@@ -227,7 +227,7 @@
             dataType: "json",
             data: (function() {
                 var requestData = {
-                    page: page,
+                    pageNumber: page,
                     minPrice: minGia,
                     maxPrice: maxGia,
                     pageSize: 12,

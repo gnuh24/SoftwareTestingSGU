@@ -98,43 +98,59 @@
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-
         let categoryName = document.getElementById("categoryName");
+        let trimmedCategoryName = categoryName.value.trim();
 
-        if (!categoryName.value.trim()) {
-
+        // Kiểm tra tên loại sản phẩm không được để trống
+        if (!trimmedCategoryName) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên loại sản phẩm không được để trống',
             });
             categoryName.focus();
-            event.preventDefault();
             return;
         }
 
+        // Kiểm tra độ dài tên loại sản phẩm
+        if (trimmedCategoryName.length < 3 || trimmedCategoryName.length > 100) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm phải từ 3 đến 100 ký tự',
+            });
+            categoryName.focus();
+            return;
+        }
 
-
-        //Kiểm tra tên loại sản phẩm
-        if (isTenLoaiSanPhamExists(categoryName.value.trim())) {
+        // Kiểm tra tên loại sản phẩm chỉ chứa chữ
+        const namePattern = /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẰẲẴẶẤẦẨẪẬẮẰẴẸẺẼỀỀỂưăằẳẵặấầẩẫậắằẵẹẻẽềềể]+(?:\s[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẰẲẴẶẤẦẨẪẬẮẰẴẸẺẼỀỀỂưăằẳẵặấầẩẫậắằẵẹẻẽềềể]+)*$/u;
+        if (!namePattern.test(trimmedCategoryName)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm chỉ được chứa chữ và khoảng trắng',
+            });
+            categoryName.focus();
+            return;
+        }
+        let tmp = isTenLoaiSanPhamExists(categoryName.value);
+        console.log(tmp)
+        // Kiểm tra tên loại sản phẩm đã tồn tại
+        if (tmp == true) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
                 text: 'Tên loại sản phẩm đã tồn tại',
             });
             categoryName.focus();
-            event.preventDefault();
             return;
         }
 
+        // Tạo thông tin nhà cung cấp
+        let isCreateLoaiSanPhamComplete = createLoaiSanPham(trimmedCategoryName);
 
-
-        //Tạo thông tin nhà cung cấp
-        let isCreateLoaiSanPhamComplete = createLoaiSanPham(
-            categoryName.value
-        );
-
-        //Sau khi tạo xong chuyển về trang QLLoaiSanPham
+        // Sau khi tạo xong, chuyển về trang QLLoaiSanPham
         Swal.fire({
             icon: 'success',
             title: 'Thành công!',
@@ -155,14 +171,11 @@
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                categoryName: value
+                search: value
             },
             success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
+                exists = !data.empty;
+
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
