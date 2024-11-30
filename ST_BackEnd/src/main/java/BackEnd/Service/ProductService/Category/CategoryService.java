@@ -78,7 +78,12 @@ public class CategoryService implements ICategoryService {
 
     @Override
     @Transactional
-    public void deleteCategory(Integer categoryId) {
+    public void deleteCategory(Integer categoryId) throws Exception {
+        Category oldEntity = categoryRepository.findById(categoryId).orElse(null) ;
+        if (oldEntity == null){
+            throw new Exception("ID: " +  categoryId + " không tồn tại !!" );
+        }
+
         shoeService.updateDefaultCategoryOfProduct(categoryId);
         categoryRepository.deleteById(categoryId);
     }

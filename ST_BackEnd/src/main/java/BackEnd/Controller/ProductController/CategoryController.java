@@ -72,7 +72,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/{categoryId}")
-    public void deleteCategory(@PathVariable Integer categoryId) { // Thay thế deleteShoeType bằng deleteCategory
+    public void deleteCategory(@PathVariable Integer categoryId) throws Exception { // Thay thế deleteShoeType bằng deleteCategory
         categoryService.deleteCategory(categoryId); // Thay thế shoeTypeService bằng categoryService
     }
 }

@@ -20,6 +20,6 @@ public interface ICategoryService {
 
     Category updateCategory(CategoryUpdateForm form) throws Exception;
 
-    void deleteCategory(Integer categoryId);
+    void deleteCategory(Integer categoryId) throws Exception;
 
 }
