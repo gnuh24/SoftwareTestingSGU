@@ -113,7 +113,8 @@
             categoryName.focus();
             return;
         }
-        if (isTenLoaiSanPhamExists(CategoryName.value.trim())) {
+        let categorynametrim = CategoryName.value.trim();
+        if (isTenLoaiSanPhamExists(categorynametrim)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi!',
@@ -150,7 +151,7 @@
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                CategoryName: value
+                search: value
             },
             success: function(data) {
                 exists = !data.empty;

@@ -367,17 +367,17 @@
 
         function getBrands() {
             $.ajax({
-                url: "http://localhost:8080/Brand",
+                url: "http://localhost:8080/Brand/noPaging",
                 method: "GET",
                 dataType: "json",
                 success: function(response) {
-                    if (response.content && response.content.length > 0) {
+                    if (response && response.length > 0) {
                         // Xóa tất cả các option hiện có trong dropdown
                         $('#brand-filter').empty();
                         // Thêm option "Tất cả"
                         $('#brand-filter').append('<option value="">Tất cả</option>');
                         // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
-                        $.each(response.content, function(index, category) {
+                        $.each(response, function(index, category) {
                             $('#brand-filter').append(`<option value="${category.brandId}">${category.brandName}</option>`);
                         });
                     } else {
