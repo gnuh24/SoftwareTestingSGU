@@ -60,19 +60,19 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public CategoryDTO createCategory(@ModelAttribute @Valid CategoryCreateForm form) { // Thay thế createShoeType bằng createCategory
+    public CategoryDTO createCategory(@ModelAttribute @Valid CategoryCreateForm form) throws Exception { // Thay thế createShoeType bằng createCategory
         Category entity = categoryService.createCategory(form); // Thay thế shoeTypeService bằng categoryService
         return modelMapper.map(entity, CategoryDTO.class);
     }
 
     @PatchMapping()
-    public CategoryDTO updateCategory(@ModelAttribute @Valid CategoryUpdateForm form) { // Thay thế updateShoeType bằng updateCategory
+    public CategoryDTO updateCategory(@ModelAttribute @Valid CategoryUpdateForm form) throws Exception { // Thay thế updateShoeType bằng updateCategory
         Category entity = categoryService.updateCategory(form); // Thay thế shoeTypeService bằng categoryService
         return modelMapper.map(entity, CategoryDTO.class);
     }
 
     @DeleteMapping(value = "/{categoryId}")
-    public void deleteCategory(@PathVariable Integer categoryId) { // Thay thế deleteShoeType bằng deleteCategory
+    public void deleteCategory(@PathVariable Integer categoryId) throws Exception { // Thay thế deleteShoeType bằng deleteCategory
         categoryService.deleteCategory(categoryId); // Thay thế shoeTypeService bằng categoryService
     }
 }
