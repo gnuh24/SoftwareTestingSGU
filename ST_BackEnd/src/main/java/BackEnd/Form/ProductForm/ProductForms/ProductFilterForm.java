@@ -24,9 +24,9 @@ public class ProductFilterForm {
 
     //User
 
-//    private Integer minPrice;
-//
-//    private Integer maxPrice;
+    private Integer minPrice;
+
+    private Integer maxPrice;
 
 
 }

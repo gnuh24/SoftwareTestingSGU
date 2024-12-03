@@ -114,54 +114,27 @@
             return;
         }
         let categorynametrim = CategoryName.value.trim();
-        if (isTenLoaiSanPhamExists(categorynametrim)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Tên loại sản phẩm đã tồn tại',
-            });
-            CategoryName.focus();
-            event.preventDefault();
-            return;
-        }
+       
 
         //Bắt đầu cập nhật thông tin loại sản phẩm sau khi đã qua các bước xác nhận
         let isUpdateLoaiSanPhamComplete = updateLoaiSanPham(
             Id.value,
             CategoryName.value)
 
-        //Sau khi tạo xong chuyển về trang QLLoaiSanPham
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: 'Cập nhật loại sản phẩm thành công !!',
-        }).then(function() {
-            window.location.href = 'QLLoaiSanPham.php';
-        });
+        
+        if (isUpdateLoaiSanPhamComplete === 200){
+            //Sau khi tạo xong chuyển về trang QLLoaiSanPham
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Cập nhật loại sản phẩm thành công !!',
+            }).then(function() {
+                window.location.href = 'QLLoaiSanPham.php';
+            });
+        }
+        
 
     });
-
-    function isTenLoaiSanPhamExists(value) {
-        let exists = false;
-        if (value == categoryNamePara)
-            return exists;
-        $.ajax({
-            url: 'http://localhost:8080/Category',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                search: value
-            },
-            success: function(data) {
-                exists = !data.empty;
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
 
     function updateLoaiSanPham(Id, CategoryName) {
         var token = sessionStorage.getItem('token');
@@ -181,6 +154,11 @@
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: xhr.responseJSON.detailMessage,
+                });
             }
         });
     }

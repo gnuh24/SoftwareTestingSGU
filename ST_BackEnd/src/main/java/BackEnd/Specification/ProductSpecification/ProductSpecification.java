@@ -139,25 +139,25 @@ public class ProductSpecification implements Specification<Product> {
                 }
             }
 
-            //Filter cho bộ lọc theo cận dưới của giá sản phẩm
-//            if (form.getMinPrice() != null){
-//                ProductSpecification minPrice = new ProductSpecification("minPrice", form.getMinPrice());
-//                if (where != null){
-//                    where = where.and(minPrice);
-//                }else{
-//                    where = Specification.where(minPrice);
-//                }
-//            }
-//
-//            //Filter cho bộ lọc theo cận trên của giá sản phẩm
-//            if (form.getMaxPrice() != null){
-//                ProductSpecification maxPrice = new ProductSpecification("maxPrice", form.getMaxPrice());
-//                if (where != null){
-//                    where = where.and(maxPrice);
-//                }else{
-//                    where = Specification.where(maxPrice);
-//                }
-//            }
+//            Filter cho bộ lọc theo cận dưới của giá sản phẩm
+            if (form.getMinPrice() != null){
+                ProductSpecification minPrice = new ProductSpecification("minPrice", form.getMinPrice());
+                if (where != null){
+                    where = where.and(minPrice);
+                }else{
+                    where = Specification.where(minPrice);
+                }
+            }
+
+            //Filter cho bộ lọc theo cận trên của giá sản phẩm
+            if (form.getMaxPrice() != null){
+                ProductSpecification maxPrice = new ProductSpecification("maxPrice", form.getMaxPrice());
+                if (where != null){
+                    where = where.and(maxPrice);
+                }else{
+                    where = Specification.where(maxPrice);
+                }
+            }
 
 
 
