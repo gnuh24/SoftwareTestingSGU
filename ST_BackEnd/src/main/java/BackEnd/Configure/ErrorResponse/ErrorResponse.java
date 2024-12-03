@@ -13,7 +13,6 @@ public class ErrorResponse {
     private String message;
 
     //Hiển thị cho Dev xem
-    @NonNull
     private String detailMessage;
 
     private Object error;

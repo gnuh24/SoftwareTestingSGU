@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -41,6 +42,9 @@ public class AuthExceptionHandler implements AuthenticationEntryPoint, AccessDen
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(errorResponse);
 
+        // Set the response status code
+        response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401 Unauthorized
+
         // return json
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(json);
@@ -65,6 +69,9 @@ public class AuthExceptionHandler implements AuthenticationEntryPoint, AccessDen
         // convert object to json
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(errorResponse);
+
+        // Set the response status code
+        response.setStatus(HttpStatus.FORBIDDEN.value()); // 403 Unauthorized
 
         // return json
         response.setContentType("application/json;charset=UTF-8");

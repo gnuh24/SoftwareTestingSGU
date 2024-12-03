@@ -54,13 +54,6 @@ public class ProductSpecification implements Specification<Product> {
             return criteriaBuilder.equal(root.get("category").get("id"), value);
         }
 
-//        if (field.equalsIgnoreCase("minPrice")){
-//            return criteriaBuilder.greaterThanOrEqualTo( root.get("price"), (Integer) value);
-//        }
-//
-//        if (field.equalsIgnoreCase("maxPrice")){
-//            return criteriaBuilder.lessThanOrEqualTo( root.get("price"), (Integer) value);
-//        }
 
         return null;
     }
@@ -97,28 +90,6 @@ public class ProductSpecification implements Specification<Product> {
                 }
             }
 
-
-
-//            //Filter cho bộ lọc theo ngày ( Cận dưới )
-//            if (form.getMinCreateTime() != null){
-//                ProductSpecification minCreateDate = new ProductSpecification("minCreateTime", form.getMinCreateTime());
-//                if (where != null){
-//                    where = where.and(minCreateDate);
-//                }else{
-//                    where = Specification.where(minCreateDate);
-//                }
-//            }
-//
-//            //Filter cho bộ lọc theo ngày ( Cận trên )
-//            if (form.getMaxCreateTime() != null){
-//                ProductSpecification maxCreateDate = new ProductSpecification("maxCreateTime", form.getMaxCreateTime());
-//                if (where != null){
-//                    where = where.and(maxCreateDate);
-//                }else{
-//                    where = Specification.where(maxCreateDate);
-//                }
-//            }
-
             //Filter cho bộ lọc theo thương hiệu
             if (form.getBrandId() != null){
                 ProductSpecification brandId = new ProductSpecification("brandId", form.getBrandId());
@@ -139,7 +110,7 @@ public class ProductSpecification implements Specification<Product> {
                 }
             }
 
-//            Filter cho bộ lọc theo cận dưới của giá sản phẩm
+//           Filter cho bộ lọc theo cận dưới của giá sản phẩm
             if (form.getMinPrice() != null){
                 ProductSpecification minPrice = new ProductSpecification("minPrice", form.getMinPrice());
                 if (where != null){

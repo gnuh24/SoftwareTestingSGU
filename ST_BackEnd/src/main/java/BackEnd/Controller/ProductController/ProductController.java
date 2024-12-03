@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -84,20 +85,38 @@ public class ProductController {
         List<ProductDTOListUser> dtos = modelMapper.map(entites.getContent(), new TypeToken<List<ProductDTOListUser>>() {
         }.getType());
 
-        for (ProductDTOListUser dtoListAdmin: dtos){
+        Iterator<ProductDTOListUser> iterator = dtos.iterator();
+
+        while (iterator.hasNext()) {
+            ProductDTOListUser dtoListAdmin = iterator.next();
             Batch batch = batchService.getTheValidBatch(dtoListAdmin.getId());
 
-            if (batch == null){
+            if (batch == null) {
                 batch = batchService.getTheValidBatchBackup(dtoListAdmin.getId());
             }
 
-            dtoListAdmin.setPrice(batch.getUnitPrice());
+            if (batch != null) {
+                dtoListAdmin.setPrice(batch.getUnitPrice());
+
+                // Check price range filtering
+                if (form.getMinPrice() != null && form.getMaxPrice() != null) {
+                    if (batch.getUnitPrice() < form.getMinPrice() || batch.getUnitPrice() > form.getMaxPrice()) {
+                        // Remove if price does not match the range
+                        iterator.remove();
+                    }
+                }
+            } else {
+                // Remove products without a valid batch
+                iterator.remove();
+            }
         }
+
+        System.err.println(dtos);
 
 
 
         // Trả về FrontEnd với định dạng Page (Tích họp Sort, Paging)
-        return new PageImpl<>(dtos, pageable, entites.getTotalElements());
+        return new PageImpl<>(dtos, pageable, dtos.size());
     }
 
     @GetMapping(value = "/CommonUser/{shoeId}")
